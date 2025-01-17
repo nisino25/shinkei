@@ -150,96 +150,164 @@ export default {
         },
   
         methods: {
-              sleep(ms) {
-                  return new Promise(resolve => setTimeout(resolve, ms));
-              },
-              playSound(path) {
-                const audio = new Audio(path);
-                audio.play();
-              },
-              
-              playGame(game,area){
-                  this.chosenGame = game
-                  console.log(area)
-  
-                  if(this.chosenGame == 'shinkei'){
-                      if(!area) return
-  
-                      this.playArea = area
-                      if(this.playArea == '京都'){
-                          this.items = [
-                            {name: `フジバカマ` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-food-1.jpg'},
-                            {name: `川魚` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-food-2.jpg'},
-                            {name: `どんぐり` , group: 3, type: 'regular', imgSrc: './card-pics/kyoto-food-3.jpg'},
-                            {name: `樹液` , group: 4, type: 'regular', imgSrc: './card-pics/kyoto-food-4.jpg'},
-                            {name: `サワガニ` , group: 5, type: 'regular', imgSrc: './card-pics/kyoto-food-5.jpg'},
-                            {name: `セミ` , group: 6, type: 'regular', imgSrc: './card-pics/kyoto-food-6.jpg'},
-                            {name: `クモ` , group: 7, type: 'regular', imgSrc: './card-pics/kyoto-food-7.jpg'},
+            sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            },
+            playSound(path) {
+            const audio = new Audio(path);
+            audio.play();
+            },
 
-                            {name: `アサギマダラ` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-hunter-1.jpg'},
-                            {name: `アカショウビン` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-hunter-2.jpg'},
-                            {name: `ニホンザル` , group: 3, type: 'regular', imgSrc: './card-pics/kyoto-hunter-3.jpg'},
-                            {name: `オオムラサキ` , group: 4, type: 'regular', imgSrc: './card-pics/kyoto-hunter-4.jpg'},
-                            {name: `オオサンショウウオ` , group: 5, type: 'regular', imgSrc: './card-pics/kyoto-hunter-5.jpg'},
-                            {name: `アオバズク` , group: 6, type: 'regular', imgSrc: './card-pics/kyoto-hunter-6.jpg'},
-                            {name: `モリアオガエル` , group: 7, type: 'regular', imgSrc: './card-pics/kyoto-hunter-7.jpg'},
+            playShinkei(){
+                // this.playArea = area
+                    if(this.playArea == '京都'){
+                        this.items = [
+                        {name: `フジバカマ` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-food-1.jpg'},
+                        {name: `川魚` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-food-2.jpg'},
+                        {name: `どんぐり` , group: 3, type: 'regular', imgSrc: './card-pics/kyoto-food-3.jpg'},
+                        {name: `樹液` , group: 4, type: 'regular', imgSrc: './card-pics/kyoto-food-4.jpg'},
+                        {name: `サワガニ` , group: 5, type: 'regular', imgSrc: './card-pics/kyoto-food-5.jpg'},
+                        {name: `セミ` , group: 6, type: 'regular', imgSrc: './card-pics/kyoto-food-6.jpg'},
+                        {name: `クモ` , group: 7, type: 'regular', imgSrc: './card-pics/kyoto-food-7.jpg'},
 
-                            {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-1.jpg'},
-                            {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-2.jpg'},
-                            {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-3.jpg'},
+                        {name: `アサギマダラ` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-hunter-1.jpg'},
+                        {name: `アカショウビン` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-hunter-2.jpg'},
+                        {name: `ニホンザル` , group: 3, type: 'regular', imgSrc: './card-pics/kyoto-hunter-3.jpg'},
+                        {name: `オオムラサキ` , group: 4, type: 'regular', imgSrc: './card-pics/kyoto-hunter-4.jpg'},
+                        {name: `オオサンショウウオ` , group: 5, type: 'regular', imgSrc: './card-pics/kyoto-hunter-5.jpg'},
+                        {name: `アオバズク` , group: 6, type: 'regular', imgSrc: './card-pics/kyoto-hunter-6.jpg'},
+                        {name: `モリアオガエル` , group: 7, type: 'regular', imgSrc: './card-pics/kyoto-hunter-7.jpg'},
 
-                            {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: './card-pics/kyoto-gameover.jpg'},
+                        {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-1.jpg'},
+                        {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-2.jpg'},
+                        {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-3.jpg'},
 
-                            {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: './card-pics/kyoto-bad-1.jpg'},
-                            {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: './card-pics/kyoto-bad-2.jpg'},
+                        {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: './card-pics/kyoto-gameover.jpg'},
+
+                        {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: './card-pics/kyoto-bad-1.jpg'},
+                        {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: './card-pics/kyoto-bad-2.jpg'},
 
 
-                          ]
-                      }
-                      if(this.playArea == '北海道'){
-                          this.items = [
-                              {name: `オオワシ` , group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_6f16ae32a2734926bb164d4dfe2b6e3e~mv2.jpg'},
-                              {name: `ねずみ<br>（オオワシ）`,group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_a7498435df98422b859d403a85cef13f~mv2.jpg'},
-  
-                              {name: `ツル` ,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_7510c7c944184a2696cc59e3406cd56f~mv2.jpg'},
-                              {name: `みみず<br>（ツル）`,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_0c71945a9fbf43568d9378ced8fcc6de~mv2.jpg'},
-  
-                              {name: `クマ` ,group: 3, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_5a66047942a54ed1838fbf4b607dd01e~mv2.jpg'},
-                              {name: `どんぐり<br>（クマ）`,group: 3, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_793ca946081e483cb8a6d5d77506e827~mv2.jpg'},
-  
-                              {name: `クワガタ` ,group: 4, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_e52afa786a794460bac9d8b2b307355a~mv2.jpg'},
-                              {name: `じゅえき<br>（クワガタ）`,group: 4, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_74d4da3493234020b90401259139016f~mv2.jpg'},
-  
-                              {name: `イトウ` ,group: 5, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_2ba3a8e0cdc849a98b0c6f3b0ae049dd~mv2.jpg'},
-                              {name: `どじょう<br>（イトウ）`,group: 5, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_16b8345030ff419caaea4b95e64b3b26~mv2.jpg'},
-  
-                              {name: `エゾモモンガ` ,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_87a731881a8849f1aab4651b9c059d70~mv2.jpg'},
-                              {name: `くさやはっぱ<br>（エゾモモンガ）`,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ca38ab9fee984b34b748f9ea0447d5de~mv2.jpg'},
-  
-                              {name: `シマエナガ` ,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_91fefcee2f6b4829aa0bc70a7a52985b~mv2.jpg'},
-                              {name: `くだもの<br>(シマエナガ)`,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ef7d0288db604e83a0ec5e6db766003b~mv2.jpg'},
-  
-                              {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_ef0fd76958f844db82fd0c86cc270a8b~mv2.jpg'},
-                              {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_402067a9860f45bba3e2e079406216f2~mv2.jpg'},
-                              {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_c1a9f328c0f74ad2b9014961d8855f28~mv2.jpg'},
-                              {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: 'https://static.wixstatic.com/media/db1732_810a547dd6634ec3bf7b44c41d1edcce~mv2.jpg'},
-  
-                              {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_9dd0c7e378f54013ac0166d5eb605b60~mv2.jpg'},
-                              {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_19231290e2fb4f898a955326faa3643a~mv2.jpg'},
-                          ]
-                      }
-                      
-                      this.resetGame()
-  
-                  }else if(this.chosenGame == 'sorting'){
-                      this.currentPoint = 0
-                  }else if(this.chosenGame == 'bingo'){
-                      this.bingoList = this.bingoList.map(() => ({ task: '', isFinished: false, isColored: false }));
-                      this.mixList();
-                  }
-  
-              },
-              getCardStyle(card) {
+                        ]
+                    }
+                    if(this.playArea == '北海道'){
+                        this.items = [
+                            {name: `オオワシ` , group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_6f16ae32a2734926bb164d4dfe2b6e3e~mv2.jpg'},
+                            {name: `ねずみ<br>（オオワシ）`,group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_a7498435df98422b859d403a85cef13f~mv2.jpg'},
+
+                            {name: `ツル` ,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_7510c7c944184a2696cc59e3406cd56f~mv2.jpg'},
+                            {name: `みみず<br>（ツル）`,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_0c71945a9fbf43568d9378ced8fcc6de~mv2.jpg'},
+
+                            {name: `クマ` ,group: 3, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_5a66047942a54ed1838fbf4b607dd01e~mv2.jpg'},
+                            {name: `どんぐり<br>（クマ）`,group: 3, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_793ca946081e483cb8a6d5d77506e827~mv2.jpg'},
+
+                            {name: `クワガタ` ,group: 4, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_e52afa786a794460bac9d8b2b307355a~mv2.jpg'},
+                            {name: `じゅえき<br>（クワガタ）`,group: 4, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_74d4da3493234020b90401259139016f~mv2.jpg'},
+
+                            {name: `イトウ` ,group: 5, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_2ba3a8e0cdc849a98b0c6f3b0ae049dd~mv2.jpg'},
+                            {name: `どじょう<br>（イトウ）`,group: 5, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_16b8345030ff419caaea4b95e64b3b26~mv2.jpg'},
+
+                            {name: `エゾモモンガ` ,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_87a731881a8849f1aab4651b9c059d70~mv2.jpg'},
+                            {name: `くさやはっぱ<br>（エゾモモンガ）`,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ca38ab9fee984b34b748f9ea0447d5de~mv2.jpg'},
+
+                            {name: `シマエナガ` ,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_91fefcee2f6b4829aa0bc70a7a52985b~mv2.jpg'},
+                            {name: `くだもの<br>(シマエナガ)`,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ef7d0288db604e83a0ec5e6db766003b~mv2.jpg'},
+
+                            {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_ef0fd76958f844db82fd0c86cc270a8b~mv2.jpg'},
+                            {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_402067a9860f45bba3e2e079406216f2~mv2.jpg'},
+                            {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_c1a9f328c0f74ad2b9014961d8855f28~mv2.jpg'},
+                            {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: 'https://static.wixstatic.com/media/db1732_810a547dd6634ec3bf7b44c41d1edcce~mv2.jpg'},
+
+                            {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_9dd0c7e378f54013ac0166d5eb605b60~mv2.jpg'},
+                            {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_19231290e2fb4f898a955326faa3643a~mv2.jpg'},
+                        ]
+                    }
+                    
+                    this.resetGame()
+            },
+            
+            playGame(game,area){
+                // this.chosenGame = game
+                console.log(area)
+
+                if(this.chosenGame == 'shinkei'){
+                    if(!area) return
+
+                    this.playArea = area
+                    if(this.playArea == '京都'){
+                        this.items = [
+                        {name: `フジバカマ` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-food-1.jpg'},
+                        {name: `川魚` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-food-2.jpg'},
+                        {name: `どんぐり` , group: 3, type: 'regular', imgSrc: './card-pics/kyoto-food-3.jpg'},
+                        {name: `樹液` , group: 4, type: 'regular', imgSrc: './card-pics/kyoto-food-4.jpg'},
+                        {name: `サワガニ` , group: 5, type: 'regular', imgSrc: './card-pics/kyoto-food-5.jpg'},
+                        {name: `セミ` , group: 6, type: 'regular', imgSrc: './card-pics/kyoto-food-6.jpg'},
+                        {name: `クモ` , group: 7, type: 'regular', imgSrc: './card-pics/kyoto-food-7.jpg'},
+
+                        {name: `アサギマダラ` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-hunter-1.jpg'},
+                        {name: `アカショウビン` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-hunter-2.jpg'},
+                        {name: `ニホンザル` , group: 3, type: 'regular', imgSrc: './card-pics/kyoto-hunter-3.jpg'},
+                        {name: `オオムラサキ` , group: 4, type: 'regular', imgSrc: './card-pics/kyoto-hunter-4.jpg'},
+                        {name: `オオサンショウウオ` , group: 5, type: 'regular', imgSrc: './card-pics/kyoto-hunter-5.jpg'},
+                        {name: `アオバズク` , group: 6, type: 'regular', imgSrc: './card-pics/kyoto-hunter-6.jpg'},
+                        {name: `モリアオガエル` , group: 7, type: 'regular', imgSrc: './card-pics/kyoto-hunter-7.jpg'},
+
+                        {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-1.jpg'},
+                        {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-2.jpg'},
+                        {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-3.jpg'},
+
+                        {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: './card-pics/kyoto-gameover.jpg'},
+
+                        {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: './card-pics/kyoto-bad-1.jpg'},
+                        {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: './card-pics/kyoto-bad-2.jpg'},
+
+
+                        ]
+                    }
+                    if(this.playArea == '北海道'){
+                        this.items = [
+                            {name: `オオワシ` , group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_6f16ae32a2734926bb164d4dfe2b6e3e~mv2.jpg'},
+                            {name: `ねずみ<br>（オオワシ）`,group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_a7498435df98422b859d403a85cef13f~mv2.jpg'},
+
+                            {name: `ツル` ,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_7510c7c944184a2696cc59e3406cd56f~mv2.jpg'},
+                            {name: `みみず<br>（ツル）`,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_0c71945a9fbf43568d9378ced8fcc6de~mv2.jpg'},
+
+                            {name: `クマ` ,group: 3, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_5a66047942a54ed1838fbf4b607dd01e~mv2.jpg'},
+                            {name: `どんぐり<br>（クマ）`,group: 3, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_793ca946081e483cb8a6d5d77506e827~mv2.jpg'},
+
+                            {name: `クワガタ` ,group: 4, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_e52afa786a794460bac9d8b2b307355a~mv2.jpg'},
+                            {name: `じゅえき<br>（クワガタ）`,group: 4, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_74d4da3493234020b90401259139016f~mv2.jpg'},
+
+                            {name: `イトウ` ,group: 5, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_2ba3a8e0cdc849a98b0c6f3b0ae049dd~mv2.jpg'},
+                            {name: `どじょう<br>（イトウ）`,group: 5, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_16b8345030ff419caaea4b95e64b3b26~mv2.jpg'},
+
+                            {name: `エゾモモンガ` ,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_87a731881a8849f1aab4651b9c059d70~mv2.jpg'},
+                            {name: `くさやはっぱ<br>（エゾモモンガ）`,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ca38ab9fee984b34b748f9ea0447d5de~mv2.jpg'},
+
+                            {name: `シマエナガ` ,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_91fefcee2f6b4829aa0bc70a7a52985b~mv2.jpg'},
+                            {name: `くだもの<br>(シマエナガ)`,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ef7d0288db604e83a0ec5e6db766003b~mv2.jpg'},
+
+                            {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_ef0fd76958f844db82fd0c86cc270a8b~mv2.jpg'},
+                            {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_402067a9860f45bba3e2e079406216f2~mv2.jpg'},
+                            {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_c1a9f328c0f74ad2b9014961d8855f28~mv2.jpg'},
+                            {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: 'https://static.wixstatic.com/media/db1732_810a547dd6634ec3bf7b44c41d1edcce~mv2.jpg'},
+
+                            {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_9dd0c7e378f54013ac0166d5eb605b60~mv2.jpg'},
+                            {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_19231290e2fb4f898a955326faa3643a~mv2.jpg'},
+                        ]
+                    }
+                    
+                    this.resetGame()
+
+                }else if(this.chosenGame == 'sorting'){
+                    this.currentPoint = 0
+                }else if(this.chosenGame == 'bingo'){
+                    this.bingoList = this.bingoList.map(() => ({ task: '', isFinished: false, isColored: false }));
+                    this.mixList();
+                }
+
+            },
+            getCardStyle(card) {
                 if (!card.matched && card.data.type === 'regular') {
                     return {};
                 }
@@ -345,7 +413,9 @@ export default {
                   this.currentPoint = 0
               },
               async startGame(location){
+                // this.playGame()
                 this.playArea = location
+                this.playShinkei()
                   this.incrementShinkei()
                   this.showingManual = false
                   await this.sleep(500);
@@ -374,10 +444,12 @@ export default {
   
                   this.uniqueId = urlParams.get('uniqueId');
   
-                  const tempGameMode = urlParams.get('gameMode')
-                  if(!tempGameMode) return
+                //   const tempGameMode = urlParams.get('gameMode')
+                  this.chosenGame = 'shinkei'
+                  this.showingManual = true
+                //   if(!tempGameMode) return
   
-                  if(tempGameMode == 'shinkei') this.playGame('shinkei','京都')
+                //   if(tempGameMode == 'shinkei') this.playGame('shinkei','京都')
               },
               async findMe(){
                   this.loading = true;
@@ -453,7 +525,7 @@ export default {
                 } catch (error) {
                     console.error('Error setting timestamp:', error);
                 }
-            }
+            },
         },
         async mounted() {
           console.clear()
