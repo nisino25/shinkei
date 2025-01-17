@@ -667,9 +667,9 @@ export default {
   #app #shinkei .card {
       position: relative;
       width: 100%;
-      /* aspect-ratio: 5/6; */
+      aspect-ratio: 5/6;
       /* aspect-ratio: 7/8; */
-      aspect-ratio: 4/5;
+      /* aspect-ratio: 4/5; */
       display: block;
       text-align: center;
       
@@ -689,13 +689,14 @@ export default {
       position: absolute;
       width: 100%;
       left: 50%;
-      bottom: 16.5%;
+      bottom: 11.5%;
       transform: translateX(-50%) translateY(50%);
 
       display: block;
       /* white-space: nowrap; */
       font-size: .575em;
       font-weight: bold;
+      line-height: 1.2;
   }
   #app #shinkei .flipped {
       background-color: white;
