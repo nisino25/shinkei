@@ -162,13 +162,13 @@ export default {
                 // this.playArea = area
                     if(this.playArea == '京都'){
                         this.items = [
-                        {name: `フジバカマ` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-food-1.jpg'},
-                        {name: `川魚` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-food-2.jpg'},
-                        {name: `どんぐり` , group: 3, type: 'regular', imgSrc: './card-pics/kyoto-food-3.jpg'},
-                        {name: `樹液` , group: 4, type: 'regular', imgSrc: './card-pics/kyoto-food-4.jpg'},
-                        {name: `サワガニ` , group: 5, type: 'regular', imgSrc: './card-pics/kyoto-food-5.jpg'},
-                        {name: `セミ` , group: 6, type: 'regular', imgSrc: './card-pics/kyoto-food-6.jpg'},
-                        {name: `クモ` , group: 7, type: 'regular', imgSrc: './card-pics/kyoto-food-7.jpg'},
+                        {name: `フジバカマ<br>（アサギマダラ）` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-food-1.jpg'},
+                        {name: `川魚<br>（アカショウビン）` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-food-2.jpg'},
+                        {name: `どんぐり<br>（ニホンザル）` , group: 3, type: 'regular', imgSrc: './card-pics/kyoto-food-3.jpg'},
+                        {name: `樹液<br>（オオムラサキ）` , group: 4, type: 'regular', imgSrc: './card-pics/kyoto-food-4.jpg'},
+                        {name: `サワガニ<br>（オオサンショウウオ）` , group: 5, type: 'regular', imgSrc: './card-pics/kyoto-food-5.jpg'},
+                        {name: `セミ<br>（アオバズク）` , group: 6, type: 'regular', imgSrc: './card-pics/kyoto-food-6.jpg'},
+                        {name: `クモ<br>（モリアオガエル）` , group: 7, type: 'regular', imgSrc: './card-pics/kyoto-food-7.jpg'},
 
                         {name: `アサギマダラ` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-hunter-1.jpg'},
                         {name: `アカショウビン` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-hunter-2.jpg'},
