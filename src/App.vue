@@ -115,426 +115,228 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue'
 
-export default {
-  name: 'App',
-  data() {
-            return {
-                chosenGame: null,
-                currentPoint: 0,
-                items: [],
-                cards: [],
-                flippedCards: [],
-                
-                currentIndex: 0,
-                canFlip: true,
-                playArea: '北海道',
-  
-                isGameOver: false,
-                showingManual: false,
-  
-                fetchedData: null, 
-                loading: null,
-  
-                uniqueId: null,
-                currentUserRow: null,
-                currentUsername: null,
-  
-                currentTotalPoints: null,
+const chosenGame = ref(null);
+const currentPoint = ref(0);
+const items = ref([]);
+const cards = ref([]);
+const flippedCards = ref([]);
 
-                computedHref: null,
-                
-                hasPointsReached: null,
-            };
-        },
-  
-        methods: {
-            sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            },
-            playSound(path) {
-            const audio = new Audio(path);
-            audio.play();
-            },
+// const currentIndex = ref(0);
+const canFlip = ref(true);
+const playArea = ref('北海道');
 
-            playShinkei(){
-                // this.playArea = area
-                    if(this.playArea == '京都'){
-                        this.items = [
-                        {name: `フジバカマ<br>（アサギマダラ）` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-food-1.jpg'},
-                        {name: `川魚<br>（アカショウビン）` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-food-2.jpg'},
-                        {name: `どんぐり<br>（ニホンザル）` , group: 3, type: 'regular', imgSrc: './card-pics/kyoto-food-3.jpg'},
-                        {name: `樹液<br>（オオムラサキ）` , group: 4, type: 'regular', imgSrc: './card-pics/kyoto-food-4.jpg'},
-                        {name: `サワガニ<br>（オオサンショウウオ）` , group: 5, type: 'regular', imgSrc: './card-pics/kyoto-food-5.jpg'},
-                        {name: `セミ<br>（アオバズク）` , group: 6, type: 'regular', imgSrc: './card-pics/kyoto-food-6.jpg'},
-                        {name: `クモ<br>（モリアオガエル）` , group: 7, type: 'regular', imgSrc: './card-pics/kyoto-food-7.jpg'},
+const isGameOver = ref(false);
+const showingManual = ref(false);
 
-                        {name: `アサギマダラ` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-hunter-1.jpg'},
-                        {name: `アカショウビン` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-hunter-2.jpg'},
-                        {name: `ニホンザル` , group: 3, type: 'regular', imgSrc: './card-pics/kyoto-hunter-3.jpg'},
-                        {name: `オオムラサキ` , group: 4, type: 'regular', imgSrc: './card-pics/kyoto-hunter-4.jpg'},
-                        {name: `オオサンショウウオ` , group: 5, type: 'regular', imgSrc: './card-pics/kyoto-hunter-5.jpg'},
-                        {name: `アオバズク` , group: 6, type: 'regular', imgSrc: './card-pics/kyoto-hunter-6.jpg'},
-                        {name: `モリアオガエル` , group: 7, type: 'regular', imgSrc: './card-pics/kyoto-hunter-7.jpg'},
+const sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+};
 
-                        {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-1.jpg'},
-                        {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-2.jpg'},
-                        {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-3.jpg'},
+const playSound = (path) => {
+    const audio = new Audio(path);
+    audio.play();
+};
 
-                        {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: './card-pics/kyoto-gameover.jpg'},
+const playShinkei = () => {
+    // playArea.value = area
+    if(playArea.value == '京都'){
+        items.value = [
+            {name: `フジバカマ<br>（アサギマダラ）` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-food-1-v2.png'},
+            {name: `川魚<br>（アカショウビン）` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-food-2-v2.jpg'},
+            {name: `どんぐり<br>（ニホンザル）` , group: 3, type: 'regular', imgSrc: './card-pics/kyoto-food-3-v2.jpg'},
+            {name: `樹液<br>（オオムラサキ）` , group: 4, type: 'regular', imgSrc: './card-pics/kyoto-food-4-v2.jpg'},
+            {name: `サワガニ<br>（オオサンショウウオ）` , group: 5, type: 'regular', imgSrc: './card-pics/kyoto-food-5-v2.png'},
+            {name: `セミ<br>（アオバズク）` , group: 6, type: 'regular', imgSrc: './card-pics/kyoto-food-6-v2.png'},
+            {name: `クモ<br>（モリアオガエル）` , group: 7, type: 'regular', imgSrc: './card-pics/kyoto-food-7-v2.png'},
 
-                        {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: './card-pics/kyoto-bad-1.jpg'},
-                        {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: './card-pics/kyoto-bad-2.jpg'},
+            {name: `アサギマダラ` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-hunter-1-v2.png'},
+            {name: `アカショウビン` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-hunter-2-v2.png'},
+            {name: `ニホンザル` , group: 3, type: 'regular', imgSrc: './card-pics/kyoto-hunter-3-v2.png'},
+            {name: `オオムラサキ` , group: 4, type: 'regular', imgSrc: './card-pics/kyoto-hunter-4-v2.png'},
+            {name: `オオサンショウウオ` , group: 5, type: 'regular', imgSrc: './card-pics/kyoto-hunter-5-v2.png'},
+            {name: `アオバズク` , group: 6, type: 'regular', imgSrc: './card-pics/kyoto-hunter-6-v2.png'},
+            {name: `モリアオガエル` , group: 7, type: 'regular', imgSrc: './card-pics/kyoto-hunter-7-v2.png'},
 
+            {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-1-v2.jpg'},
+            {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-2-v2.jpg'},
+            {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-3-v2.jpg'},
 
-                        ]
-                    }
-                    if(this.playArea == '北海道'){
-                        this.items = [
-                            {name: `オオワシ` , group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_6f16ae32a2734926bb164d4dfe2b6e3e~mv2.jpg'},
-                            {name: `ねずみ<br>（オオワシ）`,group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_a7498435df98422b859d403a85cef13f~mv2.jpg'},
+            {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: './card-pics/kyoto-gameover-v2.jpg'},
 
-                            {name: `ツル` ,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_7510c7c944184a2696cc59e3406cd56f~mv2.jpg'},
-                            {name: `みみず<br>（ツル）`,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_0c71945a9fbf43568d9378ced8fcc6de~mv2.jpg'},
+            {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: './card-pics/kyoto-bad-1-v2.jpg'},
+            {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: './card-pics/kyoto-bad-2-v2.jpg'},
+        ]
+    }
+    if(playArea.value == '北海道'){
+        items.value = [
+            {name: `オオワシ` , group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_6f16ae32a2734926bb164d4dfe2b6e3e~mv2.jpg'},
+            {name: `ねずみ<br>（オオワシ）`,group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_a7498435df98422b859d403a85cef13f~mv2.jpg'},
 
-                            {name: `クマ` ,group: 3, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_5a66047942a54ed1838fbf4b607dd01e~mv2.jpg'},
-                            {name: `どんぐり<br>（クマ）`,group: 3, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_793ca946081e483cb8a6d5d77506e827~mv2.jpg'},
+            {name: `ツル` ,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_7510c7c944184a2696cc59e3406cd56f~mv2.jpg'},
+            {name: `みみず<br>（ツル）`,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_0c71945a9fbf43568d9378ced8fcc6de~mv2.jpg'},
 
-                            {name: `クワガタ` ,group: 4, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_e52afa786a794460bac9d8b2b307355a~mv2.jpg'},
-                            {name: `じゅえき<br>（クワガタ）`,group: 4, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_74d4da3493234020b90401259139016f~mv2.jpg'},
+            {name: `クマ` ,group: 3, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_5a66047942a54ed1838fbf4b607dd01e~mv2.jpg'},
+            {name: `どんぐり<br>（クマ）`,group: 3, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_793ca946081e483cb8a6d5d77506e827~mv2.jpg'},
 
-                            {name: `イトウ` ,group: 5, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_2ba3a8e0cdc849a98b0c6f3b0ae049dd~mv2.jpg'},
-                            {name: `どじょう<br>（イトウ）`,group: 5, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_16b8345030ff419caaea4b95e64b3b26~mv2.jpg'},
+            {name: `クワガタ` ,group: 4, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_e52afa786a794460bac9d8b2b307355a~mv2.jpg'},
+            {name: `じゅえき<br>（クワガタ）`,group: 4, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_74d4da3493234020b90401259139016f~mv2.jpg'},
 
-                            {name: `エゾモモンガ` ,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_87a731881a8849f1aab4651b9c059d70~mv2.jpg'},
-                            {name: `くさやはっぱ<br>（エゾモモンガ）`,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ca38ab9fee984b34b748f9ea0447d5de~mv2.jpg'},
+            {name: `イトウ` ,group: 5, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_2ba3a8e0cdc849a98b0c6f3b0ae049dd~mv2.jpg'},
+            {name: `どじょう<br>（イトウ）`,group: 5, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_16b8345030ff419caaea4b95e64b3b26~mv2.jpg'},
 
-                            {name: `シマエナガ` ,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_91fefcee2f6b4829aa0bc70a7a52985b~mv2.jpg'},
-                            {name: `くだもの<br>(シマエナガ)`,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ef7d0288db604e83a0ec5e6db766003b~mv2.jpg'},
+            {name: `エゾモモンガ` ,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_87a731881a8849f1aab4651b9c059d70~mv2.jpg'},
+            {name: `くさやはっぱ<br>（エゾモモンガ）`,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ca38ab9fee984b34b748f9ea0447d5de~mv2.jpg'},
 
-                            {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_ef0fd76958f844db82fd0c86cc270a8b~mv2.jpg'},
-                            {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_402067a9860f45bba3e2e079406216f2~mv2.jpg'},
-                            {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_c1a9f328c0f74ad2b9014961d8855f28~mv2.jpg'},
-                            {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: 'https://static.wixstatic.com/media/db1732_810a547dd6634ec3bf7b44c41d1edcce~mv2.jpg'},
+            {name: `シマエナガ` ,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_91fefcee2f6b4829aa0bc70a7a52985b~mv2.jpg'},
+            {name: `くだもの<br>(シマエナガ)`,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ef7d0288db604e83a0ec5e6db766003b~mv2.jpg'},
 
-                            {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_9dd0c7e378f54013ac0166d5eb605b60~mv2.jpg'},
-                            {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_19231290e2fb4f898a955326faa3643a~mv2.jpg'},
-                        ]
-                    }
-                    
-                    this.resetGame()
-            },
+            {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_ef0fd76958f844db82fd0c86cc270a8b~mv2.jpg'},
+            {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_402067a9860f45bba3e2e079406216f2~mv2.jpg'},
+            {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_c1a9f328c0f74ad2b9014961d8855f28~mv2.jpg'},
+            {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: 'https://static.wixstatic.com/media/db1732_810a547dd6634ec3bf7b44c41d1edcce~mv2.jpg'},
+
+            {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_9dd0c7e378f54013ac0166d5eb605b60~mv2.jpg'},
+            {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_19231290e2fb4f898a955326faa3643a~mv2.jpg'},
+        ]
+    }
+    
+    resetGame()
+};
+                 
+const getCardStyle = (card) => {
+    if (!card.matched && card.data.type === 'regular') {
+        return {};
+    }
+
+    const styles = {
+        regular: { backgroundColor: 'gold' },
+        destructive: { backgroundColor: 'crimson', color: 'white' },
+        bomb: { backgroundColor: 'black', color: 'white' },
+        beneficial: { backgroundColor: '#004526', color: 'white' },
+    };
+
+    return styles[card.data?.type] || {};
+};
+
+const shuffle =(array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+};
+
+const flipCard = async (index) => {
+        if(isGameOver.value) return
+        if (cards.value[index].flipped || cards.value[index].matched) {
+            return;
+        }
+
+        playSound('https://static.wixstatic.com/mp3/db1732_ffc2595b2a0d4d4494528b3d895d5d0c.wav');
+
+        if(cards.value[index].data.type !== 'regular'){
+            cards.value[index].matched = true
+            if(cards.value[index].data.type == 'destructive'){
+                currentPoint.value--
+            }else if(cards.value[index].data.type == 'beneficial'){
+                currentPoint.value++
+            }else if(cards.value[index].data.type == 'bomb'){
+                currentPoint.value = currentPoint.value -3
+                gameOver()
+            }
+            return
+        }
+
+        cards.value[index].flipped = true;
+        flippedCards.value.push(index);
+
+        if (flippedCards.value.length === 2) {
+            canFlip.value = false
+            checkMatch();
             
-            playGame(game,area){
-                // this.chosenGame = game
-                console.log(area)
+        }
+};
+const gameOver = async () =>{
+    isGameOver.value = true
+};
+const checkMatch = async () => {
+    await sleep(1000);
+    const [firstIndex, secondIndex] = flippedCards.value;
+    const firstCard = cards.value[firstIndex];
+    const secondCard = cards.value[secondIndex];
 
-                if(this.chosenGame == 'shinkei'){
-                    if(!area) return
+    if (firstCard.data.group === secondCard.data.group) {
+        firstCard.matched = true;
+        secondCard.matched = true;
+        canFlip.value = true
+        currentPoint.value+= 1
 
-                    this.playArea = area
-                    if(this.playArea == '京都'){
-                        this.items = [
-                        {name: `フジバカマ` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-food-1.jpg'},
-                        {name: `川魚` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-food-2.jpg'},
-                        {name: `どんぐり` , group: 3, type: 'regular', imgSrc: './card-pics/kyoto-food-3.jpg'},
-                        {name: `樹液` , group: 4, type: 'regular', imgSrc: './card-pics/kyoto-food-4.jpg'},
-                        {name: `サワガニ` , group: 5, type: 'regular', imgSrc: './card-pics/kyoto-food-5.jpg'},
-                        {name: `セミ` , group: 6, type: 'regular', imgSrc: './card-pics/kyoto-food-6.jpg'},
-                        {name: `クモ` , group: 7, type: 'regular', imgSrc: './card-pics/kyoto-food-7.jpg'},
+        checkGameStatus()
+    } else {
+        firstCard.flipped = false;
+        secondCard.flipped = false;
+        canFlip.value = true
+        playSound('https://static.wixstatic.com/mp3/db1732_b789dfd0cb414130bfe9fa02df24fddd.wav');
+    }
+    flippedCards.value = [];
+};
+const checkGameStatus = () => {
+    let allRegularMatched = cards.value
+        .filter(card => card.data.type === 'regular')
+        .every(card => card.matched);
 
-                        {name: `アサギマダラ` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-hunter-1.jpg'},
-                        {name: `アカショウビン` , group: 2, type: 'regular', imgSrc: './card-pics/kyoto-hunter-2.jpg'},
-                        {name: `ニホンザル` , group: 3, type: 'regular', imgSrc: './card-pics/kyoto-hunter-3.jpg'},
-                        {name: `オオムラサキ` , group: 4, type: 'regular', imgSrc: './card-pics/kyoto-hunter-4.jpg'},
-                        {name: `オオサンショウウオ` , group: 5, type: 'regular', imgSrc: './card-pics/kyoto-hunter-5.jpg'},
-                        {name: `アオバズク` , group: 6, type: 'regular', imgSrc: './card-pics/kyoto-hunter-6.jpg'},
-                        {name: `モリアオガエル` , group: 7, type: 'regular', imgSrc: './card-pics/kyoto-hunter-7.jpg'},
+    if(allRegularMatched) gameOver()
+};
+const resetGame = () => {
+    showingManual.value = true
+    isGameOver.value = false
+    canFlip.value = false
 
-                        {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-1.jpg'},
-                        {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-2.jpg'},
-                        {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-3.jpg'},
+    flippedCards.value = [];
 
-                        {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: './card-pics/kyoto-gameover.jpg'},
+    cards.value = shuffle(items.value.map(name => ({
+        data: name,
+        flipped: false,
+        matched: false
+    })));
 
-                        {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: './card-pics/kyoto-bad-1.jpg'},
-                        {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: './card-pics/kyoto-bad-2.jpg'},
+    currentPoint.value = 0
+};
+const startGame = async (location) => {
+    playArea.value = location
+    playShinkei()
+    showingManual.value = false
+    await sleep(500);
+    playSound('https://static.wixstatic.com/mp3/db1732_ffc2595b2a0d4d4494528b3d895d5d0c.wav');
 
+    for (let i in cards.value) {
+        let card = cards.value[i]
+        if (card.data.type === 'destructive' || card.data.type === 'bomb') {
+            card.flipped = true;
+            card.matched = true;
+        }
+    }
+    await sleep(1000);
+    playSound('https://static.wixstatic.com/mp3/db1732_b789dfd0cb414130bfe9fa02df24fddd.wav');
 
-                        ]
-                    }
-                    if(this.playArea == '北海道'){
-                        this.items = [
-                            {name: `オオワシ` , group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_6f16ae32a2734926bb164d4dfe2b6e3e~mv2.jpg'},
-                            {name: `ねずみ<br>（オオワシ）`,group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_a7498435df98422b859d403a85cef13f~mv2.jpg'},
+    for (let i in cards.value) {
+        let card = cards.value[i];
+        card.flipped = false;
+        card.matched = false;
+        canFlip.value = true
+    }
+};
 
-                            {name: `ツル` ,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_7510c7c944184a2696cc59e3406cd56f~mv2.jpg'},
-                            {name: `みみず<br>（ツル）`,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_0c71945a9fbf43568d9378ced8fcc6de~mv2.jpg'},
+onMounted(() => {
+    console.clear();
 
-                            {name: `クマ` ,group: 3, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_5a66047942a54ed1838fbf4b607dd01e~mv2.jpg'},
-                            {name: `どんぐり<br>（クマ）`,group: 3, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_793ca946081e483cb8a6d5d77506e827~mv2.jpg'},
+    chosenGame.value = 'shinkei'
+    showingManual.value = true
+});
 
-                            {name: `クワガタ` ,group: 4, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_e52afa786a794460bac9d8b2b307355a~mv2.jpg'},
-                            {name: `じゅえき<br>（クワガタ）`,group: 4, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_74d4da3493234020b90401259139016f~mv2.jpg'},
-
-                            {name: `イトウ` ,group: 5, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_2ba3a8e0cdc849a98b0c6f3b0ae049dd~mv2.jpg'},
-                            {name: `どじょう<br>（イトウ）`,group: 5, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_16b8345030ff419caaea4b95e64b3b26~mv2.jpg'},
-
-                            {name: `エゾモモンガ` ,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_87a731881a8849f1aab4651b9c059d70~mv2.jpg'},
-                            {name: `くさやはっぱ<br>（エゾモモンガ）`,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ca38ab9fee984b34b748f9ea0447d5de~mv2.jpg'},
-
-                            {name: `シマエナガ` ,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_91fefcee2f6b4829aa0bc70a7a52985b~mv2.jpg'},
-                            {name: `くだもの<br>(シマエナガ)`,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ef7d0288db604e83a0ec5e6db766003b~mv2.jpg'},
-
-                            {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_ef0fd76958f844db82fd0c86cc270a8b~mv2.jpg'},
-                            {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_402067a9860f45bba3e2e079406216f2~mv2.jpg'},
-                            {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_c1a9f328c0f74ad2b9014961d8855f28~mv2.jpg'},
-                            {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: 'https://static.wixstatic.com/media/db1732_810a547dd6634ec3bf7b44c41d1edcce~mv2.jpg'},
-
-                            {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_9dd0c7e378f54013ac0166d5eb605b60~mv2.jpg'},
-                            {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_19231290e2fb4f898a955326faa3643a~mv2.jpg'},
-                        ]
-                    }
-                    
-                    this.resetGame()
-
-                }else if(this.chosenGame == 'sorting'){
-                    this.currentPoint = 0
-                }else if(this.chosenGame == 'bingo'){
-                    this.bingoList = this.bingoList.map(() => ({ task: '', isFinished: false, isColored: false }));
-                    this.mixList();
-                }
-
-            },
-            getCardStyle(card) {
-                if (!card.matched && card.data.type === 'regular') {
-                    return {};
-                }
-
-                const styles = {
-                    regular: { backgroundColor: 'gold' },
-                    destructive: { backgroundColor: 'crimson', color: 'white' },
-                    bomb: { backgroundColor: 'black', color: 'white' },
-                    beneficial: { backgroundColor: '#004526', color: 'white' },
-                };
-
-                return styles[card.data?.type] || {};
-            },
-
-            shuffle(array) {
-                  for (let i = array.length - 1; i > 0; i--) {
-                      const j = Math.floor(Math.random() * (i + 1));
-                      [array[i], array[j]] = [array[j], array[i]];
-                  }
-                  return array;
-              },
-            async flipCard(index) {
-                  if(this.isGameOver) return
-                  if (this.cards[index].flipped || this.cards[index].matched) {
-                      return;
-                  }
-  
-                  this.playSound('https://static.wixstatic.com/mp3/db1732_ffc2595b2a0d4d4494528b3d895d5d0c.wav');
-  
-                  if(this.cards[index].data.type !== 'regular'){
-                      this.cards[index].matched = true
-                      if(this.cards[index].data.type == 'destructive'){
-                          this.currentPoint--
-                      }else if(this.cards[index].data.type == 'beneficial'){
-                          this.currentPoint++
-                      }else if(this.cards[index].data.type == 'bomb'){
-                          this.currentPoint = this.currentPoint -3
-                          this.gameOver()
-                      }
-                      return
-                  }
-  
-                  this.cards[index].flipped = true;
-                  this.flippedCards.push(index);
-  
-                  if (this.flippedCards.length === 2) {
-                      this.canFlip = false
-                      this.checkMatch();
-                      
-                  }
-              },
-              async gameOver(){
-                  this.isGameOver = true
-                  await this.updatePoints(this.currentPoint)
-
-                  if(!this.hasPointsReached && this.currentTotalPoints >= 50){
-                    await this.updateTimestamp()
-                    alert(`合計５０点到達おめでとうございます！\n\n先着３名に景品（〇〇カーをプレゼントいたしますので、住所を登録してください！）`)
-                    window.location.href = 'https://www.ce-n.org/originalcard';
-                  }
-              },
-              async checkMatch() {
-                  await this.sleep(1000);
-                  const [firstIndex, secondIndex] = this.flippedCards;
-                  const firstCard = this.cards[firstIndex];
-                  const secondCard = this.cards[secondIndex];
-  
-                  if (firstCard.data.group === secondCard.data.group) {
-                      firstCard.matched = true;
-                      secondCard.matched = true;
-                      this.canFlip = true
-                      this.currentPoint+= 1
-  
-                      this.checkGameStatus()
-                  } else {
-                      firstCard.flipped = false;
-                      secondCard.flipped = false;
-                      this.canFlip = true
-                      this.playSound('https://static.wixstatic.com/mp3/db1732_b789dfd0cb414130bfe9fa02df24fddd.wav');
-                  }
-                  this.flippedCards = [];
-              },
-              checkGameStatus(){
-                  let allRegularMatched = this.cards
-                      .filter(card => card.data.type === 'regular')
-                      .every(card => card.matched);
-  
-                  if(allRegularMatched) this.gameOver()
-              },
-              resetGame() {
-                  this.showingManual = true
-                  this.isGameOver = false
-                  this.canFlip = false
-  
-                  this.flippedCards = [];
-  
-                  this.cards = this.shuffle(this.items.map(name => ({
-                      data: name,
-                      flipped: false,
-                      matched: false
-                  })));
-  
-                  this.currentPoint = 0
-              },
-              async startGame(location){
-                // this.playGame()
-                this.playArea = location
-                this.playShinkei()
-                  this.incrementShinkei()
-                  this.showingManual = false
-                  await this.sleep(500);
-                  this.playSound('https://static.wixstatic.com/mp3/db1732_ffc2595b2a0d4d4494528b3d895d5d0c.wav');
-  
-                  for (let i in this.cards) {
-                      let card = this.cards[i]
-                      if (card.data.type === 'destructive' || card.data.type === 'bomb') {
-                          card.flipped = true;
-                          card.matched = true;
-                      }
-                  }
-                  await this.sleep(1000);
-                  this.playSound('https://static.wixstatic.com/mp3/db1732_b789dfd0cb414130bfe9fa02df24fddd.wav');
-  
-                  for (let i in this.cards) {
-                      let card = this.cards[i];
-                          card.flipped = false;
-                          card.matched = false;
-                      this.canFlip = true
-                  }
-              },
-  
-              getParams() {
-                  const urlParams = new URLSearchParams(window.location.search);
-  
-                  this.uniqueId = urlParams.get('uniqueId');
-  
-                //   const tempGameMode = urlParams.get('gameMode')
-                  this.chosenGame = 'shinkei'
-                  this.showingManual = true
-                //   if(!tempGameMode) return
-  
-                //   if(tempGameMode == 'shinkei') this.playGame('shinkei','京都')
-              },
-              async findMe(){
-                  this.loading = true;
-                  try {
-                      const URL =`https://www.ce-n.org/_functions/findMe?id=${this.uniqueId}`
-                      console.log(URL)
-                      const response = await fetch(URL);
-                      const result = await response.json();
-
-                      if(result.message) {
-                        console.log(`Ntot found`)
-                        this.uniqueId = null
-                      }
-                      console.log(result)
-                      this.currentUserRow = result;
-                      this.currentUsername = this.currentUserRow?.text4
-                      this.currentTotalPoints = this.currentUserRow.totalPoints
-                      this.hasPointsReached = this.currentUserRow?.hasPointsReached
-  
-                      
-                  } catch (error) {
-                      console.error('Error fetching data:', error);
-                  } finally {
-                      this.computedHref = this.uniqueId ? `https://www.ce-n.org/hui-yuan-purohuiru/${this.uniqueId}` : 'https://www.ce-n.org/';
-                      this.loading = false;
-                  }
-              },
-              async fetchData(url) {
-                try {
-                    const response = await fetch(url, { method: 'GET' });
-
-                    if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                    }
-
-                    return await response.json();
-                } catch (error) {
-                    console.error('Fetch error:', error);
-                    throw error; 
-                }
-            },
-
-            async incrementShinkei() {
-                let finalId = this.uniqueId ? this.uniqueId : '8c3c2de0-70a9-48a1-9a17-ff0568ecd88d';
-                try {
-                    const data = await this.fetchData(`https://www.ce-n.org/_functions/shinkeiIncrement?id=${finalId}`);
-                    console.log('Shinkei playtime incremented:', data);
-                } catch (error) {
-                    console.error('Error incrementing shinkei playtime:', error);
-                }
-            },
-
-            async updatePoints(number) {
-                if(!this.uniqueId) return
-                console.log('updating');
-                try {
-                    const data = await this.fetchData(`https://www.ce-n.org/_functions/updatePoints?id=${this.uniqueId}&increment=${number}`);
-                    console.log('Shinkei point updated:', data);
-                    this.currentTotalPoints = data[0].totalPoints;
-                } catch (error) {
-                    console.error('Error updating shinkei points:', error);
-                }
-            },
-
-            async updateTimestamp() {
-                if(!this.uniqueId) return
-                console.log('updating timestamp');
-                const currentTimestamp = Date.now();
-                try {
-                    const data = await this.fetchData(`https://www.ce-n.org/_functions/updateHasPointsReached?id=${this.uniqueId}&updatetime=${currentTimestamp}`);
-                    console.log('Timestamp set:', data);
-                    this.hasPointsReached = data[0].hasPointsReached;
-                } catch (error) {
-                    console.error('Error setting timestamp:', error);
-                }
-            },
-        },
-        async mounted() {
-          console.clear()
-          // this.chsosenGame = 'shinkei'
-          this.getParams();
-
-          if(this.uniqueId) await this.findMe()
-        },
-}
 </script>
 
 <style>
@@ -683,6 +485,15 @@ export default {
       display: block;
       width: 87.5%;
       margin: 5px auto;
+
+      width: auto;
+      max-height: 62.5%;
+  }
+
+  #app #shinkei .card .card-front img{
+    /* width: 87.5% !important; */
+    max-height: unset !important;
+    height: auto;
   }
 
   #app #shinkei .card  span{
