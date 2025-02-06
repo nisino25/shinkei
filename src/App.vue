@@ -1,7 +1,26 @@
 <template>
 
+    <div v-if="!loading" style="display: block; margin: 12.5px auto; text-align: center; font-size: .9em;" >
+
+      <div style="display: flex; justify-content: space-between; width: 100%;font-weight: bold; margin-bottom: 5px; align-items: center;">
+        <a :href="currentUsername ? `https://www.ce-n.org/hui-yuan-purohuiru/${uniqueId}` : 'https://www.ce-n.org/'">戻る</a>
+        <p style="font-size: .75em;" v-if="uniqueId">
+          ようこそ!&nbsp;<strong>{{ currentUsername }}</strong>さん<br>
+        </p>
+        <span style="pointer-events: none;" v-if="uniqueId">
+          合計得点: <strong style="color: goldenrod;">{{ currentTotalPoints ? currentTotalPoints : 0 }}</strong>
+        </span>
+      </div>
+      <span style="font-weight: bold; color: DarkOrange; font-size: .8em;" v-if="uniqueId">
+        <s>合計100点で景品をゲット!(先着３名)</s><br>
+        次のイベントをお楽しみに！
+      </span>
+      <hr>
+
+    </div>
+
     <div v-if="!selectGame" class="p-6 bg-white rounded-lg shadow-lg text-center">
-      <h1 class="text-2xl font-bold mb-4">ゲームを選んでください</h1>
+      <h1 class="text-2xl font-bold mb-4">ゲームを選んでください {{ gamePoint }}</h1>
       <div class="space-x-4">
           <button 
               @click="selectGame = 'ゴミ分別ゲーム'" 
@@ -22,11 +41,66 @@
   </template>
   
   <script setup>
+
+  import { userData } from '@/stores/userData';
+  import { storeToRefs } from 'pinia';
   
   import sortingGame from "./components/sortingGame.vue";
   import shinkeiGame from "./components/shinkeiGame.vue";
   
-  import { ref} from "vue";
-  const selectGame = ref(null)
   
-  </script>
+  // const { gamePoint, selectGame } = storeToRefs(store); // Correct way to access state
+  
+  import { onMounted } from "vue";
+  
+  const store = userData();
+  const { gamePoint, selectGame, uniqueId, currentUsername, currentTotalPoints, hasPointsReached, loading, computedHref } = storeToRefs(store);
+
+  onMounted(async () => {
+    console.clear();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("uniqueId");
+
+    if (!id) {
+      loading.value = false;
+      return;
+    }
+
+    store.uniqueId = id; // Save uniqueId in Pinia
+
+    try {
+      const URL = `https://www.ce-n.org/_functions/findMe?id=${id}`;
+      console.log("Fetching:", URL);
+
+      const response = await fetch(URL);
+      const result = await response.json();
+
+      if (result.message) {
+        console.log("Not found");
+        store.setUniqueId(null);
+      } else {
+        store.uniqueId = null;
+
+
+        // Update all necessary values in Pinia
+        store.uniqueId = id;
+        store.currentUsername = result.text4 || "Unknown";
+        store.currentTotalPoints = result.totalPoints || 0;
+        store.hasPointsReached = result.hasPointsReached || false;
+        store.computedHref = `https://www.ce-n.org/hui-yuan-purohuiru/${id}`;
+
+        console.log(computedHref,hasPointsReached)
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      loading.value = false;
+    }
+  });
+</script>
+<style>
+html{
+  padding: 1em !important;
+}
+</style>
