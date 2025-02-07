@@ -1,157 +1,164 @@
 <template>
-
-    <template v-if="!selectedCountry">
-        <div class="cheatSheet">
-            <h5>遊びたい国を選んでください</h5>
-            <div class="selectingCountry">
-                <ul>
-                    <li v-for="(country, index) in countries" :key="country" 
-                    :class="{ 'disabled': index >= 3 }" 
-                    @click="selectedCountry = country">
-                    {{ country }}
-                </li>
-                </ul>
-            </div>
-        </div>
-    </template>
-  
-    <template v-else>
-        <h5 :class="{ 'selectedCountry-info': currentPage !== 0 }">
-            あなたは{{selectedCountry}}を選択しました。
-        </h5>
-        
-    
-        <template v-if="currentPage == 0">
+    <div class="sortingGameContainer">
+        <template v-if="!selectedCountry">
             <div class="cheatSheet">
-  
-                <div class="flex-container">
-                    <button style="margin-right: 10px; background-color: crimson;" @click="selectedCountry = null">戻る</button>
-                    <button @click="startGame">ゲームスタート</button>
+                <h5>遊びたい国を選んでください</h5>
+                <div class="selectingCountry">
+                    <ul>
+                        <li v-for="(country, index) in countries" :key="country" 
+                        :class="{ 'disabled': index >= 3 }" 
+                        @click="selectedCountry = country">
+                        {{ country }}
+                    </li>
+                    </ul>
                 </div>
-  
-                <template v-for="(items, category,index) in modifiedTrashItems" :key="category">
-                    <div class="category-container" v-if="items.length > 0">
-                        <h2 v-html="getTranslation(category)"></h2>
-                        <div class="item-list">
-                            <div v-for="item in items" :key="item.label" 
-                            class="item" 
-                                  :class="{ 'moved-item': item.hasMoved }"> <!-- Apply class if item has moved -->
-                                <span v-if="item.symbolName" class="material-symbols-outlined">{{ item.symbolName }}</span>
-                                <i v-else-if="item.iconName" :class="item.iconName"></i>
-                                <span v-else class="material-symbols-outlined">help</span>
-                                <p>{{ item.label }}</p>
+            </div>
+        </template>
+      
+        <template v-else>
+            <h5 :class="{ 'selectedCountry-info': currentPage !== 0 }">
+                あなたは{{selectedCountry}}を選択しました。
+            </h5>
+            
+        
+            <template v-if="currentPage == 0">
+                <div class="cheatSheet">
+      
+                    <div class="flex-container">
+                        <button style="margin-right: 10px; background-color: crimson;" @click="selectedCountry = null">戻る</button>
+                        <button @click="startGame">ゲームスタート</button>
+                    </div>
+      
+                    <template v-for="(items, category,index) in modifiedTrashItems" :key="category">
+                        <div class="category-container" v-if="items.length > 0">
+                            <h2 v-html="getTranslation(category)"></h2>
+                            <div class="item-list">
+                                <div v-for="item in items" :key="item.label" 
+                                class="item" 
+                                      :class="{ 'moved-item': item.hasMoved }"> <!-- Apply class if item has moved -->
+                                    <span v-if="item.symbolName" class="material-symbols-outlined">{{ item.symbolName }}</span>
+                                    <i v-else-if="item.iconName" :class="item.iconName"></i>
+                                    <span v-else class="material-symbols-outlined">help</span>
+                                    <p>{{ item.label }}</p>
+                                </div>
                             </div>
+                            <hr v-if="!isLastCategory(index)">
                         </div>
-                        <hr v-if="!isLastCategory(index)">
-                    </div>
-                </template>
-                
-                
-            </div>
-        </template>
-  
-        <template v-if="currentPage == 1">
-            <div class="tile-container">
-                <div class="detail">
-                    <div>
-                        ミス: {{currentPoints}}
-                    </div>
-                    <div class="timer" ><i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ formattedTimer }}</div>
-                    <div>
-                        {{currentTileIndex}}/{{tiles?.length}}
-                    </div>
+                    </template>
+                    
                     
                 </div>
-                <template  v-if="currentPage == 1">
-                  <div  v-for="(tile, index) in tiles" :key="tile.id" 
-                      :class="['tile', 'white', { 'swiped': isSwiped }]"
-                      :style="{ 
-                          width: tile.id === flyAwayTile ? '0px' : '',
-                          height: tile.id === flyAwayTile ? '0px' : '',
-                          transform: getTransform(tile, index),
-                          zIndex: tiles.length - index, 
-                          transition: index === currentTileIndex && tile.id !== flyAwayTile && isSwiping ? 'unset' : '.4s ease-in-out',
-                          display: index < currentTileIndex ? 'none' : ''
-                      }"
-                      @mousedown="startSwipe"
-                      @mousemove="moveSwipe"
-                      @mouseup="endSwipe"
-                      @mouseleave="endSwipe"
-                      @touchstart="startSwipe"
-                      @touchmove="moveSwipe"
-                      @touchend="endSwipe">
-                      <span v-if="tile.symbolName" class="material-symbols-outlined">{{tile.symbolName}}</span>
-                      <i v-else-if="tile.iconName" :class="tile.iconName"></i>
-                      <span v-else class="material-symbols-outlined">help</span>
-                      <p>{{ tile.label }}</p>
-                  </div>
-                </template>
-                <div class="areas-container" v-if="currentTileIndex !== tiles?.length">
-                    <template v-if="selectedCountry == '中国'">
-                        <div class="trash-can-container">
-                            <img src="https://static.wixstatic.com/media/db1732_b1cf89c71b854beeaf53416161b70d9a~mv2.png">
-                            <br>
-                            <span>危険物</span>
+            </template>
+      
+            <template v-if="currentPage == 1">
+                <div class="tile-container">
+                    <div class="detail">
+                        <div>
+                            ミス: {{currentPoints}}
                         </div>
-                        <div class="trash-can-container">
-                            <img src="https://static.wixstatic.com/media/db1732_b1cf89c71b854beeaf53416161b70d9a~mv2.png">
-                            <br>
-                            <span>リサイクル</span>
+                        <div class="timer" ><i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ formattedTimer }}</div>
+                        <div>
+                            {{currentTileIndex}}/{{tiles?.length}}
                         </div>
-                        <div class="trash-can-container">
-                            <img src="https://static.wixstatic.com/media/db1732_b1cf89c71b854beeaf53416161b70d9a~mv2.png">
-                            <br>
-                            <span>湿ごみ</span>
-                        </div>
-                        <div class="trash-can-container">
-                            <img src="https://static.wixstatic.com/media/db1732_b1cf89c71b854beeaf53416161b70d9a~mv2.png">
-                            <br>
-                            <span>干ごみ</span>
-                        </div>
-  
-  
-                    </template>
-                    <template v-else-if="selectedCountry == 'アメリカ'">
-                        <img style="display: none;">
-                        <img src="https://static.wixstatic.com/media/db1732_2b32170ff6014ca896a57c4f0b23ba09~mv2.png">
-                        <img style="display: none;">
-                        <img style="display: none;">
-                        <img src="https://static.wixstatic.com/media/db1732_9ac022debeb1483b92d118cf73fffc51~mv2.png">
-                    </template>
                         
-                    <template v-else>
-                        <img src="https://static.wixstatic.com/media/db1732_166538de5cbd4c81b4078953645142a4~mv2.png">
-                        <img src="https://static.wixstatic.com/media/db1732_2b32170ff6014ca896a57c4f0b23ba09~mv2.png">
-                        <img src="https://static.wixstatic.com/media/db1732_8100bacaf7c0433e946099db26147af3~mv2.png">
-                        <img src="https://static.wixstatic.com/media/db1732_9eec8c63a54c41a0b4666486d61d921b~mv2.png">
+                    </div>
+                    <template  v-if="currentPage == 1">
+                      <div  v-for="(tile, index) in tiles" :key="tile.id" 
+                          :class="['tile', 'white', { 'swiped': isSwiped }]"
+                          :style="{ 
+                              width: tile.id === flyAwayTile ? '0px' : '',
+                              height: tile.id === flyAwayTile ? '0px' : '',
+                              transform: getTransform(tile, index),
+                              zIndex: tiles.length - index, 
+                              transition: index === currentTileIndex && tile.id !== flyAwayTile && isSwiping ? 'unset' : '.4s ease-in-out',
+                              display: index < currentTileIndex ? 'none' : ''
+                          }"
+                          @mousedown="startSwipe"
+                          @mousemove="moveSwipe"
+                          @mouseup="endSwipe"
+                          @mouseleave="endSwipe"
+                          @touchstart="startSwipe"
+                          @touchmove="moveSwipe"
+                          @touchend="endSwipe">
+                          <span v-if="tile.symbolName" class="material-symbols-outlined">{{tile.symbolName}}</span>
+                          <i v-else-if="tile.iconName" :class="tile.iconName"></i>
+                          <span v-else class="material-symbols-outlined">help</span>
+                          <p>{{ tile.label }}</p>
+                      </div>
                     </template>
+                    <div class="areas-container" v-if="currentTileIndex !== tiles?.length">
+                        <template v-if="selectedCountry == '中国'">
+                            <div class="trash-can-container">
+                                <img src="https://static.wixstatic.com/media/db1732_b1cf89c71b854beeaf53416161b70d9a~mv2.png">
+                                <br>
+                                <span>危険物</span>
+                            </div>
+                            <div class="trash-can-container">
+                                <img src="https://static.wixstatic.com/media/db1732_b1cf89c71b854beeaf53416161b70d9a~mv2.png">
+                                <br>
+                                <span>リサイクル</span>
+                            </div>
+                            <div class="trash-can-container">
+                                <img src="https://static.wixstatic.com/media/db1732_b1cf89c71b854beeaf53416161b70d9a~mv2.png">
+                                <br>
+                                <span>湿ごみ</span>
+                            </div>
+                            <div class="trash-can-container">
+                                <img src="https://static.wixstatic.com/media/db1732_b1cf89c71b854beeaf53416161b70d9a~mv2.png">
+                                <br>
+                                <span>干ごみ</span>
+                            </div>
+      
+      
+                        </template>
+                        <template v-else-if="selectedCountry == 'アメリカ'">
+                            <img style="display: none;">
+                            <img src="https://static.wixstatic.com/media/db1732_2b32170ff6014ca896a57c4f0b23ba09~mv2.png">
+                            <img style="display: none;">
+                            <img style="display: none;">
+                            <img src="https://static.wixstatic.com/media/db1732_9ac022debeb1483b92d118cf73fffc51~mv2.png">
+                        </template>
+                            
+                        <template v-else>
+                            <img src="https://static.wixstatic.com/media/db1732_166538de5cbd4c81b4078953645142a4~mv2.png">
+                            <img src="https://static.wixstatic.com/media/db1732_2b32170ff6014ca896a57c4f0b23ba09~mv2.png">
+                            <img src="https://static.wixstatic.com/media/db1732_8100bacaf7c0433e946099db26147af3~mv2.png">
+                            <img src="https://static.wixstatic.com/media/db1732_9eec8c63a54c41a0b4666486d61d921b~mv2.png">
+                        </template>
+                    </div>
                 </div>
-            </div>
-        </template>
-  
-        <template v-if="currentPage == 2">
-            <div class="result">
-                <div>
-                    <h2>合計:<mark>{{currentPoints + bonusPoints + completeBonus}}</mark>点</h2>
-                    <hr>
-                    <small style="font-weight: unset; display: block; text-align: right;">
-                        まちがい<mark>{{currentPoints}}</mark>点<br>
-                        スピードボーナス<mark>+{{bonusPoints}}</mark>点<br>
-                        かんりょうボーナス<mark>+{{completeBonus}}</mark>点
-                    </small>
-                    <hr>
-                    
-                    <button @click="startGame">リスタート</button>
-                    <br>
-                    <button style="background-color: #2ecc71;" @click="currentPage = 0; selectedCountry = null">他の国でチャレンジ！</button>
+            </template>
+      
+            <template v-if="currentPage == 2">
+                <div class="result">
+                    <div>
+                        <h2>合計:<mark>{{currentPoints + bonusPoints + completeBonus}}</mark>点</h2>
+                        <hr>
+                        <small style="font-weight: unset; display: block; text-align: right;">
+                            まちがい<mark>{{currentPoints}}</mark>点<br>
+                            スピードボーナス<mark>+{{bonusPoints}}</mark>点<br>
+                            かんりょうボーナス<mark>+{{completeBonus}}</mark>点
+                        </small>
+                        <hr>
+                        
+                        <button @click="startGame">リスタート</button>
+                        <br>
+                        <button style="background-color: #2ecc71;" @click="currentPage = 0; selectedCountry = null">他の国でチャレンジ！</button>
+                    </div>
                 </div>
-            </div>
+            </template>
         </template>
-    </template>
+    </div>
+
+
   
   </template>
   
-  <script setup>
+<script setup>
+
+  import { userData } from '@/stores/userData';
+  const store = userData();
+
   import { ref, onMounted, watch, computed } from 'vue';
   
   const selectedCountry = ref(null);
@@ -379,7 +386,8 @@
   const startGame = () =>{
     currentPage.value = 1
     currentPoints.value = 0 
-    tiles.value = generateRandomTiles(15)
+    // tiles.value = generateRandomTiles(15)
+    tiles.value = generateRandomTiles(5)
     currentTileIndex.value = 0
     bonusPoints.value = 0
     startTimer();
@@ -459,7 +467,7 @@
     }, 100);
   };
   
-  const endSwipe = () => {
+  const  endSwipe = async () => {
     if (!isSwiping.value && timer.value > 0) return;
   
                   
@@ -529,6 +537,13 @@
             document.body.style.backgroundColor = 'yellow';
             clearInterval(timerInterval.value);
             bonusPoints.value = Math.floor(timer.value);
+
+
+            const addingPoint = currentPoints.value + bonusPoints.value + completeBonus.value;
+            
+
+            await store.updatePoints(addingPoint,store.uniqueId);
+
             currentPage.value =2
         }
   
@@ -578,9 +593,9 @@
             return 'その他';
     }
   };
-  </script>
-  
-  <style scoped>
+</script>
+
+<style>
     body, html {
         margin: 0;
         padding: 0;
@@ -590,13 +605,21 @@
         overflow: hidden;
     }
   
-    #app {
+    .sortingGameContainer {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100dvh;
+        height: 75dvh;
         max-width: 100dvw;
         transition: background-color 0.3s ease;
+    }
+
+    .sortingGameContainer h5{
+        position: absolute;
+        top: 11.5%;
+        left: 50%;
+        transform: translateX(-50%);
+        text-wrap: nowrap;
     }
   
     .selectingCountry ul{
@@ -649,7 +672,7 @@
   
     .selectedCountry-info{
         position: absolute;
-        top: 0%;
+        top: 10%;
         left: 50%;
         transform: translate(-50%, 0%);
   

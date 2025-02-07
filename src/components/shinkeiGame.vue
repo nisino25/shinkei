@@ -1,18 +1,6 @@
 <template>
     <div class="inner">
-        <div v-if="!loading" style="display: block; margin: 12.5px auto; text-align: center; font-size: .9em;" >
-  
-            <div style="display: flex; justify-content: space-between; width: 100%;font-weight: bold; margin-bottom: 5px; align-items: center;">
-              <a :href="currentUsername ? `https://www.ce-n.org/hui-yuan-purohuiru/${uniqueId}` : 'https://www.ce-n.org/'">戻る</a>
-              <p style="font-size: .75em;" v-if="uniqueId">
-                ようこそ!&nbsp;<strong>{{ currentUsername }}</strong>さん<br>
-              </p>
-              <span style="pointer-events: none;" v-if="uniqueId">
-                合計得点: <strong style="color: goldenrod;">{{ currentTotalPoints ? currentTotalPoints : 0 }}</strong>
-              </span>
-            </div>
-            <span style="font-weight: bold; color: DarkOrange; font-size: 1.3em;" v-if="uniqueId">合計100点で景品をゲット!(先着３名)</span>
-            <hr>
+        <div v-if="!loading" style="display: block; margin: 0 auto 12.5px; text-align: center; font-size: .9em;" >
   
             <template v-if="!showingManual">
               <div style="display: flex; justify-content: space-between; font-size: 90%; align-items: center;">
@@ -113,9 +101,12 @@
             </template>
         </div>
     </div>
-  </template>
+</template>
   
-  <script setup>
+<script setup>
+  import { userData } from '@/stores/userData';
+  const store = userData();
+
   import { ref, onMounted } from 'vue'
   
   const chosenGame = ref(null);
@@ -261,6 +252,10 @@
   };
   const gameOver = async () =>{
       isGameOver.value = true
+
+      await store.updatePoints(currentPoint.value,store.uniqueId);
+
+      // await updatePoints(currentPoint.value)
   };
   const checkMatch = async () => {
       await sleep(1000);
@@ -336,10 +331,12 @@
       chosenGame.value = 'shinkei'
       showingManual.value = true
   });
+
   
-  </script>
   
-  <style>
+</script>
+
+<style>
   
     #app{
         font-family: 'Noto Sans JP', sans-serif;

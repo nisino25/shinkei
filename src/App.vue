@@ -1,9 +1,9 @@
 <template>
 
-    <div v-if="!loading" style="display: block; margin: 12.5px auto; text-align: center; font-size: .9em;" >
+    <div v-if="!loading" style="display: block; margin: 12.5px auto; text-align: center; font-size: .9em; padding: 0 1em;" >
 
       <div style="display: flex; justify-content: space-between; width: 100%;font-weight: bold; margin-bottom: 5px; align-items: center;">
-        <a :href="currentUsername ? `https://www.ce-n.org/hui-yuan-purohuiru/${uniqueId}` : 'https://www.ce-n.org/'">戻る</a>
+        <button class="text-sm" @click="goBackBtn()">戻る</button>
         <p style="font-size: .75em;" v-if="uniqueId">
           ようこそ!&nbsp;<strong>{{ currentUsername }}</strong>さん<br>
         </p>
@@ -20,7 +20,7 @@
     </div>
 
     <div v-if="!selectGame" class="p-6 bg-white rounded-lg shadow-lg text-center">
-      <h1 class="text-2xl font-bold mb-4">ゲームを選んでください {{ gamePoint }}</h1>
+      <h1 class="text-2xl font-bold mb-4">ゲームを選んでください</h1>
       <div class="space-x-4">
           <button 
               @click="selectGame = 'ゴミ分別ゲーム'" 
@@ -54,7 +54,15 @@
   import { onMounted } from "vue";
   
   const store = userData();
-  const { gamePoint, selectGame, uniqueId, currentUsername, currentTotalPoints, hasPointsReached, loading, computedHref } = storeToRefs(store);
+  const { selectGame, uniqueId, currentUsername, currentTotalPoints, hasPointsReached, loading, computedHref } = storeToRefs(store);
+
+  const goBackBtn = () => {
+    if(store.selectGame) return store.selectGame = null;
+
+    if(store.currentUsername) return window.location = `https://www.ce-n.org/hui-yuan-purohuiru/${store.uniqueId}`
+
+    window.location = 'https://www.ce-n.org/'
+  };
 
   onMounted(async () => {
     console.clear();
@@ -101,6 +109,6 @@
 </script>
 <style>
 html{
-  padding: 1em !important;
+  
 }
 </style>
