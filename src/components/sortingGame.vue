@@ -25,8 +25,8 @@
                 <div class="cheatSheet">
       
                     <div class="flex-container">
-                        <button style="margin-right: 10px; background-color: crimson;" @click="selectedCountry = null">戻る</button>
-                        <button @click="startGame">ゲームスタート</button>
+                        <button style="" @click="selectedCountry = null">戻る</button>
+                        <button style="margin-left: 10px; background-color: crimson;" @click="startGame">ゲームスタート</button>
                     </div>
       
                     <template v-for="(items, category,index) in modifiedTrashItems" :key="category">
@@ -616,7 +616,7 @@
 
     .sortingGameContainer h5{
         position: absolute;
-        top: 11.5%;
+        top: 10.0%;
         left: 50%;
         transform: translateX(-50%);
         text-wrap: nowrap;
@@ -659,8 +659,8 @@
         color: white; /* Text color */
         border: none; /* Remove default border */
         border-radius: 4px; /* Rounded corners */
-        padding: 8px 15px; /* Padding */
-        font-size: 16px; /* Font size */
+        padding: 4px 12px; /* Padding */
+        font-size: 12px; /* Font size */
         cursor: pointer; /* Pointer cursor on hover */
         transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
     }
