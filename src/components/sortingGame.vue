@@ -1,5 +1,5 @@
 <template>
-    <div class="sortingGameContainer">
+    <div class="sortingGameContainer" :style="{ display: currentPage >= 1 ? 'flex' : 'block' }">
         <template v-if="!selectedCountry">
             <div class="cheatSheet">
                 <h5>遊びたい国を選んでください</h5>
@@ -386,8 +386,8 @@
   const startGame = () =>{
     currentPage.value = 1
     currentPoints.value = 0 
-    // tiles.value = generateRandomTiles(15)
-    tiles.value = generateRandomTiles(5)
+    tiles.value = generateRandomTiles(15)
+    // tiles.value = generateRandomTiles(5)
     currentTileIndex.value = 0
     bonusPoints.value = 0
     startTimer();
@@ -606,7 +606,7 @@
     }
   
     .sortingGameContainer {
-        display: flex;
+        /* display: flex; */
         justify-content: center;
         align-items: center;
         height: 75dvh;
@@ -615,10 +615,6 @@
     }
 
     .sortingGameContainer h5{
-        position: absolute;
-        top: 10.0%;
-        left: 50%;
-        transform: translateX(-50%);
         text-wrap: nowrap;
     }
   
@@ -672,7 +668,7 @@
   
     .selectedCountry-info{
         position: absolute;
-        top: 10%;
+        bottom: 10%;
         left: 50%;
         transform: translate(-50%, 0%);
   
