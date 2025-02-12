@@ -612,6 +612,8 @@
         height: 75dvh;
         max-width: 100dvw;
         transition: background-color 0.3s ease;
+
+        margin-top: 2em;
     }
 
     .sortingGameContainer h5{
@@ -668,7 +670,7 @@
   
     .selectedCountry-info{
         position: absolute;
-        bottom: 10%;
+        bottom: 2.5%;
         left: 50%;
         transform: translate(-50%, 0%);
   
