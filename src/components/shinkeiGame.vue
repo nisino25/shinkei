@@ -1,6 +1,6 @@
 <template>
     <div class="inner">
-        <div v-if="!loading" style="display: block; margin: 0 auto 12.5px; text-align: center; font-size: .9em;" >
+        <div class="top-menu-for-shinkei" v-if="!loading">
   
             <template v-if="!showingManual">
               <div style="display: flex; justify-content: space-between; font-size: 90%; align-items: center;">
@@ -15,21 +15,6 @@
               </div>
             </template>
   
-        </div>
-  
-        <div v-if="!chosenGame" class="game-menu">
-            <h1>どのゲームで遊びますか</h1><br>
-            <!-- <span>最終更新: 2024/5/31/20:00</span> -->
-             <!-- <span>最終更新: 2024/6/11/19:45</span> -->
-             <!-- <span>最終更新: 2024/6/12/19:00</span> -->
-             <!-- <span>最終更新: 2024/6/13/11:30</span> -->
-              <span>最終更新: 2024/6/13/12:00</span>
-            <a href='/games/shinkei' @click="playGame('shinkei','北海道')">神経衰弱（北海道版）</a>
-            <button @click="chosenGame = 'sorting'">ゴミ振り分けゲーム(北海道版)</button>
-            <button @click="chosenGame = 'roulete'">毎日ルーレット</button>
-            <button @click="playGame('bingo')">ビンゴ</button>
-            <button @click="playGame('shinkei','京都')" disabled>神経衰弱（京都版）工事中</button>
-            <button @click="chosenGame = 'sorting'" disabled>ゴミ振り分けゲーム(京都版)</button>
         </div>
   
         <div id="shinkei" v-if="chosenGame == 'shinkei'">
@@ -451,11 +436,31 @@
     }
   
     /* ------------------------------------------ */
+    .top-menu-for-shinkei{
+        display: block;
+        margin: 0 auto 12.5px;
+        text-align: center;
+        font-size: .9em;
+    }
+
+    /* Styles for iPads (768px and larger) */
+    @media screen and (min-width: 1000px) {
+        .top-menu-for-shinkei{
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+
+            width: 900px;
+        }
+    }
+
+    
   
   
   
     #app #shinkei .grid {
-        max-width: 98.5%;
+        width: 98.5%;
+        max-width: 650px;
         margin: auto;
         display: grid;
         grid-template-columns: repeat(4, 1fr);

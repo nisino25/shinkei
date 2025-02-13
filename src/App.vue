@@ -11,7 +11,7 @@
           合計得点: <strong style="color: goldenrod;">{{ currentTotalPoints ? currentTotalPoints : 0 }}</strong>
         </span>
       </div>
-      <span style="font-weight: bold; color: DarkOrange; font-size: .8em;" v-if="uniqueId">
+      <span style="font-weight: bold; color: DarkOrange; font-size: .8em;" v-if="uniqueId && !selectGame">
         <s>合計100点で景品をゲット!(先着３名)</s><br>
         次のイベントをお楽しみに！
       </span>
