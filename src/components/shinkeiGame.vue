@@ -27,22 +27,50 @@
                   </div>
                   
                     <h4>神経衰弱 (しんけん すいじゃく) の遊び方</h4>
+
+                    <div v-if="cenTesting" class="">
+                      <hr class="my-5">
+                      <h4>ペアの紹介</h4>
+                      lenth{{ manualInfo.length }}
+
+                      <div v-for="(info,index) in manualInfo" :key="index">
+
+                        <!-- Exclude 'location' key -->
+                        <div class="mb-4">
+                          <h3 class="text-lg font-medium">{{ info.location }}</h3>
+
+                          <!-- Image Pairing (Food on Top, Hunter on Bottom) -->
+                          <div class="flex space-x-2 overflow-x-auto pb-5">
+                            <div v-for="(img, index) in info.foodCards" :key="'food-' + index" class="flex flex-col items-center">
+                              <!-- Image Container -->
+                              <div class="w-[100px] h-[100px] border-2 border-gray-300 flex items-center justify-center overflow-hidden">
+                                <img :src="img" alt="Food Card" class="h-[85%] w-auto">
+                              </div>
+
+                              <div v-if="info.hunterCards[index]" class="w-[100px] h-[100px] border-2 border-gray-300 flex items-center justify-center mt-2">
+                                <img :src="info.hunterCards[index]" alt="Hunter Card" class="h-[85%] w-auto">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
   
                     
                     <p>カードをタップして開こう</p>
                     <span>
-                        まず、画面に表示されているカードの中から1枚をタップして開きます。                        
+                        画面に表示されているカードをタップして開きます。                        
                     </span>
   
                     <p>王とえさの組み合わせを当てよう</p>
                     <span>目的は、王とそのえさの組み合わせを見つけること。正しいペアを見つけると、1ポイントがもらえます。</span>
   
                     <p>スペシャルカード</p>
-                    <span>破壊カード (赤いカード) を開けてしまうと、1ポイント失います。</span>
+                    <span>破壊カード (赤いカード) を開けると、1ポイント失います。</span>
                     <span>回復カードを見つけると、1ポイントがもらえます。</span>
   
                     <p>爆弾カードに気をつけて</p>
-                    <span>爆弾カードを開けてしまうと、ゲームは即終了し、ポイントは-3になります。</span>
+                    <span>爆弾を引くと、-3ポイントとしてゲームは終了します。</span>
   
                     <p>ゲームスタートボタンをクリック</p>
                     <span>ゲーム開始の1秒間、悪いカードの位置が表示されるので、覚えて避けるようにしましょう。</span>
@@ -92,7 +120,7 @@
   import { userData } from '@/stores/userData';
   const store = userData();
 
-  import { ref, onMounted } from 'vue'
+  import { ref, onMounted, computed } from 'vue'
   
   const chosenGame = ref(null);
   const currentPoint = ref(0);
@@ -106,6 +134,66 @@
   
   const isGameOver = ref(false);
   const showingManual = ref(false);
+
+  const manualInfo = ref(
+    
+    [
+      {
+        location: '京都',
+        foodCards: [
+          './card-pics/kyoto-food-1-v2.png',
+          './card-pics/kyoto-food-2-v2.jpg',
+          './card-pics/kyoto-food-3-v2.jpg',
+          './card-pics/kyoto-food-4-v2.jpg',
+          './card-pics/kyoto-food-5-v2.png',
+          './card-pics/kyoto-food-6-v2.png',
+          './card-pics/kyoto-food-7-v2.png',
+        ],
+        hunterCards: [
+          './card-pics/kyoto-hunter-1-v2.png',
+          './card-pics/kyoto-hunter-2-v2.png',
+          './card-pics/kyoto-hunter-3-v2.png',
+          './card-pics/kyoto-hunter-4-v2.png',
+          './card-pics/kyoto-hunter-5-v2.png',
+          './card-pics/kyoto-hunter-6-v2.png',
+          './card-pics/kyoto-hunter-7-v2.png',
+        ]
+      },
+      {
+        location: '北海道',
+        foodCards: [
+          'https://static.wixstatic.com/media/db1732_6f16ae32a2734926bb164d4dfe2b6e3e~mv2.jpg',
+            
+          'https://static.wixstatic.com/media/db1732_7510c7c944184a2696cc59e3406cd56f~mv2.jpg',
+            
+          'https://static.wixstatic.com/media/db1732_5a66047942a54ed1838fbf4b607dd01e~mv2.jpg',
+            
+          'https://static.wixstatic.com/media/db1732_e52afa786a794460bac9d8b2b307355a~mv2.jpg',
+            
+          'https://static.wixstatic.com/media/db1732_2ba3a8e0cdc849a98b0c6f3b0ae049dd~mv2.jpg',
+            
+          'https://static.wixstatic.com/media/db1732_87a731881a8849f1aab4651b9c059d70~mv2.jpg',
+            
+          'https://static.wixstatic.com/media/db1732_91fefcee2f6b4829aa0bc70a7a52985b~mv2.jpg',
+        ],
+        hunterCards: [
+          'https://static.wixstatic.com/media/db1732_a7498435df98422b859d403a85cef13f~mv2.jpg',
+          'https://static.wixstatic.com/media/db1732_0c71945a9fbf43568d9378ced8fcc6de~mv2.jpg',
+          'https://static.wixstatic.com/media/db1732_793ca946081e483cb8a6d5d77506e827~mv2.jpg',
+          'https://static.wixstatic.com/media/db1732_74d4da3493234020b90401259139016f~mv2.jpg',
+          'https://static.wixstatic.com/media/db1732_16b8345030ff419caaea4b95e64b3b26~mv2.jpg',
+          'https://static.wixstatic.com/media/db1732_ca38ab9fee984b34b748f9ea0447d5de~mv2.jpg',
+          'https://static.wixstatic.com/media/db1732_ef7d0288db604e83a0ec5e6db766003b~mv2.jpg',
+          'https://static.wixstatic.com/media/db1732_402067a9860f45bba3e2e079406216f2~mv2.jpg',
+          'https://static.wixstatic.com/media/db1732_c1a9f328c0f74ad2b9014961d8855f28~mv2.jpg',
+          'https://static.wixstatic.com/media/db1732_810a547dd6634ec3bf7b44c41d1edcce~mv2.jpg',
+            
+          'https://static.wixstatic.com/media/db1732_9dd0c7e378f54013ac0166d5eb605b60~mv2.jpg',
+          'https://static.wixstatic.com/media/db1732_19231290e2fb4f898a955326faa3643a~mv2.jpg',
+        ]
+      },
+    ],
+  )
   
   const sleep = (ms) => {
       return new Promise(resolve => setTimeout(resolve, ms));
@@ -309,6 +397,11 @@
           canFlip.value = true
       }
   };
+
+  const cenTesting = computed(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("cenTesting") || false;
+  });
   
   onMounted(() => {
       console.clear();
