@@ -26,7 +26,7 @@
                     <button @click="startGame('北海道')">北海道版</button>
                   </div>
 
-                    <div v-if="cenTesting">
+                    <div>
                       <h4 class="font-bold">ペアの紹介</h4>
 
                       <div v-for="(info,index) in manualInfo" :key="index">
@@ -125,7 +125,7 @@
   import { userData } from '@/stores/userData';
   const store = userData();
 
-  import { ref, onMounted, computed, watch } from 'vue'
+  import { ref, onMounted, watch } from 'vue'
   
   const chosenGame = ref(null);
   const currentPoint = ref(0);
@@ -400,10 +400,10 @@
       }
   };
 
-  const cenTesting = computed(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get("cenTesting") || false;
-  });
+//   const cenTesting = computed(() => {
+//     const urlParams = new URLSearchParams(window.location.search);
+//     return urlParams.get("cenTesting") || false;
+//   });
 
   // Watch for changes and update <body> overflow
   watch(showingManual, (newValue) => {
