@@ -31,7 +31,6 @@
                     <div v-if="cenTesting" class="">
                       <hr class="my-5">
                       <h4>ペアの紹介</h4>
-                      lenth{{ manualInfo.length }}
 
                       <div v-for="(info,index) in manualInfo" :key="index">
 
@@ -120,7 +119,7 @@
   import { userData } from '@/stores/userData';
   const store = userData();
 
-  import { ref, onMounted, computed } from 'vue'
+  import { ref, onMounted, computed, watch } from 'vue'
   
   const chosenGame = ref(null);
   const currentPoint = ref(0);
@@ -402,6 +401,13 @@
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get("cenTesting") || false;
   });
+
+  // Watch for changes and update <body> overflow
+  watch(showingManual, (newValue) => {
+    document.body.classList.toggle("overflow-auto", newValue);
+    document.body.classList.toggle("overflow-hidden", !newValue);
+  });
+
   
   onMounted(() => {
       console.clear();
