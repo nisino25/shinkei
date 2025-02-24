@@ -22,8 +22,8 @@
             <template v-if="showingManual">
                 <div class="manual">
                   <div class="flex-container" style="display:flex; justify-content: space-between;">
-                    <button @click="startGame('北海道')">北海道版</button>
                     <button @click="startGame('京都')">京都版</button>
+                    <button @click="startGame('北海道')">北海道版</button>
                   </div>
 
                     <div v-if="cenTesting">
