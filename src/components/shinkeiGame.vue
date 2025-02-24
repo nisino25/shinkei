@@ -37,19 +37,23 @@
 
                           <!-- Image Pairing (Food on Top, Hunter on Bottom) -->
                           <div class="flex space-x-2 overflow-x-auto pb-5">
-                            <div v-for="(img, index) in info.foodCards" :key="'food-' + index" class="flex flex-col items-center">
+                            <div v-for="(img, index) in info.hunterCards" :key="'food-' + index" class="flex flex-col items-center">
                               <!-- Image Container -->
                               <div class="w-[100px] h-[100px] border-2 border-gray-300 flex items-center justify-center overflow-hidden">
                                 <img :src="img" alt="Food Card" class="h-[85%] w-auto">
                               </div>
 
-                              <div v-if="info.hunterCards[index]" class="w-[100px] h-[100px] border-2 border-gray-300 flex items-center justify-center mt-2">
-                                <img :src="info.hunterCards[index]" alt="Hunter Card" class="h-[85%] w-auto">
+                              <i class="my-4 fas fa-star text-yellow-400 text-2xl"></i>
+
+                              <div v-if="info.foodCards[index]" class="w-[100px] h-[100px] border-2 border-gray-300 flex items-center justify-center mt-2">
+                                <img :src="info.foodCards[index]" alt="Hunter Card" class="h-[85%] w-auto">
                               </div>
                             </div>
                           </div>
                         </div>
+                        <hr>
                       </div>
+                    
                     </div>
 
                     
@@ -141,6 +145,17 @@
     [
       {
         location: '京都',
+        
+        hunterCards: [
+          './card-pics/kyoto-hunter-1-v2.png',
+          './card-pics/kyoto-hunter-2-v2.png',
+          './card-pics/kyoto-hunter-3-v2.png',
+          './card-pics/kyoto-hunter-4-v2.png',
+          './card-pics/kyoto-hunter-5-v2.png',
+          './card-pics/kyoto-hunter-6-v2.png',
+          './card-pics/kyoto-hunter-7-v2.png',
+        ],
+
         foodCards: [
           './card-pics/kyoto-food-1-v2.png',
           './card-pics/kyoto-food-2-v2.jpg',
@@ -150,34 +165,20 @@
           './card-pics/kyoto-food-6-v2.png',
           './card-pics/kyoto-food-7-v2.png',
         ],
-        hunterCards: [
-          './card-pics/kyoto-hunter-1-v2.png',
-          './card-pics/kyoto-hunter-2-v2.png',
-          './card-pics/kyoto-hunter-3-v2.png',
-          './card-pics/kyoto-hunter-4-v2.png',
-          './card-pics/kyoto-hunter-5-v2.png',
-          './card-pics/kyoto-hunter-6-v2.png',
-          './card-pics/kyoto-hunter-7-v2.png',
-        ]
       },
       {
         location: '北海道',
-        foodCards: [
+        hunterCards: [
+          
           'https://static.wixstatic.com/media/db1732_6f16ae32a2734926bb164d4dfe2b6e3e~mv2.jpg',
-            
-          'https://static.wixstatic.com/media/db1732_7510c7c944184a2696cc59e3406cd56f~mv2.jpg',
-            
-          'https://static.wixstatic.com/media/db1732_5a66047942a54ed1838fbf4b607dd01e~mv2.jpg',
-            
+          'https://static.wixstatic.com/media/db1732_7510c7c944184a2696cc59e3406cd56f~mv2.jpg',         
+          'https://static.wixstatic.com/media/db1732_5a66047942a54ed1838fbf4b607dd01e~mv2.jpg', 
           'https://static.wixstatic.com/media/db1732_e52afa786a794460bac9d8b2b307355a~mv2.jpg',
-            
           'https://static.wixstatic.com/media/db1732_2ba3a8e0cdc849a98b0c6f3b0ae049dd~mv2.jpg',
-            
           'https://static.wixstatic.com/media/db1732_87a731881a8849f1aab4651b9c059d70~mv2.jpg',
-            
           'https://static.wixstatic.com/media/db1732_91fefcee2f6b4829aa0bc70a7a52985b~mv2.jpg',
         ],
-        hunterCards: [
+        foodCards: [
           'https://static.wixstatic.com/media/db1732_a7498435df98422b859d403a85cef13f~mv2.jpg',
           'https://static.wixstatic.com/media/db1732_0c71945a9fbf43568d9378ced8fcc6de~mv2.jpg',
           'https://static.wixstatic.com/media/db1732_793ca946081e483cb8a6d5d77506e827~mv2.jpg',
@@ -191,7 +192,7 @@
             
           'https://static.wixstatic.com/media/db1732_9dd0c7e378f54013ac0166d5eb605b60~mv2.jpg',
           'https://static.wixstatic.com/media/db1732_19231290e2fb4f898a955326faa3643a~mv2.jpg',
-        ]
+        ],
       },
     ],
   )
