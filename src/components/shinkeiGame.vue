@@ -25,12 +25,9 @@
                     <button @click="startGame('北海道')">北海道版</button>
                     <button @click="startGame('京都')">京都版</button>
                   </div>
-                  
-                    <h4>神経衰弱 (しんけん すいじゃく) の遊び方</h4>
 
-                    <div v-if="cenTesting" class="">
-                      <hr class="my-5">
-                      <h4>ペアの紹介</h4>
+                    <div v-if="cenTesting">
+                      <h4 class="font-bold">ペアの紹介</h4>
 
                       <div v-for="(info,index) in manualInfo" :key="index">
 
@@ -54,6 +51,11 @@
                         </div>
                       </div>
                     </div>
+
+                    
+                  
+                    <hr class="my-5">
+                    <h4 class="font-bold">神経衰弱 (しんけん すいじゃく) の遊び方</h4>
   
                     
                     <p>カードをタップして開こう</p>
