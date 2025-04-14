@@ -23,6 +23,7 @@
                 <div class="manual">
                   <div class="flex-container" style="display:flex; justify-content: space-between;">
                     <button @click="startGame('京都')">京都版</button>
+                    <button v-if="isTesting" @click="startGame('平塚')">平塚版</button>
                     <button @click="startGame('北海道')">北海道版</button>
                   </div>
 
@@ -32,7 +33,7 @@
                       <div v-for="(info,index) in manualInfo" :key="index">
 
                         <!-- Exclude 'location' key -->
-                        <div class="mb-4">
+                        <div class="mb-4" v-if="(info.location =='平塚' && isTesting) || (info.location !== '平塚')">
                           <h3 class="text-lg font-medium">{{ info.location }}</h3>
 
                           <!-- Image Pairing (Food on Top, Hunter on Bottom) -->
@@ -46,7 +47,7 @@
                               <i class="my-4 fas fa-star text-yellow-400 text-2xl"></i>
 
                               <div v-if="info.foodCards[index]" class="w-[100px] h-[100px] border-2 border-gray-300 flex items-center justify-center mt-2">
-                                <img :src="info.foodCards[index]" alt="Hunter Card" class="h-[85%] w-auto">
+                                <img :src="info.foodCards[index]" alt="Hunter Card" class="h-auto w-auto max-w-[95%] max-h-[95%]">
                               </div>
                             </div>
                           </div>
@@ -140,6 +141,8 @@
   const isGameOver = ref(false);
   const showingManual = ref(false);
 
+  const isTesting = ref(false);
+
   const manualInfo = ref(
     
     [
@@ -164,6 +167,31 @@
           './card-pics/kyoto-food-5-v2.png',
           './card-pics/kyoto-food-6-v2.png',
           './card-pics/kyoto-food-7-v2.png',
+        ],
+      },
+      {
+        location: '平塚',
+        
+        hunterCards: [
+          './card-pics/hiratsuka-hunter-1.png',
+          './card-pics/hiratsuka-hunter-2.png',
+          './card-pics/hiratsuka-hunter-3.png',
+          './card-pics/hiratsuka-hunter-4.png',
+          './card-pics/hiratsuka-hunter-5.png',
+          './card-pics/hiratsuka-hunter-6.png',
+          './card-pics/hiratsuka-hunter-7.png',
+          './card-pics/hiratsuka-hunter-8.png',
+        ],
+
+        foodCards: [
+          './card-pics/hiratsuka-food-1.png',
+          './card-pics/hiratsuka-food-2.png',
+          './card-pics/hiratsuka-food-3.png',
+          './card-pics/hiratsuka-food-4.png',
+          './card-pics/hiratsuka-food-5.png',
+          './card-pics/hiratsuka-food-6.png',
+          './card-pics/hiratsuka-food-7.png',
+          './card-pics/hiratsuka-food-8.png',
         ],
       },
       {
@@ -266,6 +294,34 @@
   
               {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_9dd0c7e378f54013ac0166d5eb605b60~mv2.jpg'},
               {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_19231290e2fb4f898a955326faa3643a~mv2.jpg'},
+          ]
+      }
+      if(playArea.value == '平塚'){
+        items.value = [
+            {name: `アカウミガメ` , group: 1, type: 'regular', imgSrc: './card-pics/hiratsuka-food-1.png'},
+            {name: `カニ` , group: 2, type: 'regular', imgSrc: './card-pics/hiratsuka-food-2.png'},
+            {name: `エビ` , group: 3, type: 'regular', imgSrc: './card-pics/hiratsuka-food-3.png'},
+            {name: `ヤマメ` , group: 4, type: 'regular', imgSrc: './card-pics/hiratsuka-food-4.png'},
+            {name: `ツツジ` , group: 5, type: 'regular', imgSrc: './card-pics/hiratsuka-food-5.png'},
+            {name: `どんぐり` , group: 6, type: 'regular', imgSrc: './card-pics/hiratsuka-food-6.png'},
+            {name: `カタツムリ` , group: 7, type: 'regular', imgSrc: './card-pics/hiratsuka-food-7.png'},
+            {name: `シロツメグサ` , group: 8, type: 'regular', imgSrc: './card-pics/hiratsuka-food-8.png'},
+
+            {name: `アカウミガメ<br>（クラゲ）` , group: 1, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-1.png'},
+            {name: `カモメ<br>（カニ）` , group: 2, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-2.png'},
+            {name: `ミナミハコフグ<br>（エビ）` , group: 3, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-3.png'},
+            {name: `カワセミ<br>（ヤマメ）` , group: 4, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-4.png'},
+            {name: `アゲハチョウ<br>（ツツジ）` , group: 5, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-5.png'},
+            {name: `ニホンリス<br>（どんぐり）` , group: 6, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-6.png'},
+            {name: `アカキツネ<br>（カタツムリ）` , group: 7, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-7.png'},
+            {name: `ニホンカモシカ<br>（シロツメグサ）` , group: 8, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-8.png'},
+  
+            {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-1-v2.jpg'},
+            {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-2-v2.jpg'},
+
+            {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: './card-pics/kyoto-gameover-v2.jpg'},
+
+            {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: './card-pics/kyoto-bad-1-v2.jpg'},
           ]
       }
       
@@ -400,23 +456,21 @@
       }
   };
 
-//   const cenTesting = computed(() => {
-//     const urlParams = new URLSearchParams(window.location.search);
-//     return urlParams.get("cenTesting") || false;
-//   });
-
-  // Watch for changes and update <body> overflow
   watch(showingManual, (newValue) => {
     document.body.classList.toggle("overflow-auto", newValue);
     document.body.classList.toggle("overflow-hidden", !newValue);
   });
 
-  
   onMounted(() => {
       console.clear();
   
-      chosenGame.value = 'shinkei'
-      showingManual.value = true
+      chosenGame.value = 'shinkei';
+      showingManual.value = true;
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const isTestingParam = urlParams.get("isTesting");
+
+        if (isTestingParam == 1) isTesting.value = true;
   });
 
   
