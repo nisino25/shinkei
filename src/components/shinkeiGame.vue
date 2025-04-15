@@ -23,7 +23,7 @@
                 <div class="manual">
                   <div class="flex-container" style="display:flex; justify-content: space-between;">
                     <button @click="startGame('京都')">京都版</button>
-                    <button v-if="isTesting" @click="startGame('平塚')">平塚版</button>
+                    <button v-if="isTesting" @click="startGame('神奈川')">神奈川版</button>
                     <button @click="startGame('北海道')">北海道版</button>
                   </div>
 
@@ -33,7 +33,7 @@
                       <div v-for="(info,index) in manualInfo" :key="index">
 
                         <!-- Exclude 'location' key -->
-                        <div class="mb-4" v-if="(info.location =='平塚' && isTesting) || (info.location !== '平塚')">
+                        <div class="mb-4" v-if="(info.location =='神奈川' && isTesting) || (info.location !== '神奈川')">
                           <h3 class="text-lg font-medium">{{ info.location }}</h3>
 
                           <!-- Image Pairing (Food on Top, Hunter on Bottom) -->
@@ -170,7 +170,7 @@
         ],
       },
       {
-        location: '平塚',
+        location: '神奈川',
         
         hunterCards: [
           './card-pics/hiratsuka-hunter-1.png',
@@ -296,25 +296,25 @@
               {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_19231290e2fb4f898a955326faa3643a~mv2.jpg'},
           ]
       }
-      if(playArea.value == '平塚'){
+      if(playArea.value == '神奈川'){
         items.value = [
-            {name: `アカウミガメ` , group: 1, type: 'regular', imgSrc: './card-pics/hiratsuka-food-1.png'},
-            {name: `カニ` , group: 2, type: 'regular', imgSrc: './card-pics/hiratsuka-food-2.png'},
-            {name: `エビ` , group: 3, type: 'regular', imgSrc: './card-pics/hiratsuka-food-3.png'},
-            {name: `ヤマメ` , group: 4, type: 'regular', imgSrc: './card-pics/hiratsuka-food-4.png'},
-            {name: `ツツジ` , group: 5, type: 'regular', imgSrc: './card-pics/hiratsuka-food-5.png'},
-            {name: `どんぐり` , group: 6, type: 'regular', imgSrc: './card-pics/hiratsuka-food-6.png'},
-            {name: `カタツムリ` , group: 7, type: 'regular', imgSrc: './card-pics/hiratsuka-food-7.png'},
-            {name: `シロツメグサ` , group: 8, type: 'regular', imgSrc: './card-pics/hiratsuka-food-8.png'},
+            {name: `クラゲ<br>(アカウミガメ)` , group: 1, type: 'regular', imgSrc: './card-pics/hiratsuka-food-1.png'},
+            {name: `カニ<br>(カモ)` , group: 2, type: 'regular', imgSrc: './card-pics/hiratsuka-food-2.png'},
+            {name: `エビ<br>(ミナミハコフグ)` , group: 3, type: 'regular', imgSrc: './card-pics/hiratsuka-food-3.png'},
+            {name: `ヤマメ<br>(カワセミ)` , group: 4, type: 'regular', imgSrc: './card-pics/hiratsuka-food-4.png'},
+            {name: `ツツジ<br>(アゲハチョウ)` , group: 5, type: 'regular', imgSrc: './card-pics/hiratsuka-food-5.png'},
+            {name: `どんぐり<br>(ニホンリス)` , group: 6, type: 'regular', imgSrc: './card-pics/hiratsuka-food-6.png'},
+            {name: `カタツムリ<br>(アカキツネ)` , group: 7, type: 'regular', imgSrc: './card-pics/hiratsuka-food-7.png'},
+            {name: `シロツメグサ<br>(ニホンカモシカ)` , group: 8, type: 'regular', imgSrc: './card-pics/hiratsuka-food-8.png'},
 
-            {name: `アカウミガメ<br>（クラゲ）` , group: 1, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-1.png'},
-            {name: `カモメ<br>（カニ）` , group: 2, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-2.png'},
-            {name: `ミナミハコフグ<br>（エビ）` , group: 3, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-3.png'},
-            {name: `カワセミ<br>（ヤマメ）` , group: 4, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-4.png'},
-            {name: `アゲハチョウ<br>（ツツジ）` , group: 5, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-5.png'},
-            {name: `ニホンリス<br>（どんぐり）` , group: 6, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-6.png'},
-            {name: `アカキツネ<br>（カタツムリ）` , group: 7, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-7.png'},
-            {name: `ニホンカモシカ<br>（シロツメグサ）` , group: 8, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-8.png'},
+            {name: `アカウミガメ` , group: 1, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-1.png'},
+            {name: `カモ` , group: 2, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-2.png'},
+            {name: `ミナミハコフグ` , group: 3, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-3.png'},
+            {name: `カワセミ` , group: 4, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-4.png'},
+            {name: `アゲハチョウ` , group: 5, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-5.png'},
+            {name: `ニホンリス` , group: 6, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-6.png'},
+            {name: `アカキツネ` , group: 7, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-7.png'},
+            {name: `ニホンカモシカ` , group: 8, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-8.png'},
   
             {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-1-v2.jpg'},
             {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: './card-pics/kyoto-bad-2-v2.jpg'},
