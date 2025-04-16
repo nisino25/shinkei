@@ -23,7 +23,7 @@
                 <div class="manual">
                   <div class="flex-container" style="display:flex; justify-content: space-between;">
                     <button @click="startGame('京都')">京都版</button>
-                    <button v-if="isTesting" @click="startGame('神奈川')">神奈川版</button>
+                    <button @click="startGame('神奈川')">神奈川版</button>
                     <button @click="startGame('北海道')">北海道版</button>
                   </div>
 
@@ -33,7 +33,7 @@
                       <div v-for="(info,index) in manualInfo" :key="index">
 
                         <!-- Exclude 'location' key -->
-                        <div class="mb-4" v-if="(info.location =='神奈川' && isTesting) || (info.location !== '神奈川')">
+                        <div class="mb-4">
                           <h3 class="text-lg font-medium">{{ info.location }}</h3>
 
                           <!-- Image Pairing (Food on Top, Hunter on Bottom) -->
