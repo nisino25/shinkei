@@ -207,13 +207,13 @@
           'https://static.wixstatic.com/media/db1732_91fefcee2f6b4829aa0bc70a7a52985b~mv2.jpg',
         ],
         foodCards: [
-          'https://static.wixstatic.com/media/db1732_a7498435df98422b859d403a85cef13f~mv2.jpg',
+          './card-pics/hokkaido-food-1.png',
           'https://static.wixstatic.com/media/db1732_0c71945a9fbf43568d9378ced8fcc6de~mv2.jpg',
           'https://static.wixstatic.com/media/db1732_793ca946081e483cb8a6d5d77506e827~mv2.jpg',
           'https://static.wixstatic.com/media/db1732_74d4da3493234020b90401259139016f~mv2.jpg',
           'https://static.wixstatic.com/media/db1732_16b8345030ff419caaea4b95e64b3b26~mv2.jpg',
           'https://static.wixstatic.com/media/db1732_ca38ab9fee984b34b748f9ea0447d5de~mv2.jpg',
-          'https://static.wixstatic.com/media/db1732_ef7d0288db604e83a0ec5e6db766003b~mv2.jpg',
+          './card-pics/hokkaido-food-7.png',
           'https://static.wixstatic.com/media/db1732_402067a9860f45bba3e2e079406216f2~mv2.jpg',
           'https://static.wixstatic.com/media/db1732_c1a9f328c0f74ad2b9014961d8855f28~mv2.jpg',
           'https://static.wixstatic.com/media/db1732_810a547dd6634ec3bf7b44c41d1edcce~mv2.jpg',
@@ -267,7 +267,7 @@
       if(playArea.value == '北海道'){
           items.value = [
               {name: `オオワシ` , group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_6f16ae32a2734926bb164d4dfe2b6e3e~mv2.jpg'},
-              {name: `ねずみ<br>（オオワシ）`,group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_a7498435df98422b859d403a85cef13f~mv2.jpg'},
+              {name: `死んだサケ<br>（オオワシ）`,group: 1, type: 'regular', imgSrc: './card-pics/hokkaido-food-1.png'},
   
               {name: `ツル` ,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_7510c7c944184a2696cc59e3406cd56f~mv2.jpg'},
               {name: `みみず<br>（ツル）`,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_0c71945a9fbf43568d9378ced8fcc6de~mv2.jpg'},
@@ -285,7 +285,7 @@
               {name: `くさやはっぱ<br>（エゾモモンガ）`,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ca38ab9fee984b34b748f9ea0447d5de~mv2.jpg'},
   
               {name: `シマエナガ` ,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_91fefcee2f6b4829aa0bc70a7a52985b~mv2.jpg'},
-              {name: `くだもの<br>(シマエナガ)`,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ef7d0288db604e83a0ec5e6db766003b~mv2.jpg'},
+              {name: `アブラムシ<br>(シマエナガ)`,group: 7, type: 'regular', imgSrc: './card-pics/hokkaido-food-7.png'},
   
               {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_ef0fd76958f844db82fd0c86cc270a8b~mv2.jpg'},
               {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_402067a9860f45bba3e2e079406216f2~mv2.jpg'},
