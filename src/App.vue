@@ -24,19 +24,25 @@
       <div class="space-x-4">
           <button 
               @click="selectGame = 'ゴミ分別ゲーム'" 
-              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+              class="px-4 py-2 bg-blue-500 text-white rounded-lg">
               ゴミ分別ゲーム
           </button>
           <button 
               @click="selectGame ='神経衰弱ゲーム'" 
-              class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+              class="px-4 py-2 bg-green-500 text-white rounded-lg">
               神経衰弱ゲーム
+          </button>
+          <button v-if="isTesting" 
+              @click="selectGame ='チャット'" 
+              class="px-4 py-2 bg-blue-500 text-white rounded-lg">
+              チャット
           </button>
       </div>
     </div>
   
     <sortingGame v-if="selectGame == 'ゴミ分別ゲーム'"></sortingGame>
     <shinkeiGame v-if="selectGame == '神経衰弱ゲーム'"></shinkeiGame>
+    <chatDemo v-if="selectGame == 'チャット'"></chatDemo>
   
   </template>
   
@@ -47,11 +53,13 @@
   
   import sortingGame from "./components/sortingGame.vue";
   import shinkeiGame from "./components/shinkeiGame.vue";
-  
+  import chatDemo from "./components/chatDemo.vue";
+
+  const isTesting = ref(false);  
   
   // const { gamePoint, selectGame } = storeToRefs(store); // Correct way to access state
   
-  import { onMounted } from "vue";
+  import { onMounted, ref } from "vue";
   
   const store = userData();
   const { selectGame, uniqueId, currentUsername, currentTotalPoints, hasPointsReached, loading, computedHref } = storeToRefs(store);
@@ -68,6 +76,10 @@
     console.clear();
 
     const urlParams = new URLSearchParams(window.location.search);
+    const isTestingParam = urlParams.get("isTesting");
+
+    if (isTestingParam == 1) isTesting.value = true;
+
     const id = urlParams.get("uniqueId");
 
     if (!id) {
