@@ -37,12 +37,18 @@
               class="px-4 py-2 bg-blue-500 text-white rounded-lg">
               チャット
           </button>
+          <button v-if="isTesting" 
+              @click="selectGame ='スイッチ'" 
+              class="px-4 py-2 bg-red-500 text-white rounded-lg">
+              スイッチ
+          </button>
       </div>
     </div>
   
     <sortingGame v-if="selectGame == 'ゴミ分別ゲーム'"></sortingGame>
     <shinkeiGame v-if="selectGame == '神経衰弱ゲーム'"></shinkeiGame>
     <chatDemo v-if="selectGame == 'チャット'"></chatDemo>
+    <switchDemo v-if="selectGame == 'スイッチ'"></switchDemo>
   
   </template>
   
@@ -54,6 +60,7 @@
   import sortingGame from "./components/sortingGame.vue";
   import shinkeiGame from "./components/shinkeiGame.vue";
   import chatDemo from "./components/chatDemo.vue";
+  import switchDemo from "./components/switchDemo.vue";
 
   const isTesting = ref(false);  
   
