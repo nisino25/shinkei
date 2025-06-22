@@ -21,8 +21,6 @@
   
             <template v-if="showingManual">
                 <div class="manual">
-                    
-                        isTesting: {{ isTesting }}
                   <div class="flex-container" style="display:flex; justify-content: space-between;">
                     <template v-for="(info,index) in manualInfo" :key="index" >
                         <button v-if="(isTesting) || (!isTesting && !info.isDemo)" @click="startGame(info.location)">
