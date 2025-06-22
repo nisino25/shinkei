@@ -148,7 +148,7 @@
     
     [
       {
-        isDemo: true,
+        isDemo: false,
         location: '沖縄',
         hunterCards: [
           './card-pics/okinawa/hunter/1.png',
@@ -268,7 +268,7 @@
             {name: `じゅえき<br>(オキナワカブト)` , group: 3, type: 'regular', imgSrc: './card-pics/okinawa/food/3.png'},
             {name: `カエル<br>(カンムリワシ)` , group: 4, type: 'regular', imgSrc: './card-pics/okinawa/food/4.png'},
             {name: `かいそう<br>(ジュゴン)` , group: 5, type: 'regular', imgSrc: './card-pics/okinawa/food/5.png'},
-            {name: `えび<br>(マンタ)` , group: 6, type: 'regular', imgSrc: './card-pics/okinawa/food/6.png'},
+            {name: `オキアミ<br>(マンタ)` , group: 6, type: 'regular', imgSrc: './card-pics/okinawa/food/6.png'},
             {name: `みみず<br>(ヤンバルクイナ)` , group: 7, type: 'regular', imgSrc: './card-pics/okinawa/food/7.png'},
 
             {name: `イリオモテヤマネコ` , group: 1, type: 'regular', imgSrc: './card-pics/okinawa/hunter/1.png'},
