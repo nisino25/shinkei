@@ -1,6 +1,6 @@
 <template>
     <div class="inner">
-        <div class="top-menu-for-shinkei" v-if="!loading">
+        <div class="top-menu-for-shinkei">
   
             <template v-if="!showingManual">
               <div style="display: flex; justify-content: space-between; font-size: 90%; align-items: center;">
@@ -21,19 +21,22 @@
   
             <template v-if="showingManual">
                 <div class="manual">
+                    
+                        isTesting: {{ isTesting }}
                   <div class="flex-container" style="display:flex; justify-content: space-between;">
-                    <button @click="startGame('京都')">京都版</button>
-                    <button @click="startGame('神奈川')">神奈川版</button>
-                    <button @click="startGame('北海道')">北海道版</button>
+                    <template v-for="(info,index) in manualInfo" :key="index" >
+                        <button v-if="(isTesting) || (!isTesting && !info.isDemo)" @click="startGame(info.location)">
+                            {{ info.location }}
+                        </button>
+                    </template>
                   </div>
 
                     <div>
                       <h4 class="font-bold">ペアの紹介</h4>
 
                       <div v-for="(info,index) in manualInfo" :key="index">
-
                         <!-- Exclude 'location' key -->
-                        <div class="mb-4">
+                        <div class="mb-4" v-if="(isTesting) || (!isTesting && !info.isDemo)">
                           <h3 class="text-lg font-medium">{{ info.location }}</h3>
 
                           <!-- Image Pairing (Food on Top, Hunter on Bottom) -->
@@ -147,6 +150,29 @@
     
     [
       {
+        isDemo: true,
+        location: '沖縄',
+        hunterCards: [
+          './card-pics/okinawa/hunter/1.png',
+          './card-pics/okinawa/hunter/2.png',
+          './card-pics/okinawa/hunter/3.png',
+          './card-pics/okinawa/hunter/4.png',
+          './card-pics/okinawa/hunter/5.png',
+          './card-pics/okinawa/hunter/6.png',
+          './card-pics/okinawa/hunter/7.png',
+        ],
+
+        foodCards: [
+          './card-pics/okinawa/food/1.png',
+          './card-pics/okinawa/food/2.png',
+          './card-pics/okinawa/food/3.png',
+          './card-pics/okinawa/food/4.png',
+          './card-pics/okinawa/food/5.png',
+          './card-pics/okinawa/food/6.png',
+          './card-pics/okinawa/food/7.png',
+        ],
+      },
+      {
         location: '京都',
         
         hunterCards: [
@@ -236,6 +262,35 @@
   
   const playShinkei = () => {
       // playArea.value = area
+      
+      if(playArea.value == '沖縄'){
+        items.value = [
+            {name: `ネズミ<br>(イリオモテヤマネコ)` , group: 1, type: 'regular', imgSrc: './card-pics/okinawa/food/1.png'},
+            {name: `ジャスミン<br>(オオゴマダラ)` , group: 2, type: 'regular', imgSrc: './card-pics/okinawa/food/2.png'},
+            {name: `じゅえき<br>(オキナワカブト)` , group: 3, type: 'regular', imgSrc: './card-pics/okinawa/food/3.png'},
+            {name: `カエル<br>(カンムリワシ)` , group: 4, type: 'regular', imgSrc: './card-pics/okinawa/food/4.png'},
+            {name: `かいそう<br>(ジュゴン)` , group: 5, type: 'regular', imgSrc: './card-pics/okinawa/food/5.png'},
+            {name: `えび<br>(マンタ)` , group: 6, type: 'regular', imgSrc: './card-pics/okinawa/food/6.png'},
+            {name: `みみず<br>(ヤンバルクイナ)` , group: 7, type: 'regular', imgSrc: './card-pics/okinawa/food/7.png'},
+
+            {name: `イリオモテヤマネコ` , group: 1, type: 'regular', imgSrc: './card-pics/okinawa/hunter/1.png'},
+            {name: `オオゴマダラ` , group: 2, type: 'regular', imgSrc: './card-pics/okinawa/hunter/2.png'},
+            {name: `オキナワカブト` , group: 3, type: 'regular', imgSrc: './card-pics/okinawa/hunter/3.png'},
+            {name: `カンムリワシ` , group: 4, type: 'regular', imgSrc: './card-pics/okinawa/hunter/4.png'},
+            {name: `ジュゴン` , group: 5, type: 'regular', imgSrc: './card-pics/okinawa/hunter/5.png'},
+            {name: `マンタ` , group: 6, type: 'regular', imgSrc: './card-pics/okinawa/hunter/6.png'},
+            {name: `ヤンバルクイナ` , group: 7, type: 'regular', imgSrc: './card-pics/okinawa/hunter/7.png'},
+  
+            {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: './card-pics/bad/1.jpg'},
+            {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: './card-pics/bad/2.jpg'},
+            {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: './card-pics/bad/3.jpg'},
+
+            {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: './card-pics/good/1.jpg'},
+            {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: './card-pics/good/2.jpg'},
+            
+            {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: './card-pics/gameover/1.png'},
+          ]
+      }
       if(playArea.value == '京都'){
           items.value = [
               {name: `フジバカマ<br>（アサギマダラ）` , group: 1, type: 'regular', imgSrc: './card-pics/kyoto-food-1-v2.png'},
