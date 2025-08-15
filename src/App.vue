@@ -47,6 +47,11 @@
               class="px-4 py-2 bg-red-500 text-white rounded-lg">
               陣地取りゲーム
           </button> 
+          <button v-if="isTesting" 
+              @click="selectGame ='マップゲーム'" 
+              class="px-4 py-2 bg-red-500 text-white rounded-lg">
+              マップゲーム
+          </button> 
       </div>
     </div>
   
@@ -55,6 +60,7 @@
     <chatDemo v-if="selectGame == 'チャット'"></chatDemo>
     <switchDemo v-if="selectGame == 'スイッチ'"></switchDemo>
     <dominationDemo v-if="selectGame == '陣地取りゲーム'"></dominationDemo>
+    <mapDemo v-if="selectGame == 'マップゲーム'"></mapDemo>
   
   </template>
   
@@ -68,6 +74,7 @@
   import chatDemo from "./components/chatDemo.vue";
   import switchDemo from "./components/switchDemo.vue";
   import dominationDemo from "./components/dominationGame.vue";
+  import mapDemo from "./components/mapGame.vue";
 
   const isTesting = ref(false);  
   
