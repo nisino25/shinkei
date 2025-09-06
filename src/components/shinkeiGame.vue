@@ -221,29 +221,22 @@
       {
         location: '北海道',
         hunterCards: [
-          
-          'https://static.wixstatic.com/media/db1732_6f16ae32a2734926bb164d4dfe2b6e3e~mv2.jpg',
-          'https://static.wixstatic.com/media/db1732_7510c7c944184a2696cc59e3406cd56f~mv2.jpg',         
-          'https://static.wixstatic.com/media/db1732_5a66047942a54ed1838fbf4b607dd01e~mv2.jpg', 
-          'https://static.wixstatic.com/media/db1732_e52afa786a794460bac9d8b2b307355a~mv2.jpg',
-          'https://static.wixstatic.com/media/db1732_2ba3a8e0cdc849a98b0c6f3b0ae049dd~mv2.jpg',
-          'https://static.wixstatic.com/media/db1732_87a731881a8849f1aab4651b9c059d70~mv2.jpg',
-          'https://static.wixstatic.com/media/db1732_91fefcee2f6b4829aa0bc70a7a52985b~mv2.jpg',
+          './card-pics/hokkaido/hunter/1.jpg',
+          './card-pics/hokkaido/hunter/2.jpg',
+          './card-pics/hokkaido/hunter/3.jpg',
+          './card-pics/hokkaido/hunter/4.jpg',
+          './card-pics/hokkaido/hunter/5.jpg',
+          './card-pics/hokkaido/hunter/6.jpg',
+          './card-pics/hokkaido/hunter/7.jpg',
         ],
         foodCards: [
-          './card-pics/hokkaido-food-1.png',
-          'https://static.wixstatic.com/media/db1732_0c71945a9fbf43568d9378ced8fcc6de~mv2.jpg',
-          'https://static.wixstatic.com/media/db1732_793ca946081e483cb8a6d5d77506e827~mv2.jpg',
-          'https://static.wixstatic.com/media/db1732_74d4da3493234020b90401259139016f~mv2.jpg',
-          'https://static.wixstatic.com/media/db1732_16b8345030ff419caaea4b95e64b3b26~mv2.jpg',
-          'https://static.wixstatic.com/media/db1732_ca38ab9fee984b34b748f9ea0447d5de~mv2.jpg',
-          './card-pics/hokkaido-food-7.png',
-          'https://static.wixstatic.com/media/db1732_402067a9860f45bba3e2e079406216f2~mv2.jpg',
-          'https://static.wixstatic.com/media/db1732_c1a9f328c0f74ad2b9014961d8855f28~mv2.jpg',
-          'https://static.wixstatic.com/media/db1732_810a547dd6634ec3bf7b44c41d1edcce~mv2.jpg',
-            
-          'https://static.wixstatic.com/media/db1732_9dd0c7e378f54013ac0166d5eb605b60~mv2.jpg',
-          'https://static.wixstatic.com/media/db1732_19231290e2fb4f898a955326faa3643a~mv2.jpg',
+          './card-pics/hokkaido/food/1.png',
+          './card-pics/hokkaido/food/2.jpg',
+          './card-pics/hokkaido/food/3.jpg',
+          './card-pics/hokkaido/food/4.jpg',
+          './card-pics/hokkaido/food/5.jpg',
+          './card-pics/hokkaido/food/6.jpg',
+          './card-pics/hokkaido/food/7.png',
         ],
       },
     ],
@@ -263,30 +256,30 @@
       
       if(playArea.value == '沖縄'){
         items.value = [
-            {name: `ネズミ<br>(イリオモテヤマネコ)` , group: 1, type: 'regular', imgSrc: './card-pics/okinawa/food/1.png'},
-            {name: `ジャスミン<br>(オオゴマダラ)` , group: 2, type: 'regular', imgSrc: './card-pics/okinawa/food/2.png'},
-            {name: `じゅえき<br>(オキナワカブト)` , group: 3, type: 'regular', imgSrc: './card-pics/okinawa/food/3.png'},
-            {name: `カエル<br>(カンムリワシ)` , group: 4, type: 'regular', imgSrc: './card-pics/okinawa/food/4.png'},
-            {name: `かいそう<br>(ジュゴン)` , group: 5, type: 'regular', imgSrc: './card-pics/okinawa/food/5.png'},
-            {name: `オキアミ<br>(マンタ)` , group: 6, type: 'regular', imgSrc: './card-pics/okinawa/food/6.png'},
-            {name: `みみず<br>(ヤンバルクイナ)` , group: 7, type: 'regular', imgSrc: './card-pics/okinawa/food/7.png'},
+            {imgSrc: './card-pics/okinawa/food/1.png', group: 1, type: 'regular', name: `ネコ<br>(イリオモテヤマネコ)` , },
+            {imgSrc: './card-pics/okinawa/food/2.png', group: 2, type: 'regular', name: `ジャスミン<br>(オオゴマダラ)` , },
+            {imgSrc: './card-pics/okinawa/food/3.png', group: 3, type: 'regular', name: `じゅえき<br>(オキナワカブト)` , },
+            {imgSrc: './card-pics/okinawa/food/4.png', group: 4, type: 'regular', name: `カエル<br>(カンムリワシ)` },
+            {imgSrc: './card-pics/okinawa/food/5.png', group: 5, type: 'regular', name: `かいそう<br>(ジュゴン)` , },
+            {imgSrc: './card-pics/okinawa/food/6.png', group: 6, type: 'regular', name: `オキアミ<br>(マンタ)` , },
+            {imgSrc: './card-pics/okinawa/food/7.png', group: 7, type: 'regular', name: `みみず<br>(ヤンバルクイナ)` , },
 
-            {name: `イリオモテヤマネコ` , group: 1, type: 'regular', imgSrc: './card-pics/okinawa/hunter/1.png'},
-            {name: `オオゴマダラ` , group: 2, type: 'regular', imgSrc: './card-pics/okinawa/hunter/2.png'},
-            {name: `オキナワカブト` , group: 3, type: 'regular', imgSrc: './card-pics/okinawa/hunter/3.png'},
-            {name: `カンムリワシ` , group: 4, type: 'regular', imgSrc: './card-pics/okinawa/hunter/4.png'},
-            {name: `ジュゴン` , group: 5, type: 'regular', imgSrc: './card-pics/okinawa/hunter/5.png'},
-            {name: `マンタ` , group: 6, type: 'regular', imgSrc: './card-pics/okinawa/hunter/6.png'},
-            {name: `ヤンバルクイナ` , group: 7, type: 'regular', imgSrc: './card-pics/okinawa/hunter/7.png'},
+            {imgSrc: './card-pics/okinawa/hunter/1.png', group: 1, type: 'regular', name: `イリオモテヤマネコ` , },
+            {imgSrc: './card-pics/okinawa/hunter/2.png', group: 2, type: 'regular', name: `オオゴマダラ` , },
+            {imgSrc: './card-pics/okinawa/hunter/3.png', group: 3, type: 'regular', name: `オキナワカブト` , },
+            {imgSrc: './card-pics/okinawa/hunter/4.png', group: 4, type: 'regular', name: `カンムリワシ` , },
+            {imgSrc: './card-pics/okinawa/hunter/5.png', group: 5, type: 'regular', name: `ジュゴン` , },
+            {imgSrc: './card-pics/okinawa/hunter/6.png', group: 6, type: 'regular', name: `マンタ` , },
+            {imgSrc: './card-pics/okinawa/hunter/7.png', group: 7, type: 'regular', name: `ヤンバルクイナ` , },
   
-            {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: './card-pics/bad/1.jpg'},
-            {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: './card-pics/bad/2.jpg'},
-            {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: './card-pics/bad/3.jpg'},
+            {imgSrc: './card-pics/bad/1.jpg', group: null, type: 'destructive', name: `動物との<br>交通事故` ,},
+            {imgSrc: './card-pics/bad/2.jpg', group: null, type: 'destructive', name: `森林伐採` ,},
+            {imgSrc: './card-pics/bad/3.jpg', group: null, type: 'destructive', name: `海水汚染` ,},
 
-            {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: './card-pics/good/1.jpg'},
-            {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: './card-pics/good/2.jpg'},
+            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
+            {imgSrc: './card-pics/good/2.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
             
-            {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: './card-pics/gameover/1.png'},
+            {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
           ]
       }
       if(playArea.value == '京都'){
@@ -319,34 +312,35 @@
       }
       if(playArea.value == '北海道'){
           items.value = [
-              {name: `オオワシ` , group: 1, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_6f16ae32a2734926bb164d4dfe2b6e3e~mv2.jpg'},
-              {name: `死んだサケ<br>（オオワシ）`,group: 1, type: 'regular', imgSrc: './card-pics/hokkaido-food-1.png'},
+              {imgSrc: './card-pics/hokkaido/hunter/1.jpg', group: 1, type: 'regular', name: `オオワシ` , },
+              {imgSrc: './card-pics/hokkaido/food/1.png', group: 1, type: 'regular', name: `死んだサケ<br>（オオワシ）`,},
   
-              {name: `ツル` ,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_7510c7c944184a2696cc59e3406cd56f~mv2.jpg'},
-              {name: `みみず<br>（ツル）`,group: 2, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_0c71945a9fbf43568d9378ced8fcc6de~mv2.jpg'},
+              {imgSrc: './card-pics/hokkaido/hunter/2.jpg', group: 2, type: 'regular', name: `ツル` ,},
+              {imgSrc: './card-pics/hokkaido/food/2.jpg', group: 2, type: 'regular', name: `みみず<br>（ツル）`,},
   
-              {name: `クマ` ,group: 3, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_5a66047942a54ed1838fbf4b607dd01e~mv2.jpg'},
-              {name: `どんぐり<br>（クマ）`,group: 3, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_793ca946081e483cb8a6d5d77506e827~mv2.jpg'},
+              {imgSrc: './card-pics/hokkaido/hunter/3.jpg', group: 3, type: 'regular', name: `クマ` ,},
+              {imgSrc: './card-pics/hokkaido/food/3.jpg', group: 3, type: 'regular', name: `どんぐり<br>（クマ）`,},
   
-              {name: `クワガタ` ,group: 4, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_e52afa786a794460bac9d8b2b307355a~mv2.jpg'},
-              {name: `じゅえき<br>（クワガタ）`,group: 4, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_74d4da3493234020b90401259139016f~mv2.jpg'},
+              {imgSrc: './card-pics/hokkaido/hunter/4.jpg', group: 4, type: 'regular', name: `クワガタ` ,},
+              {imgSrc: './card-pics/hokkaido/food/3.jpg', group: 4, type: 'regular', name: `じゅえき<br>（クワガタ）`,},
   
-              {name: `イトウ` ,group: 5, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_2ba3a8e0cdc849a98b0c6f3b0ae049dd~mv2.jpg'},
-              {name: `どじょう<br>（イトウ）`,group: 5, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_16b8345030ff419caaea4b95e64b3b26~mv2.jpg'},
+              {imgSrc: './card-pics/hokkaido/hunter/5.jpg', group: 5, type: 'regular', name: `イトウ` ,},
+              {imgSrc: './card-pics/hokkaido/food/5.jpg', group: 5, type: 'regular', name: `どじょう<br>（イトウ）`,},
   
-              {name: `エゾモモンガ` ,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_87a731881a8849f1aab4651b9c059d70~mv2.jpg'},
-              {name: `くさやはっぱ<br>（エゾモモンガ）`,group: 6, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_ca38ab9fee984b34b748f9ea0447d5de~mv2.jpg'},
+              {imgSrc: './card-pics/hokkaido/hunter/6.jpg', group: 6, type: 'regular', name: `エゾモモンガ` ,},
+              {imgSrc: './card-pics/hokkaido/food/6.jpg', group: 6, type: 'regular', name: `くさやはっぱ<br>（エゾモモンガ）`,},
   
-              {name: `シマエナガ` ,group: 7, type: 'regular', imgSrc: 'https://static.wixstatic.com/media/db1732_91fefcee2f6b4829aa0bc70a7a52985b~mv2.jpg'},
-              {name: `アブラムシ<br>(シマエナガ)`,group: 7, type: 'regular', imgSrc: './card-pics/hokkaido-food-7.png'},
+              {imgSrc: './card-pics/hokkaido/hunter/7.jpg', group: 7, type: 'regular', name: `シマエナガ` ,},
+              {imgSrc: './card-pics/hokkaido/food/7.png', group: 7, type: 'regular', name: `アブラムシ<br>(シマエナガ)`,},
   
-              {name: `森林伐採` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_ef0fd76958f844db82fd0c86cc270a8b~mv2.jpg'},
-              {name: `海水汚染` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_402067a9860f45bba3e2e079406216f2~mv2.jpg'},
-              {name: `動物との<br>交通事故` ,group: null, type: 'destructive', imgSrc: 'https://static.wixstatic.com/media/db1732_c1a9f328c0f74ad2b9014961d8855f28~mv2.jpg'},
-              {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: 'https://static.wixstatic.com/media/db1732_810a547dd6634ec3bf7b44c41d1edcce~mv2.jpg'},
+              {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
+              {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
   
-              {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_9dd0c7e378f54013ac0166d5eb605b60~mv2.jpg'},
-              {name: `省エネ` ,group: null, type: 'beneficial', imgSrc: 'https://static.wixstatic.com/media/db1732_19231290e2fb4f898a955326faa3643a~mv2.jpg'},
+              {imgSrc: './card-pics//bad/1.jpg', group: null, type: 'destructive', name: `森林伐採` ,},
+              {imgSrc: './card-pics/bad/2.jpg', group: null, type: 'destructive', name: `海水汚染` ,},
+              {imgSrc: './card-pics/bad/3.jpg', group: null, type: 'destructive', name: `動物との<br>交通事故` ,},
+
+              {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
           ]
       }
       if(playArea.value == '神奈川'){
