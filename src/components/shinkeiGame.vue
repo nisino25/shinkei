@@ -239,6 +239,28 @@
           './card-pics/hokkaido/food/7.png',
         ],
       },
+      {
+        location: 'アフリカ',
+        isDemo: true,
+        hunterCards: [
+          './card-pics/africa/hunter/1.jpg',
+          './card-pics/africa/hunter/2.jpg',
+          './card-pics/africa/hunter/3.jpg',
+          './card-pics/africa/hunter/4.jpg',
+          './card-pics/africa/hunter/5.jpg',
+          './card-pics/africa/hunter/6.jpg',
+          './card-pics/africa/hunter/7.jpg',
+        ],
+        foodCards: [
+          './card-pics/africa/food/1.jpg',
+          './card-pics/africa/food/2.jpg',
+          './card-pics/africa/food/3.jpg',
+          './card-pics/africa/food/4.jpg',
+          './card-pics/africa/food/5.jpg',
+          './card-pics/africa/food/6.jpg',
+          './card-pics/africa/food/7.jpg',
+        ],
+      },
     ],
   )
   
@@ -369,6 +391,39 @@
             {name: `隕石到来` ,group: null, type: 'bomb', imgSrc: './card-pics/kyoto-gameover-v2.jpg'},
 
             {name: `エコバッグ` ,group: null, type: 'beneficial', imgSrc: './card-pics/kyoto-bad-1-v2.jpg'},
+          ]
+      }
+      if(playArea.value == 'アフリカ'){
+          items.value = [
+              {imgSrc: './card-pics/africa/hunter/1.jpg', group: 1, type: 'regular', name: `ガゼル` , },
+              {imgSrc: './card-pics/africa/food/1.jpg', group: 1, type: 'regular', name: `アカシア<br>（ガゼル）`,},
+  
+              {imgSrc: './card-pics/africa/hunter/2.jpg', group: 2, type: 'regular', name: `アフリカぞう` ,},
+              {imgSrc: './card-pics/africa/food/2.jpg', group: 2, type: 'regular', name: `バナナ<br>（アフリカぞう）`,},
+  
+              {imgSrc: './card-pics/africa/hunter/3.jpg', group: 3, type: 'regular', name: `キリン` ,},
+              {imgSrc: './card-pics/africa/food/3.jpg', group: 3, type: 'regular', name: `アカシア<br>（キリン）`,},
+  
+              {imgSrc: './card-pics/africa/hunter/4.jpg', group: 4, type: 'regular', name: `シマウマ` ,},
+              {imgSrc: './card-pics/africa/food/3.jpg', group: 4, type: 'regular', name: `ガルガヤ<br>（シマウマ）`,},
+  
+              {imgSrc: './card-pics/africa/hunter/5.jpg', group: 5, type: 'regular', name: `チーター` ,},
+              {imgSrc: './card-pics/africa/food/5.jpg', group: 5, type: 'regular', name: `インパラ<br>（チーター）`,},
+  
+              {imgSrc: './card-pics/africa/hunter/6.jpg', group: 6, type: 'regular', name: `フラミンゴ` ,},
+              {imgSrc: './card-pics/africa/food/6.jpg', group: 6, type: 'regular', name: `えび<br>（フラミンゴ）`,},
+  
+              {imgSrc: './card-pics/africa/hunter/7.jpg', group: 7, type: 'regular', name: `ライオン` ,},
+              {imgSrc: './card-pics/africa/food/7.jpg', group: 7, type: 'regular', name: `ヌー<br>（ライオン）`,},
+  
+              {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
+              {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
+  
+              {imgSrc: './card-pics//bad/1.jpg', group: null, type: 'destructive', name: `森林伐採` ,},
+              {imgSrc: './card-pics/bad/2.jpg', group: null, type: 'destructive', name: `海水汚染` ,},
+              {imgSrc: './card-pics/bad/3.jpg', group: null, type: 'destructive', name: `動物との<br>交通事故` ,},
+
+              {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
           ]
       }
       
