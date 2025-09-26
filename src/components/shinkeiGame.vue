@@ -22,10 +22,22 @@
             <template v-if="showingManual">
                 <div class="manual">
                   <div class="flex-container" style="display:flex; justify-content: space-between;">
-                    <template v-for="(info,index) in manualInfo" :key="index" >
-                        <button v-if="(isTesting) || (!isTesting && !info.isDemo)" @click="startGame(info.location)">
-                            {{ info.location }}
-                        </button>
+                    <template v-if="isTesting">
+                        <div class="map-container relative">
+                            <img src="../../public/shinkei-map.png">
+                            <template v-for="(info,index) in manualInfo" :key="index" >
+                                <button class="btn absolute text-sm bg-[#234C6A] py-2 px-2 none text-white" :class="'location-btn-' + info.location" v-if="(isTesting) || (!isTesting && !info.isDemo)" @click="startGame(info.location)">
+                                    {{ info.location }}
+                                </button>
+                            </template>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <template v-for="(info,index) in manualInfo" :key="index" >
+                            <button class="bg-[#365E32] py-2 px-3 leading-tight text-white" v-if="(isTesting) || (!isTesting && !info.isDemo)" @click="startGame(info.location)">
+                                {{ info.location }}
+                            </button>
+                        </template>
                     </template>
                   </div>
 
@@ -681,14 +693,11 @@
         outline: 0;
         cursor: pointer;
         border: none;
-        padding: 0 15px;
-        height: 45px;
-        line-height: 45px;
+        /* height: 45px; */
         border-radius: 7px;
         font-weight: 400;
-        font-size: 16px;
-        background: #365E32;
-        color: white;
+        /* font-size: 16px; */
+        /* color: white; */
         box-shadow: 0 4px 14px 0 rgb(0 0 0 / 10%);
         
     }
@@ -897,6 +906,28 @@
             font-size: 1.2em;
         }
     }
+
+    /* ==================================================== */
+
+    .location-btn-北海道{
+        top: 13%;
+        left: 67%;
+    }
+    .location-btn-沖縄{
+        top: 85%;
+        left: 5%;
+    }.location-btn-京都{
+        top: 52%;
+        left: 34%;
+    }.location-btn-神奈川{
+        top: 48%;
+        left: 50%;
+    }.location-btn-アフリカ{
+        top: 71%;
+        left: 67%;
+    }
+
+
   
   
   </style>
