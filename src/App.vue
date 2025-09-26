@@ -52,6 +52,11 @@
               class="px-4 py-2 bg-red-500 text-white rounded-lg">
               マップゲーム
           </button> 
+          <button v-if="isTesting" 
+              @click="selectGame ='RPG'" 
+              class="px-4 py-2 bg-red-500 text-white rounded-lg">
+              RPG
+          </button> 
       </div>
     </div>
   
@@ -61,6 +66,7 @@
     <switchDemo v-if="selectGame == 'スイッチ'"></switchDemo>
     <dominationDemo v-if="selectGame == '陣地取りゲーム'"></dominationDemo>
     <mapDemo v-if="selectGame == 'マップゲーム'"></mapDemo>
+    <RPGDemo v-if="selectGame == 'RPG'"></RPGDemo>
   
   </template>
   
@@ -75,6 +81,7 @@
   import switchDemo from "./components/switchDemo.vue";
   import dominationDemo from "./components/dominationGame.vue";
   import mapDemo from "./components/mapGame.vue";
+  import RPGDemo from "./components/RPGGame.vue";
 
   const isTesting = ref(false);  
   
