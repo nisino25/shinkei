@@ -22,23 +22,14 @@
             <template v-if="showingManual">
                 <div class="manual">
                   <div class="flex-container" style="display:flex; justify-content: space-between;">
-                    <template v-if="isTesting">
-                        <div class="map-container relative">
-                            <img src="../../public/shinkei-map.png">
-                            <template v-for="(info,index) in manualInfo" :key="index" >
-                                <button class="btn absolute text-sm bg-[#234C6A] py-2 px-2 none text-white" :class="'location-btn-' + info.location" v-if="(isTesting) || (!isTesting && !info.isDemo)" @click="startGame(info.location)">
-                                    {{ info.location }}
-                                </button>
-                            </template>
-                        </div>
-                    </template>
-                    <template v-else>
+                    <div class="map-container relative">
+                        <img src="../../public/shinkei-map.png">
                         <template v-for="(info,index) in manualInfo" :key="index" >
-                            <button class="bg-[#365E32] py-2 px-3 leading-tight text-white" v-if="(isTesting) || (!isTesting && !info.isDemo)" @click="startGame(info.location)">
+                            <button class="btn absolute text-sm bg-[#234C6A] py-2 px-2 none text-white" :class="'location-btn-' + info.location" v-if="(isTesting) || (!isTesting && !info.isDemo)" @click="startGame(info.location)">
                                 {{ info.location }}
                             </button>
                         </template>
-                    </template>
+                    </div>
                   </div>
 
                     <div>
@@ -253,7 +244,7 @@
       },
       {
         location: 'アフリカ',
-        isDemo: true,
+        isDemo: false,
         hunterCards: [
           './card-pics/africa/hunter/1.jpg',
           './card-pics/africa/hunter/2.jpg',
@@ -380,7 +371,7 @@
       if(playArea.value == '神奈川'){
         items.value = [
             {name: `クラゲ<br>(アカウミガメ)` , group: 1, type: 'regular', imgSrc: './card-pics/hiratsuka-food-1.png'},
-            {name: `カニ<br>(カモ)` , group: 2, type: 'regular', imgSrc: './card-pics/hiratsuka-food-2.png'},
+            {name: `カニ<br>(カモメ)` , group: 2, type: 'regular', imgSrc: './card-pics/hiratsuka-food-2.png'},
             {name: `エビ<br>(ミナミハコフグ)` , group: 3, type: 'regular', imgSrc: './card-pics/hiratsuka-food-3.png'},
             {name: `ヤマメ<br>(カワセミ)` , group: 4, type: 'regular', imgSrc: './card-pics/hiratsuka-food-4.png'},
             {name: `ツツジ<br>(アゲハチョウ)` , group: 5, type: 'regular', imgSrc: './card-pics/hiratsuka-food-5.png'},
@@ -389,7 +380,7 @@
             {name: `シロツメグサ<br>(ニホンカモシカ)` , group: 8, type: 'regular', imgSrc: './card-pics/hiratsuka-food-8.png'},
 
             {name: `アカウミガメ` , group: 1, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-1.png'},
-            {name: `カモ` , group: 2, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-2.png'},
+            {name: `カモメ` , group: 2, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-2.png'},
             {name: `ミナミハコフグ` , group: 3, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-3.png'},
             {name: `カワセミ` , group: 4, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-4.png'},
             {name: `アゲハチョウ` , group: 5, type: 'regular', imgSrc: './card-pics/hiratsuka-hunter-5.png'},
