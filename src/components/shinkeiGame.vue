@@ -155,25 +155,38 @@
       {
         isDemo: false,
         location: '沖縄',
-        hunterCards: [
-          './card-pics/okinawa/hunter/1.png',
-          './card-pics/okinawa/hunter/2.png',
-          './card-pics/okinawa/hunter/3.png',
-          './card-pics/okinawa/hunter/4.png',
-          './card-pics/okinawa/hunter/5.png',
-          './card-pics/okinawa/hunter/6.png',
-          './card-pics/okinawa/hunter/7.png',
-        ],
+        
+        wholeCardSet: [
+            {imgSrc: './card-pics/okinawa/hunter/1.png', group: 1, type: 'regular', name: `イリオモテヤマネコ` , },
+            {imgSrc: './card-pics/okinawa/food/1.png?v=2', group: 1, type: 'regular', foodType: "mamal", name: `ネズミ<br>（イリオモテヤマネコ）`,},
 
-        foodCards: [
-          './card-pics/okinawa/food/1.png',
-          './card-pics/okinawa/food/2.png',
-          './card-pics/okinawa/food/3.png',
-          './card-pics/okinawa/food/4.png',
-          './card-pics/okinawa/food/5.png',
-          './card-pics/okinawa/food/6.png',
-          './card-pics/okinawa/food/7.png',
-        ],
+            {imgSrc: './card-pics/okinawa/hunter/2.png', group: 2, type: 'regular', name: `オオゴマダラ` ,},
+            {imgSrc: './card-pics/okinawa/food/2.png', group: 2, type: 'regular', foodType: "plant", name: `ホウライカガミ<br>（オオゴマダラ）`,},
+
+            {imgSrc: './card-pics/okinawa/hunter/3.png', group: 3, type: 'regular', name: `オキナワカブト` ,},
+            {imgSrc: './card-pics/okinawa/food/3.png?v=2', group: 3, type: 'regular', foodType: "sap", name: `じゅえき<br>（オキナワカブト）`,},
+
+            {imgSrc: './card-pics/okinawa/hunter/4.png', group: 4, type: 'regular', name: `カンムリワシ` ,},
+            {imgSrc: './card-pics/okinawa/food/4.png', group: 4, type: 'regular', foodType: "vertebrate", name: `かえる<br>（カンムリワシ）`,},
+
+            {imgSrc: './card-pics/okinawa/hunter/5.png', group: 5, type: 'regular', name: `ジュゴン` ,},
+            {imgSrc: './card-pics/okinawa/food/5.png?v=2', group: 5, type: 'regular', foodType: "algae", name: `かいそう<br>（ジュゴン）`,},
+
+            {imgSrc: './card-pics/okinawa/hunter/6.png', group: 6, type: 'regular', name: `マンタ` ,},
+            {imgSrc: './card-pics/okinawa/food/6.png', group: 6, type: 'regular', foodType: "fish", name: `オキアミ<br>（マンタ）`,},
+
+            {imgSrc: './card-pics/okinawa/hunter/7.png', group: 7, type: 'regular', name: `ヤンバルクイナ` ,},
+            {imgSrc: './card-pics/okinawa/food/7.png?v=2', group: 7, type: 'regular', foodType: "insect", name: `ミミズ<br>（ヤンバルクイナ）`,},
+
+            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
+            {imgSrc: './card-pics/good/2.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
+
+            {imgSrc: './card-pics//bad/1.jpg', group: null, type: 'destructive', name: `森林伐採` ,},
+            {imgSrc: './card-pics/bad/2.jpg', group: null, type: 'destructive', name: `海水汚染` ,},
+            {imgSrc: './card-pics/bad/3.jpg', group: null, type: 'destructive', name: `動物との<br>交通事故` ,},
+
+            {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
+        ]
       },
       {
         location: '神奈川',
@@ -206,24 +219,37 @@
       },
       {
         location: '北海道',
-        hunterCards: [
-          './card-pics/hokkaido/hunter/1.jpg',
-          './card-pics/hokkaido/hunter/2.jpg',
-          './card-pics/hokkaido/hunter/3.jpg',
-          './card-pics/hokkaido/hunter/4.jpg',
-          './card-pics/hokkaido/hunter/5.jpg',
-          './card-pics/hokkaido/hunter/6.jpg',
-          './card-pics/hokkaido/hunter/7.jpg',
-        ],
-        foodCards: [
-          './card-pics/hokkaido/food/1.png',
-          './card-pics/hokkaido/food/2.jpg',
-          './card-pics/hokkaido/food/3.jpg',
-          './card-pics/hokkaido/food/4.jpg',
-          './card-pics/hokkaido/food/5.jpg',
-          './card-pics/hokkaido/food/6.jpg',
-          './card-pics/hokkaido/food/7.png',
-        ],
+        wholeCardSet: [
+            {imgSrc: './card-pics/hokkaido/hunter/1.jpg', group: 1, type: 'regular', name: `オオワシ` , },
+            {imgSrc: './card-pics/hokkaido/food/1.png', group: 1, type: 'regular', foodType: "fish", name: `死んだ魚<br>（オオワシ）`,},
+
+            {imgSrc: './card-pics/hokkaido/hunter/2.jpg', group: 2, type: 'regular', name: `タンチョウヅル` ,},
+            {imgSrc: './card-pics/hokkaido/food/2.png', group: 2, type: 'regular', foodType: "insect", name: `ミミズ<br>（タンチョウヅル）`,},
+
+            {imgSrc: './card-pics/hokkaido/hunter/3.jpg', group: 3, type: 'regular', name: `ヒグマ` ,},
+            {imgSrc: './card-pics/hokkaido/food/3.png', group: 3, type: 'regular', foodType: "fruit", name: `どんぐり<br>（ヒグマ）`,},
+
+            {imgSrc: './card-pics/hokkaido/hunter/4.jpg', group: 4, type: 'regular', name: `オオクワガタ` ,},
+            {imgSrc: './card-pics/hokkaido/food/4.png', group: 4, type: 'regular', foodType: "sap", name: `じゅえき<br>（オオクワガタ）`,},
+
+            {imgSrc: './card-pics/hokkaido/hunter/5.jpg', group: 5, type: 'regular', name: `イトウ` ,},
+            {imgSrc: './card-pics/hokkaido/food/5.png', group: 5, type: 'regular', foodType: "fish", name: `どじょう<br>（イトウ）`,},
+
+            {imgSrc: './card-pics/hokkaido/hunter/6.jpg', group: 6, type: 'regular', name: `エゾモモンガ` ,},
+            {imgSrc: './card-pics/hokkaido/food/6.png', group: 6, type: 'regular', foodType: "plant", name: `花やはっぱ<br>（エゾモモンガ）`,},
+
+            {imgSrc: './card-pics/hokkaido/hunter/7.jpg', group: 7, type: 'regular', name: `シマエナガ` ,},
+            {imgSrc: './card-pics/hokkaido/food/7.png', group: 7, type: 'regular', foodType: "insect", name: `アブラムシ<br>（シマエナガ）`,},
+
+            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
+            {imgSrc: './card-pics/good/2.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
+
+            {imgSrc: './card-pics//bad/1.jpg', group: null, type: 'destructive', name: `森林伐採` ,},
+            {imgSrc: './card-pics/bad/2.jpg', group: null, type: 'destructive', name: `海水汚染` ,},
+            {imgSrc: './card-pics/bad/3.jpg', group: null, type: 'destructive', name: `動物との<br>交通事故` ,},
+
+            {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
+        ]
       },
       {
         location: 'アフリカ',
@@ -251,7 +277,7 @@
             {imgSrc: './card-pics/africa/food/7.png', group: 7, type: 'regular', foodType: "mammal", name: `ヌー<br>（ライオン）`,},
 
             {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
-            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
+            {imgSrc: './card-pics/good/2.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
 
             {imgSrc: './card-pics//bad/1.jpg', group: null, type: 'destructive', name: `森林伐採` ,},
             {imgSrc: './card-pics/bad/2.jpg', group: null, type: 'destructive', name: `海水汚染` ,},
