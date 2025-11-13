@@ -262,7 +262,7 @@
       },
       {
         location: 'オーストラリア',
-        isDemo: true,
+        isDemo: false,
         wholeCardSet: [
             {imgSrc: './card-pics/australia/hunter/1.png', group: 1, type: 'regular', name: `コアラ` , },
             {imgSrc: './card-pics/australia/food/1.png', group: 1, type: 'regular', foodType: "plant", name: `ユーカリ<br>（コアラ）`,},
@@ -297,7 +297,7 @@
       },
       {
         location: '京都',
-        isDemo: true,
+        isDemo: false,
         wholeCardSet: [
             {imgSrc: './card-pics/kyoto/hunter/1.png', group: 1, type: 'regular', name: `アサギマダラ` , },
             {imgSrc: './card-pics/kyoto/food/1.png', group: 1, type: 'regular', foodType: "plant", name: `フジバカマ<br>（アサギマダラ）`,},
