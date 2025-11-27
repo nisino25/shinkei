@@ -356,6 +356,41 @@
             {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
         ]
       },
+      {
+        location: 'ロシア',
+        isDemo: true,
+        wholeCardSet: [
+            {imgSrc: './card-pics/russia/hunter/1.png', group: 1, type: 'regular', name: `アムールトラ` , },
+            {imgSrc: './card-pics/russia/food/1.png', group: 1, type: 'regular', foodType: "mammal", name: `イノシシ<br>（アムールトラ）`,},
+
+            {imgSrc: './card-pics/russia/hunter/2.png', group: 2, type: 'regular', name: `アムールヒョウ` ,},
+            {imgSrc: './card-pics/russia/food/2.png', group: 2, type: 'regular', foodType: "mammal", name: `うさぎ<br>（アムールヒョウ）`,},
+
+            {imgSrc: './card-pics/russia/hunter/3.png', group: 3, type: 'regular', name: `コウノトリ` ,},
+            {imgSrc: './card-pics/russia/food/3.png', group: 3, type: 'regular', foodType: "fish", name: `さかな<br>（コウノトリ）`,},
+
+            {imgSrc: './card-pics/russia/hunter/4.png', group: 4, type: 'regular', name: `シベリアオオカミ` ,},
+            {imgSrc: './card-pics/russia/food/4.png', group: 4, type: 'regular', foodType: "mammal", name: `オオツノシカ<br>（シベリアオオカミ）`,},
+
+            {imgSrc: './card-pics/russia/hunter/5.png', group: 5, type: 'regular', name: `シベリアオオヤマネコ` ,},
+            {imgSrc: './card-pics/russia/food/5.png', group: 5, type: 'regular', foodType: "mammal", name: `ねずみ<br>（シベリアオオヤマネコ）`,},
+
+            {imgSrc: './card-pics/russia/hunter/6.png', group: 6, type: 'regular', name: `トナカイ` ,},
+            {imgSrc: './card-pics/russia/food/6.png', group: 6, type: 'regular', foodType: "decay", name: `コケ<br>（トナカイ）`,},
+
+            {imgSrc: './card-pics/russia/hunter/7.png', group: 7, type: 'regular', name: `ホッキョクグマ` ,},
+            {imgSrc: './card-pics/russia/food/7.png', group: 7, type: 'regular', foodType: "mammal", name: `アザラシ<br>（ホッキョクグマ）`,},
+
+            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
+            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
+
+            {imgSrc: './card-pics//bad/1.jpg', group: null, type: 'destructive', name: `森林伐採` ,},
+            {imgSrc: './card-pics/bad/2.jpg', group: null, type: 'destructive', name: `海水汚染` ,},
+            {imgSrc: './card-pics/bad/3.jpg', group: null, type: 'destructive', name: `動物との<br>交通事故` ,},
+
+            {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
+        ]
+      },
     ],
   );
 
@@ -892,11 +927,14 @@
         top: 52%;
         left: 50%;
     }.location-btn-アフリカ{
-        top: 69%;
+        top: 65%;
         left: 67%;
     }.location-btn-オーストラリア{
-        top: 79%;
+        top: 75%;
         left: 62%;
+    }.location-btn-ロシア{
+        top: 85%;
+        left: 68%;
     }
 
 
