@@ -58,21 +58,40 @@
                     :style="{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }"
                 >
                 <div
-    v-for="tile in tiles"
-    :key="tile.id"
-    class="relative rounded-sm transition-transform duration-150 cursor-pointer"
-    :class="{
-        'scale-[1.03] ring-4 ring-offset-1': tile.selected,
-        'animate-pulse': tile.validForSelection
-    }"
-    @click="onTileClick(tile)"
-    :style="tileStyle(tile)"
->
-<div
-                            v-if="tile.ownerTeam !== null"
-                            class="absolute left-1/2 top-1/2 w-1/2 aspect-square rounded-full border-[3px] bg-white bg-opacity-90 transform -translate-x-1/2 -translate-y-1/2 "
-                            :style="{ background: teamColor(tile.ownerTeam) }"
-                        ></div></div>
+                    v-for="tile in tiles"
+                    :key="tile.id"
+                    class="relative rounded-sm transition-transform duration-150 cursor-pointer"
+                    :class="{
+                        'scale-[1.03] ring-4 ring-offset-1': tile.selected,
+                        'animate-pulse': tile.validForSelection
+                    }"
+                    @click="onTileClick(tile)"
+                    :style="tileStyle(tile)"
+                >
+                <div v-if="tile.ownerTeam !== null">
+                    <div class="
+                        block
+                        absolute
+                        top-1/2
+                        left-1/2
+                        -translate-x-1/2
+                        -translate-y-1/2
+                        bg-white
+                        w-[60%]
+                        rounded-full
+                        aspect-square
+                    "
+                    ></div>
+                    <div
+                        class="absolute left-1/2 top-1/2 w-1/2 aspect-square rounded-full border-[6px] bg-opacity-90 transform -translate-x-1/2 -translate-y-1/2 tile-circle z-10"
+                        :style="{
+                            background: typeColors[tile.type],
+                            borderColor: teamColor(tile.ownerTeam)
+                        }"
+                    ></div>
+                </div>
+
+                </div>
 
                 
                     <!-- <div
@@ -95,27 +114,13 @@
 export default {
     // name: 'Tiles20x20',
     data() {
-        const cols = 15
-        const rows = 15
-        const tiles = []
-        let id = 1
-        for (let r = 0; r < rows; r++) {
-            for (let c = 0; c < cols; c++) {
-                tiles.push({
-                    id: id++,
-                    row: r,
-                    col: c,
-                    type: 'none',
-                    selected: false,
-                    ownerTeam: null
-                })
-            }
-        }
+        const cols = 25
+        const rows = 25
 
         return {
             cols,
             rows,
-            tiles,
+            tiles: [],
             currentPlayer: null,
             currentType: null,
             players: [
@@ -133,6 +138,13 @@ export default {
                 grass: 1,
                 bug: 3,
                 animal: 10
+            },
+            areaTypes: ['town', 'forest', 'river', 'sea'],
+            areaColors: {
+                town: '#D3B683',
+                forest: '#5FA86E',
+                river: '#6EC4E8',
+                sea: '#3A83C3'
             }
         }
     },
@@ -151,11 +163,8 @@ export default {
           this.goToNextPlayer()
         },
         resetTiles() {
-            this.tiles.forEach(t => {
-                t.type = 'none'
-                t.ownerTeam = null
-                t.selected = false
-            })
+            this.generateTiles()
+
             this.players.forEach(p => (p.score = 0))
         },
         setSelectType(playerId, type) {
@@ -179,11 +188,18 @@ export default {
             return player ? player.color : '#000'
         },
         tileStyle(tile) {
+            // const base = {
+            //     background: this.typeColors[tile.type] || '#ccc',
+            //     width: '100%',
+            //     aspectRatio: '1 / 1'
+            // }
             const base = {
-                background: this.typeColors[tile.type] || '#ccc',
+                background: this.areaColors[tile.area] || '#ccc',
                 width: '100%',
                 aspectRatio: '1 / 1'
             }
+
+
 
             // pulse for valid tiles
             if (tile.validForSelection) {
@@ -248,6 +264,156 @@ export default {
                 (t.col === col && Math.abs(t.row - row) === 1)
             )
         },
+        randomArea() {
+        const list = ['town', 'forest']   // river + sea removed
+        return list[Math.floor(Math.random() * list.length)]
+},
+       generateTiles() {
+        this.tiles = []
+        let id = 1
+
+        // blank map
+        for (let r = 0; r < this.rows; r++) {
+                for (let c = 0; c < this.cols; c++) {
+                        this.tiles.push({
+                                id: id++,
+                                row: r,
+                                col: c,
+                                type: 'none',
+                                selected: false,
+                                ownerTeam: null,
+                                area: null
+                        })
+                }
+        }
+
+        this.makeOcean()
+        this.makeRivers(3) // generate 3 rivers randomly
+
+        // seeds for land areas
+        const seedCount = 12
+        for (let i = 0; i < seedCount; i++) {
+                const r = Math.floor(Math.random() * this.rows)
+                const c = Math.floor(Math.random() * this.cols)
+                const tile = this.tiles.find(t => t.row === r && t.col === c)
+                if (!tile || tile.area) continue
+                tile.area = this.randomArea()
+        }
+
+        // expand land
+        for (let i = 0; i < 300; i++) {
+                const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
+                if (!tile.area || tile.area === 'sea' || tile.area === 'river') continue
+                const neighbors = this.getNeighbors(tile)
+                neighbors.forEach(n => {
+                        if (!n.area && Math.random() < 0.6) n.area = tile.area
+                })
+        }
+
+        // leftover
+        this.tiles.forEach(t => {
+                if (!t.area) t.area = this.randomArea()
+        })
+},
+        setArea(r, c, area) {
+            const t = this.tiles.find(t => t.row === r && t.col === c)
+            if (t) t.area = area
+        },
+        makeRivers(count = 2) {
+        for (let r = 0; r < count; r++) {
+                // pick random start edge: top, bottom, left, right
+                const edges = ['top', 'bottom', 'left', 'right']
+                const startEdge = edges[Math.floor(Math.random() * edges.length)]
+                let row, col
+
+                switch(startEdge) {
+                        case 'top':
+                                row = 0
+                                col = Math.floor(Math.random() * this.cols)
+                                break
+                        case 'bottom':
+                                row = this.rows - 1
+                                col = Math.floor(Math.random() * this.cols)
+                                break
+                        case 'left':
+                                row = Math.floor(Math.random() * this.rows)
+                                col = 0
+                                break
+                        case 'right':
+                                row = Math.floor(Math.random() * this.rows)
+                                col = this.cols - 1
+                                break
+                }
+
+                // random walk until reaching opposite side or map edge
+                const maxSteps = this.rows * this.cols
+                let steps = 0
+
+                while (steps < maxSteps) {
+                        this.setArea(row, col, 'river')
+
+                        // random direction: up/down/left/right
+                        const dirs = []
+                        if (row > 0) dirs.push([-1, 0])
+                        if (row < this.rows - 1) dirs.push([1, 0])
+                        if (col > 0) dirs.push([0, -1])
+                        if (col < this.cols - 1) dirs.push([0, 1])
+
+                        const [dr, dc] = dirs[Math.floor(Math.random() * dirs.length)]
+                        row += dr
+                        col += dc
+
+                        steps++
+
+                        // stop early if river hits ocean
+                        const tile = this.tiles.find(t => t.row === row && t.col === col)
+                        if (tile && tile.area === 'sea') break
+                }
+        }
+},
+        makeOcean() {
+        const edges = ['top', 'bottom', 'left', 'right']
+
+        // pick 1–4 edges randomly
+        const oceanEdges = edges.filter(() => Math.random() < 0.5)
+        if (oceanEdges.length === 0) oceanEdges.push(edges[Math.floor(Math.random() * edges.length)])
+
+        const seeds = []
+
+        oceanEdges.forEach(edge => {
+                let positions = []
+                if (edge === 'top') positions = Array.from({length: this.cols}, (_, i) => ({row: 0, col: i}))
+                if (edge === 'bottom') positions = Array.from({length: this.cols}, (_, i) => ({row: this.rows - 1, col: i}))
+                if (edge === 'left') positions = Array.from({length: this.rows}, (_, i) => ({row: i, col: 0}))
+                if (edge === 'right') positions = Array.from({length: this.rows}, (_, i) => ({row: i, col: this.cols - 1}))
+
+                const count = Math.max(3, Math.floor(Math.random() * positions.length * 0.6)) // bigger starting ocean
+                for (let i = 0; i < count; i++) {
+                        const p = positions[Math.floor(Math.random() * positions.length)]
+                        seeds.push(p)
+                        this.setArea(p.row, p.col, 'sea')
+                }
+        })
+
+        // expand ocean inward more aggressively
+        for (let i = 0; i < 800; i++) {  // more iterations = bigger ocean blobs
+                const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
+                if (tile.area !== 'sea') continue
+
+                const neighbors = this.getNeighbors(tile)
+                neighbors.forEach(n => {
+                        if (!n.area && Math.random() < 0.5) {  // 50% chance to expand
+                                n.area = 'sea'
+                        }
+                })
+        }
+}
+
+
+
+
+
+
     },
    mounted() {
         console.clear()
@@ -255,6 +421,8 @@ export default {
         if (this.players.length > 0) {
             this.currentPlayer = this.players[0].id
         }
+
+        this.generateTiles();
     },
 }
 </script>
