@@ -358,7 +358,7 @@
       },
       {
         location: 'ロシア',
-        isDemo: true,
+        isDemo: false,
         wholeCardSet: [
             {imgSrc: './card-pics/russia/hunter/1.png', group: 1, type: 'regular', name: `アムールトラ` , },
             {imgSrc: './card-pics/russia/food/1.png', group: 1, type: 'regular', foodType: "mammal", name: `イノシシ<br>（アムールトラ）`,},
