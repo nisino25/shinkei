@@ -25,16 +25,9 @@
                     <div class="map-container relative pb-2">
                         <img src="../../public/shinkei-map.png">
                         <template v-for="(info,index) in manualInfo" :key="index" >
-                            <template v-if="!isTesting">
-                                <button class="btn absolute text-sm bg-[#234C6A] py-2 px-2 none text-white" :class="'location-btn-' + info.location" v-if="(isTesting) || (!isTesting && !info.isDemo)" @click="selectLocation(info.location)">
-                                    {{ info.location }}
-                                </button>
-                            </template>
-                            <template v-else>
                                 <a class="btn absolute text-sm bg-[#234C6A] py-2 px-2 none text-white" :class="'location-btn-' + info.location" v-if="(isTesting) || (!isTesting && !info.isDemo)" href="#location-intro" @click="selectLocation(info.location)">
                                     {{ info.location }}
                                 </a>
-                            </template>
                             
                         </template>
                     </div>
