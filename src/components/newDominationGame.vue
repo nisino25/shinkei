@@ -140,16 +140,23 @@ export default {
                 animal: 10
             },
             areaTypes: ['town', 'forest', 'river', 'sea'],
-            areaColors: {
-                town: '#D3B683',
-                forest: '#5FA86E',
-                river: '#6EC4E8',
-                sea: '#3A83C3'
-            }
+           areaColors: {
+        town: '#4A4A4A',       // darker grey
+        forest: '#5FA86E',
+        dirt: '#D7B899',       // lighter dirt
+        river: '#6EC4E8',
+        sea: '#3A83C3',
+        undeveloped: '#D96A6A' // reddish, new
+}
+
         }
     },
     methods: {
         onTileClick(tile) {
+            if(tile.area === 'undeveloped') {
+                alert("まだ動物たちが住めないから、環境をなおしてね")
+                return; // cannot select undeveloped
+            }
           if(tile.ownerTeam !== null) return; // already owned
           if(this.currentType === null) return; // no type selected
           if (!tile.validForSelection) return // not valid for selection
@@ -265,10 +272,10 @@ export default {
             )
         },
         randomArea() {
-        const list = ['town', 'forest']   // river + sea removed
-        return list[Math.floor(Math.random() * list.length)]
+    const list = ['forest', 'dirt']
+    return list[Math.floor(Math.random() * list.length)]
 },
-       generateTiles() {
+generateTiles() {
         this.tiles = []
         let id = 1
 
@@ -287,10 +294,34 @@ export default {
                 }
         }
 
+        // oceans and rivers
         this.makeOcean()
-        this.makeRivers(3) // generate 3 rivers randomly
+        this.makeRivers(3)
 
-        // seeds for land areas
+        // --- Create town clusters ---
+        const townSeeds = 8  // increase for larger towns
+        for (let i = 0; i < townSeeds; i++) {
+                const r = Math.floor(Math.random() * this.rows)
+                const c = Math.floor(Math.random() * this.cols)
+                const tile = this.tiles.find(t => t.row === r && t.col === c)
+                if (!tile || tile.area) continue
+                tile.area = 'town'
+        }
+
+        // Expand towns more aggressively
+        for (let i = 0; i < 400; i++) {
+                const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
+                if (tile.area !== 'town') continue
+                
+                const neighbors = this.getNeighbors(tile)
+                neighbors.forEach(n => {
+                        if (!n.area && Math.random() < 0.75) {  
+                                n.area = 'town'
+                        }
+                })
+        }
+
+        // seeds for other land areas
         const seedCount = 12
         for (let i = 0; i < seedCount; i++) {
                 const r = Math.floor(Math.random() * this.rows)
@@ -300,7 +331,7 @@ export default {
                 tile.area = this.randomArea()
         }
 
-        // expand land
+        // expand land areas
         for (let i = 0; i < 300; i++) {
                 const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
                 if (!tile.area || tile.area === 'sea' || tile.area === 'river') continue
@@ -310,9 +341,16 @@ export default {
                 })
         }
 
-        // leftover
+        // leftover / undeveloped tiles
         this.tiles.forEach(t => {
-                if (!t.area) t.area = this.randomArea()
+                if (!t.area) {
+                        // ~1 in 7.5 tiles becomes undeveloped
+                        if (Math.random() < 1/8) {
+                                t.area = 'undeveloped'
+                        } else {
+                                t.area = this.randomArea()
+                        }
+                }
         })
 },
         setArea(r, c, area) {
@@ -387,7 +425,7 @@ export default {
                 if (edge === 'left') positions = Array.from({length: this.rows}, (_, i) => ({row: i, col: 0}))
                 if (edge === 'right') positions = Array.from({length: this.rows}, (_, i) => ({row: i, col: this.cols - 1}))
 
-                const count = Math.max(3, Math.floor(Math.random() * positions.length * 0.6)) // bigger starting ocean
+                const count = Math.max(3, Math.floor(Math.random() * positions.length * 0.5)) // bigger starting ocean
                 for (let i = 0; i < count; i++) {
                         const p = positions[Math.floor(Math.random() * positions.length)]
                         seeds.push(p)
@@ -402,12 +440,43 @@ export default {
 
                 const neighbors = this.getNeighbors(tile)
                 neighbors.forEach(n => {
-                        if (!n.area && Math.random() < 0.5) {  // 50% chance to expand
+                        if (!n.area && Math.random() < 0.8) {  // 50% chance to expand
                                 n.area = 'sea'
                         }
                 })
         }
-}
+},
+makeTowns(count = 4) {
+        const townSeeds = []
+
+        // 1. pick random town center seeds
+        for (let i = 0; i < count; i++) {
+                let tile = null
+
+                // avoid water
+                while (!tile || tile.area === 'sea' || tile.area === 'river') {
+                        tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
+                }
+
+                tile.area = 'town'
+                townSeeds.push(tile)
+        }
+
+        // 2. town expansion
+        for (let i = 0; i < 300; i++) {
+                const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
+                if (tile.area !== 'town') continue
+
+                const neighbors = this.getNeighbors(tile)
+                neighbors.forEach(n => {
+                        if (n.area === null || n.area === 'forest' || n.area === 'dirt') {
+                                if (Math.random() < 0.4) {
+                                        n.area = 'town'
+                                }
+                        }
+                })
+        }
+},
 
 
 
