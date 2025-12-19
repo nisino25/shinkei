@@ -62,34 +62,49 @@
                     :key="tile.id"
                     class="relative rounded-sm transition-transform duration-150 cursor-pointer"
                     :class="{
-                        'scale-[1.03] ring-4 ring-offset-1': tile.selected,
-                        'animate-pulse': tile.validForSelection
+                        'scale-[1.03] ring-4 ring-offset-1': tile.selected
                     }"
                     @click="onTileClick(tile)"
                     :style="tileStyle(tile)"
                 >
-                <div v-if="tile.ownerTeam !== null">
-                    <div class="
-                        block
+                    <div 
+                        v-if="tile.validForSelection"
+                        class="
+                        animate-pulse
                         absolute
                         top-1/2
                         left-1/2
                         -translate-x-1/2
                         -translate-y-1/2
-                        bg-white
-                        w-[60%]
+                        bg-golden
+                        w-[70%]
                         rounded-full
                         aspect-square
-                    "
-                    ></div>
-                    <div
-                        class="absolute left-1/2 top-1/2 w-1/2 aspect-square rounded-full border-[6px] bg-opacity-90 transform -translate-x-1/2 -translate-y-1/2 tile-circle z-10"
-                        :style="{
-                            background: typeColors[tile.type],
-                            borderColor: teamColor(tile.ownerTeam)
-                        }"
-                    ></div>
-                </div>
+                        bg-yellow-100"
+                        >
+                    </div>
+                    <div v-if="tile.ownerTeam !== null">
+                        <div class="
+                            block
+                            absolute
+                            top-1/2
+                            left-1/2
+                            -translate-x-1/2
+                            -translate-y-1/2
+                            bg-white
+                            w-[60%]
+                            rounded-full
+                            aspect-square
+                        "
+                        ></div>
+                        <div
+                            class="absolute left-1/2 top-1/2 w-1/2 aspect-square rounded-full border-[6px] bg-opacity-90 transform -translate-x-1/2 -translate-y-1/2 tile-circle z-10"
+                            :style="{
+                                background: typeColors[tile.type],
+                                borderColor: teamColor(tile.ownerTeam)
+                            }"
+                        ></div>
+                    </div>
 
                 </div>
 
@@ -209,11 +224,11 @@ export default {
 
 
             // pulse for valid tiles
-            if (tile.validForSelection) {
-                base.animation = 'pulse 1s infinite'
-                base.background = 'gold'
-                return base
-            }
+            //if (tile.validForSelection) {
+                //base.animation = 'pulse 1s infinite'
+                //base.background = 'gold'
+                //return base
+            //}
 
             if (tile.ownerTeam !== null) {
                 base.boxShadow = `inset 0 0 0 3px ${this.teamColor(tile.ownerTeam)}55`
@@ -241,12 +256,15 @@ export default {
 
             if(this.currentType === 'grass') {
                 this.tiles.forEach(t => {
+                    console.log(t)
+                    if(t.area === "undeveloped") return t.validForSelection = false
                     if(t.ownerTeam === null) t.validForSelection = true
                 })
             }
 
             if(this.currentType === 'bug') {
                 this.tiles.forEach(t => {
+                    if(t.area === "undeveloped") return t.validForSelection = false
                     if(t.ownerTeam !== null) return
                     const neighbors = this.getNeighbors(t)
                     const touchingGrass = neighbors.filter(n => n.type === 'grass')
@@ -256,6 +274,7 @@ export default {
 
             if(this.currentType === 'animal') {
                 this.tiles.forEach(t => {
+                    if(t.area === "undeveloped") return t.validForSelection = false
                     if(t.ownerTeam !== null) return
                     const neighbors = this.getNeighbors(t)
                     const touchingBugs = neighbors.filter(n => n.type === 'bug')
