@@ -23,13 +23,35 @@
                 <div class="manual">
                   <div class="flex-container" style="display:flex; justify-content: space-between;">
                     <div class="map-container relative pb-2">
-                        <img src="../../public/shinkei-map.png">
-                        <template v-for="(info,index) in manualInfo" :key="index" >
-                                <a class="btn absolute text-sm bg-[#234C6A] py-2 px-2 none text-white" :class="'location-btn-' + info.location" v-if="(isTesting) || (!isTesting && !info.isDemo)" href="#location-intro" @click="selectLocation(info.location)">
+                        <template v-if="!isTesting">
+                            <img src="../../public/shinkei-map.png">
+                            <template v-for="(info,index) in manualInfo" :key="index" >
+                                <a class="btn absolute text-sm bg-[#234C6A] py-2 px-2 none text-white" :class="'location-btn-' + info.location" v-if="(!isTesting && !info.isDemo) || (isTesting) " href="#location-intro" @click="selectLocation(info.location)">
                                     {{ info.location }}
                                 </a>
+                            </template>
+                        </template>
+                        <template v-else>
+                            <img src="../../public/shinkei-map-demo.png" v-if="isTesting">
+                            <template v-for="(info,index) in manualInfo.filter(i => !i.isInternational)" :key="index" >
+                                <a class="btn absolute text-sm bg-[#234C6A] py-2 px-2 none text-white" :class="'location-btn-' + info.location" v-if="(!isTesting && !info.isDemo) || (isTesting)" href="#location-intro" @click="selectLocation(info.location)">
+                                    {{ info.location }}
+                                </a>
+                            </template>
+                            <div class="flag-container absolute right-[15px] bottom-[15px] flex flex-wrap gap-2 text-[37.5px] items-center">
+                                <template v-for="(info,index) in manualInfo.filter(i => i.isInternational)" :key="index" >
+                                    <a href="#location-intro" @click="selectLocation(info.location)" class="btn">
+                                        <span v-if="info.countryCode !== 'af'"
+                                            :class="`fi fi-${info.countryCode}`" >
+                                        </span>
+                                        <span v-else>🦁</span>
+                                    </a>
+                                </template>
+                            </div>
                             
                         </template>
+
+                        
                     </div>
                   </div>
 
@@ -254,76 +276,6 @@
         ]
       },
       {
-        location: 'アフリカ',
-        isDemo: false,
-        wholeCardSet: [
-            {imgSrc: './card-pics/africa/hunter/1.jpg', group: 1, type: 'regular', name: `ガゼル` , },
-            {imgSrc: './card-pics/africa/food/1.png', group: 1, type: 'regular', foodType: "plant", name: `アカシアの葉<br>（ガゼル）`,},
-
-            {imgSrc: './card-pics/africa/hunter/2.jpg', group: 2, type: 'regular', name: `アフリカぞう` ,},
-            {imgSrc: './card-pics/africa/food/2.png', group: 2, type: 'regular', foodType: "fruit", name: `バナナ<br>（アフリカぞう）`,},
-
-            {imgSrc: './card-pics/africa/hunter/3.jpg', group: 3, type: 'regular', name: `キリン` ,},
-            {imgSrc: './card-pics/africa/food/3.png', group: 3, type: 'regular', foodType: "plant", name: `アカシアの花<br>（キリン）`,},
-
-            {imgSrc: './card-pics/africa/hunter/4.jpg', group: 4, type: 'regular', name: `シマウマ` ,},
-            {imgSrc: './card-pics/africa/food/4.png', group: 4, type: 'regular', foodType: "plant", name: `ガルガヤ<br>（シマウマ）`,},
-
-            {imgSrc: './card-pics/africa/hunter/5.jpg', group: 5, type: 'regular', name: `チーター` ,},
-            {imgSrc: './card-pics/africa/food/5.png', group: 5, type: 'regular', foodType: "mammal", name: `インパラ<br>（チーター）`,},
-
-            {imgSrc: './card-pics/africa/hunter/6.jpg', group: 6, type: 'regular', name: `フラミンゴ` ,},
-            {imgSrc: './card-pics/africa/food/6.png', group: 6, type: 'regular', foodType: "fish", name: `えび<br>（フラミンゴ）`,},
-
-            {imgSrc: './card-pics/africa/hunter/7.jpg', group: 7, type: 'regular', name: `ライオン` ,},
-            {imgSrc: './card-pics/africa/food/7.png', group: 7, type: 'regular', foodType: "mammal", name: `ヌー<br>（ライオン）`,},
-
-            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
-            {imgSrc: './card-pics/good/2.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
-
-            {imgSrc: './card-pics//bad/1.jpg', group: null, type: 'destructive', name: `森林伐採` ,},
-            {imgSrc: './card-pics/bad/2.jpg', group: null, type: 'destructive', name: `海水汚染` ,},
-            {imgSrc: './card-pics/bad/3.jpg', group: null, type: 'destructive', name: `動物との<br>交通事故` ,},
-
-            {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
-        ]
-      },
-      {
-        location: 'オーストラリア',
-        isDemo: false,
-        wholeCardSet: [
-            {imgSrc: './card-pics/australia/hunter/1.png', group: 1, type: 'regular', name: `コアラ` , },
-            {imgSrc: './card-pics/australia/food/1.png', group: 1, type: 'regular', foodType: "plant", name: `ユーカリ<br>（コアラ）`,},
-
-            {imgSrc: './card-pics/australia/hunter/2.png', group: 2, type: 'regular', name: `カンガルー` ,},
-            {imgSrc: './card-pics/australia/food/2.png', group: 2, type: 'regular', foodType: "fruit", name: `イネ科植物<br>（カンガルー）`,},
-
-            {imgSrc: './card-pics/australia/hunter/3.png', group: 3, type: 'regular', name: `カモノハシ` ,},
-            {imgSrc: './card-pics/australia/food/3.png', group: 3, type: 'regular', foodType: "vertebrate", name: `かえる<br>（カモノハシ）`,},
-
-            {imgSrc: './card-pics/australia/hunter/4.png', group: 4, type: 'regular', name: `ウォンバット` ,},
-            {imgSrc: './card-pics/australia/food/4.png', group: 4, type: 'regular', foodType: "decay", name: `きのこ<br>（ウォンバット）`,},
-
-            {imgSrc: './card-pics/australia/hunter/5.png', group: 5, type: 'regular', name: `リトルペンギン` ,},
-            {imgSrc: './card-pics/australia/food/5.png', group: 5, type: 'regular', foodType: "fish", name: `こざかな<br>（リトルペンギン）`,},
-
-            {imgSrc: './card-pics/australia/hunter/6.png', group: 6, type: 'regular', name: `イリエワニ` ,},
-            {imgSrc: './card-pics/australia/food/6.png', group: 6, type: 'regular', foodType: "mammal", name: `水牛<br>（イリエワニ）`,},
-
-            {imgSrc: './card-pics/australia/hunter/7.png', group: 7, type: 'regular', name: `ディンゴ` ,},
-            {imgSrc: './card-pics/australia/food/7.png', group: 7, type: 'regular', foodType: "mammal", name: `うさぎ<br>（ディンゴ）`,},
-
-            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
-            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
-
-            {imgSrc: './card-pics//bad/1.jpg', group: null, type: 'destructive', name: `森林伐採` ,},
-            {imgSrc: './card-pics/bad/2.jpg', group: null, type: 'destructive', name: `海水汚染` ,},
-            {imgSrc: './card-pics/bad/3.jpg', group: null, type: 'destructive', name: `動物との<br>交通事故` ,},
-
-            {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
-        ]
-      },
-      {
         location: '京都',
         isDemo: false,
         wholeCardSet: [
@@ -358,9 +310,86 @@
             {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
         ]
       },
+
+      {
+        location: 'アフリカ',
+        isDemo: false,
+        isInternational: true,
+        countryCode: 'af',
+        wholeCardSet: [
+            {imgSrc: './card-pics/africa/hunter/1.jpg', group: 1, type: 'regular', name: `ガゼル` , },
+            {imgSrc: './card-pics/africa/food/1.png', group: 1, type: 'regular', foodType: "plant", name: `アカシアの葉<br>（ガゼル）`,},
+
+            {imgSrc: './card-pics/africa/hunter/2.jpg', group: 2, type: 'regular', name: `アフリカぞう` ,},
+            {imgSrc: './card-pics/africa/food/2.png', group: 2, type: 'regular', foodType: "fruit", name: `バナナ<br>（アフリカぞう）`,},
+
+            {imgSrc: './card-pics/africa/hunter/3.jpg', group: 3, type: 'regular', name: `キリン` ,},
+            {imgSrc: './card-pics/africa/food/3.png', group: 3, type: 'regular', foodType: "plant", name: `アカシアの花<br>（キリン）`,},
+
+            {imgSrc: './card-pics/africa/hunter/4.jpg', group: 4, type: 'regular', name: `シマウマ` ,},
+            {imgSrc: './card-pics/africa/food/4.png', group: 4, type: 'regular', foodType: "plant", name: `ガルガヤ<br>（シマウマ）`,},
+
+            {imgSrc: './card-pics/africa/hunter/5.jpg', group: 5, type: 'regular', name: `チーター` ,},
+            {imgSrc: './card-pics/africa/food/5.png', group: 5, type: 'regular', foodType: "mammal", name: `インパラ<br>（チーター）`,},
+
+            {imgSrc: './card-pics/africa/hunter/6.jpg', group: 6, type: 'regular', name: `フラミンゴ` ,},
+            {imgSrc: './card-pics/africa/food/6.png', group: 6, type: 'regular', foodType: "fish", name: `えび<br>（フラミンゴ）`,},
+
+            {imgSrc: './card-pics/africa/hunter/7.jpg', group: 7, type: 'regular', name: `ライオン` ,},
+            {imgSrc: './card-pics/africa/food/7.png', group: 7, type: 'regular', foodType: "mammal", name: `ヌー<br>（ライオン）`,},
+
+            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
+            {imgSrc: './card-pics/good/2.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
+
+            {imgSrc: './card-pics//bad/1.jpg', group: null, type: 'destructive', name: `森林伐採` ,},
+            {imgSrc: './card-pics/bad/2.jpg', group: null, type: 'destructive', name: `海水汚染` ,},
+            {imgSrc: './card-pics/bad/3.jpg', group: null, type: 'destructive', name: `動物との<br>交通事故` ,},
+
+            {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
+        ]
+      },
+      {
+        location: 'オーストラリア',
+        countryCode: 'au',
+        isDemo: false,
+        isInternational: true,
+        wholeCardSet: [
+            {imgSrc: './card-pics/australia/hunter/1.png', group: 1, type: 'regular', name: `コアラ` , },
+            {imgSrc: './card-pics/australia/food/1.png', group: 1, type: 'regular', foodType: "plant", name: `ユーカリ<br>（コアラ）`,},
+
+            {imgSrc: './card-pics/australia/hunter/2.png', group: 2, type: 'regular', name: `カンガルー` ,},
+            {imgSrc: './card-pics/australia/food/2.png', group: 2, type: 'regular', foodType: "fruit", name: `イネ科植物<br>（カンガルー）`,},
+
+            {imgSrc: './card-pics/australia/hunter/3.png', group: 3, type: 'regular', name: `カモノハシ` ,},
+            {imgSrc: './card-pics/australia/food/3.png', group: 3, type: 'regular', foodType: "vertebrate", name: `かえる<br>（カモノハシ）`,},
+
+            {imgSrc: './card-pics/australia/hunter/4.png', group: 4, type: 'regular', name: `ウォンバット` ,},
+            {imgSrc: './card-pics/australia/food/4.png', group: 4, type: 'regular', foodType: "decay", name: `きのこ<br>（ウォンバット）`,},
+
+            {imgSrc: './card-pics/australia/hunter/5.png', group: 5, type: 'regular', name: `リトルペンギン` ,},
+            {imgSrc: './card-pics/australia/food/5.png', group: 5, type: 'regular', foodType: "fish", name: `こざかな<br>（リトルペンギン）`,},
+
+            {imgSrc: './card-pics/australia/hunter/6.png', group: 6, type: 'regular', name: `イリエワニ` ,},
+            {imgSrc: './card-pics/australia/food/6.png', group: 6, type: 'regular', foodType: "mammal", name: `水牛<br>（イリエワニ）`,},
+
+            {imgSrc: './card-pics/australia/hunter/7.png', group: 7, type: 'regular', name: `ディンゴ` ,},
+            {imgSrc: './card-pics/australia/food/7.png', group: 7, type: 'regular', foodType: "mammal", name: `うさぎ<br>（ディンゴ）`,},
+
+            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
+            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
+
+            {imgSrc: './card-pics//bad/1.jpg', group: null, type: 'destructive', name: `森林伐採` ,},
+            {imgSrc: './card-pics/bad/2.jpg', group: null, type: 'destructive', name: `海水汚染` ,},
+            {imgSrc: './card-pics/bad/3.jpg', group: null, type: 'destructive', name: `動物との<br>交通事故` ,},
+
+            {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
+        ]
+      },
       {
         location: 'ロシア',
+        countryCode: 'ru',
         isDemo: false,
+        isInternational: true,
         wholeCardSet: [
             {imgSrc: './card-pics/russia/hunter/1.png', group: 1, type: 'regular', name: `アムールトラ` , },
             {imgSrc: './card-pics/russia/food/1.png', group: 1, type: 'regular', foodType: "mammal", name: `イノシシ<br>（アムールトラ）`,},
@@ -396,6 +425,8 @@
       {
         location: 'ブラジル',
         isDemo: true,
+        isInternational: true,
+        countryCode: 'br',
         wholeCardSet: [
             {imgSrc: './card-pics/brazil/hunter/1.png', group: 1, type: 'regular', name: `ナマケモノ` , },
             {imgSrc: './card-pics/brazil/food/1.png', group: 1, type: 'regular', foodType: "plant", name: `やさい<br>（ナマケモノ）`,},
@@ -963,8 +994,7 @@
     .location-btn-北海道{
         top: 17%;
         left: 67%;
-    }
-    .location-btn-沖縄{
+    }.location-btn-沖縄{
         top: 89%;
         left: 5%;
     }.location-btn-京都{
