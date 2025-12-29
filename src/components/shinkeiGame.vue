@@ -116,7 +116,7 @@
                             </div>
                             <div class="card-back relative" :style="getCardStyle(card)">
                                 <!-- Back of the card -->
-                                 <div v-if="card.data.imgSrc.includes('/food/')" class="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[65%] aspect-square rounded-full z-0 opacity-80" :class="getFoodCircle(card.data.foodType)"></div>
+                                <div v-if="card.data.imgSrc.includes('/food/')" class="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[65%] aspect-square rounded-full z-0 opacity-80" :class="getFoodCircle(card.data.foodType)"></div>
                                 <img class="z-10 relative" :src="card.data.imgSrc" alt="">
                                 <span v-html="card.data.name"></span>
                             </div>
@@ -382,6 +382,41 @@
 
             {imgSrc: './card-pics/russia/hunter/7.png', group: 7, type: 'regular', name: `ホッキョクグマ` ,},
             {imgSrc: './card-pics/russia/food/7.png', group: 7, type: 'regular', foodType: "mammal", name: `アザラシ<br>（ホッキョクグマ）`,},
+
+            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
+            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
+
+            {imgSrc: './card-pics//bad/1.jpg', group: null, type: 'destructive', name: `森林伐採` ,},
+            {imgSrc: './card-pics/bad/2.jpg', group: null, type: 'destructive', name: `海水汚染` ,},
+            {imgSrc: './card-pics/bad/3.jpg', group: null, type: 'destructive', name: `動物との<br>交通事故` ,},
+
+            {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
+        ]
+      },
+      {
+        location: 'ブラジル',
+        isDemo: true,
+        wholeCardSet: [
+            {imgSrc: './card-pics/brazil/hunter/1.png', group: 1, type: 'regular', name: `ナマケモノ` , },
+            {imgSrc: './card-pics/brazil/food/1.png', group: 1, type: 'regular', foodType: "plant", name: `やさい<br>（ナマケモノ）`,},
+
+            {imgSrc: './card-pics/brazil/hunter/2.png', group: 2, type: 'regular', name: `カピバラ` ,},
+            {imgSrc: './card-pics/brazil/food/2.png', group: 2, type: 'regular', foodType: "plant", name: `イネ<br>（カピバラ）`,},
+
+            {imgSrc: './card-pics/brazil/hunter/3.png', group: 3, type: 'regular', name: `ライオンタマリン` ,},
+            {imgSrc: './card-pics/brazil/food/3.png', group: 3, type: 'regular', foodType: "fruit", name: `くだもの<br>（ライオンタマリン）`,},
+
+            {imgSrc: './card-pics/brazil/hunter/4.png', group: 4, type: 'regular', name: `オニオオハシ` ,},
+            {imgSrc: './card-pics/brazil/food/4.png', group: 4, type: 'regular', foodType: "fruit", name: `パパイヤ<br>（オニオオハシ）`,},
+
+            {imgSrc: './card-pics/brazil/hunter/5.png', group: 5, type: 'regular', name: `アリクイ` ,},
+            {imgSrc: './card-pics/brazil/food/5.png', group: 5, type: 'regular', foodType: "insect", name: `アリ<br>（アリクイ）`,},
+
+            {imgSrc: './card-pics/brazil/hunter/6.png', group: 6, type: 'regular', name: `アルマジロ` ,},
+            {imgSrc: './card-pics/brazil/food/6.png', group: 6, type: 'regular', foodType: "insect", name: `ミミズ・アリ<br>（アルマジロ）`,},
+
+            {imgSrc: './card-pics/brazil/hunter/7.png', group: 7, type: 'regular', name: `ピラニア` ,},
+            {imgSrc: './card-pics/brazil/food/7.png', group: 7, type: 'regular', foodType: "mammal", name: `ネズミ<br>（ピラニア）`,},
 
             {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
             {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
@@ -947,6 +982,9 @@
     }.location-btn-ロシア{
         top: 85%;
         left: 68%;
+    }.location-btn-ブラジル{
+        top: 92.5%;
+        left: 66.5%;
     }
 
 
