@@ -23,35 +23,22 @@
                 <div class="manual">
                   <div class="flex-container" style="display:flex; justify-content: space-between;">
                     <div class="map-container relative pb-2">
-                        <template v-if="!isTesting">
-                            <img src="../../public/shinkei-map.png">
-                            <template v-for="(info,index) in manualInfo" :key="index" >
-                                <a class="btn absolute text-sm bg-[#234C6A] py-2 px-2 none text-white" :class="'location-btn-' + info.location" v-if="(!isTesting && !info.isDemo) || (isTesting) " href="#location-intro" @click="selectLocation(info.location)">
-                                    {{ info.location }}
+                        <img src="../../public/shinkei-map-demo.png">
+                        <template v-for="(info,index) in manualInfo.filter(i => !i.isInternational)" :key="index" >
+                            <a class="btn absolute text-sm bg-[#234C6A] py-2 px-2 none text-white" :class="'location-btn-' + info.location" v-if="(!isTesting && !info.isDemo) || (isTesting)" href="#location-intro" @click="selectLocation(info.location)">
+                                {{ info.location }}
+                            </a>
+                        </template>
+                        <div class="flag-container absolute right-[15px] bottom-[15px] flex flex-wrap gap-2 text-[37.5px] items-center">
+                            <template v-for="(info,index) in manualInfo.filter(i => i.isInternational)" :key="index" >
+                                <a v-if="(!isTesting && !info.isDemo) || (isTesting)" href="#location-intro" @click="selectLocation(info.location)" class="btn">
+                                    <span v-if="info.countryCode !== 'af'"
+                                        :class="`fi fi-${info.countryCode}`" >
+                                    </span>
+                                    <span v-else>🦁</span>
                                 </a>
                             </template>
-                        </template>
-                        <template v-else>
-                            <img src="../../public/shinkei-map-demo.png" v-if="isTesting">
-                            <template v-for="(info,index) in manualInfo.filter(i => !i.isInternational)" :key="index" >
-                                <a class="btn absolute text-sm bg-[#234C6A] py-2 px-2 none text-white" :class="'location-btn-' + info.location" v-if="(!isTesting && !info.isDemo) || (isTesting)" href="#location-intro" @click="selectLocation(info.location)">
-                                    {{ info.location }}
-                                </a>
-                            </template>
-                            <div class="flag-container absolute right-[15px] bottom-[15px] flex flex-wrap gap-2 text-[37.5px] items-center">
-                                <template v-for="(info,index) in manualInfo.filter(i => i.isInternational)" :key="index" >
-                                    <a href="#location-intro" @click="selectLocation(info.location)" class="btn">
-                                        <span v-if="info.countryCode !== 'af'"
-                                            :class="`fi fi-${info.countryCode}`" >
-                                        </span>
-                                        <span v-else>🦁</span>
-                                    </a>
-                                </template>
-                            </div>
-                            
-                        </template>
-
-                        
+                        </div>
                     </div>
                   </div>
 
@@ -424,7 +411,7 @@
       },
       {
         location: 'ブラジル',
-        isDemo: true,
+        isDemo: false,
         isInternational: true,
         countryCode: 'br',
         wholeCardSet: [
