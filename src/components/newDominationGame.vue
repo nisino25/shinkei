@@ -2,7 +2,7 @@
     <div class="tiles-app flex gap-6 px-6">
         <aside class="w-72 flex-shrink-0 flex flex-col gap-4">
             <div class="space-y-3">
-                <h2 class="text-lg font-semibold">Players</h2>
+                <h2 class="text-lg font-semibold">プレイヤー</h2>
                 <div
                     v-for="player in players"
                     :key="player.id"
@@ -13,11 +13,34 @@
                         <div class="w-7 h-7 rounded-md" :style="{ background: player.color }"></div>
                         <div class="flex-1 text-sm">
                             <div class="font-medium">{{ player.name }}</div>
-                            <div class="text-xs text-gray-500">Team {{ player.id }}</div>
-                            <div class="text-xs font-semibold text-gray-700 mt-1">Score: {{ player.score }}</div>
+                            <!-- <div class="text-xs text-gray-500">チーム {{ player.id }}</div> -->
+                            <div class="text-xs font-semibold text-gray-700 mt-1">スコア: {{ player.score }}</div>
                         </div>
                     </div>
-                    <div class="flex gap-2">
+                    <div class="flex flex-wrap gap-2">
+    <div
+        v-for="card in hands[player.id]"
+        :key="card.id"
+        class="inline-flex items-center gap-2
+               px-3 py-1 rounded-full
+               text-xs font-medium
+               bg-slate-100 text-slate-700
+               border border-slate-300"
+        :class="areaBadgeClass(card.area)"
+    >
+        <span class="text-[10px] text-slate-500">
+            Lv{{ card.tier }}
+        </span>
+        <span>
+            {{ card.label }}
+        </span>
+        <span class="text-slate-500">
+            ×{{ card.count }}
+        </span>
+    </div>
+</div>
+
+                    <!-- <div class="flex gap-2">
                       <template v-for="(color, type) in typeColors" :key="type">
                         <button
                             v-if="type !== 'none'"
@@ -34,20 +57,37 @@
                             {{ type.charAt(0).toUpperCase() + type.slice(1) }}
                         </button>
                       </template>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
             <div class="space-y-2">
-                <h3 class="text-sm font-medium">Actions</h3>
+                <h3 class="text-sm font-medium">アクションボタン</h3>
                 <div class="flex flex-col gap-2">
                     <button
-                        class="w-full px-3 py-2 rounded-md border bg-white text-sm hover:bg-gray-50"
+                        class="w-full px-3 py-2 rounded-md border bg-gray-200 text-sm"
                         @click="resetTiles"
                     >
-                        Reset All Tiles
+                        タイルをリセット
                     </button>
                 </div>
+            </div>
+            <div class="space-y-2">
+                <h3 class="text-sm font-medium">色の説明</h3>
+                <div class="grid grid-cols-3 gap-2">
+                    <div
+                        v-for="item in terrainList"
+                        :key="item.key"
+                        class="flex items-center gap-2"
+                    >
+                        <div
+                            class="w-4 h-4 rounded-full"
+                            :style="{ background: areaColors[item.key] }"
+                        ></div>
+                        <span class="text-xs">{{ item.label }}</span>
+                    </div>
+                </div>
+
             </div>
         </aside>
 
@@ -155,14 +195,40 @@ export default {
                 animal: 10
             },
             areaTypes: ['town', 'forest', 'river', 'sea'],
-           areaColors: {
-        town: '#4A4A4A',       // darker grey
-        forest: '#5FA86E',
-        dirt: '#D7B899',       // lighter dirt
-        river: '#6EC4E8',
-        sea: '#3A83C3',
-        undeveloped: '#D96A6A' // reddish, new
-}
+            areaColors: {
+                town: '#E59A4F',       // darker grey
+                forest: '#5FA86E',
+                dirt: '#D7B899',       // lighter dirt
+                river: '#6EC4E8',
+                sea: '#3A83C3',
+                undeveloped: '#4A4A4A' // reddish, new
+            },
+            terrainList: [
+                { key: 'town', label: '町' },
+                { key: 'forest', label: '森' },
+                { key: 'dirt', label: '土' },
+                { key: 'river', label: '川' },
+                { key: 'sea', label: '海' },
+                { key: 'undeveloped', label: '未開発地' },
+            ],
+
+            landAreaCards: [
+                { id: 'monshirocho', label: 'モンシロチョウ', tier: 1, area: 'land', count: 6 },
+                { id: 'mimizu', label: 'ミミズ', tier: 1, area: 'land', count: 6 },
+                { id: 'shimaenaga', label: 'シマエナガ', tier: 2, area: 'land', count: 4 },
+                { id: 'kitakitsune', label: 'キタキツネ', tier: 3, area: 'land', count: 3 }
+            ],
+
+            waterAreaCards: [
+                { id: 'gengoro', label: 'げんごろう', tier: 1, area: 'water', count: 6 },
+                { id: 'yago', label: 'やご', tier: 1, area: 'water', count: 6 },
+                { id: 'tanago', label: 'タナゴ', tier: 2, area: 'water', count: 4 },
+                { id: 'dojo', label: 'ドジョウ', tier: 3, area: 'water', count: 3 }
+            ],
+
+            // プレイヤーごとの手札
+            hands: {}
+
 
         }
     },
@@ -291,228 +357,270 @@ export default {
             )
         },
         randomArea() {
-    const list = ['forest', 'dirt']
-    return list[Math.floor(Math.random() * list.length)]
-},
-generateTiles() {
-        this.tiles = []
-        let id = 1
+            const list = ['forest', 'dirt']
+            return list[Math.floor(Math.random() * list.length)]
+        },
+        generateTiles() {
+                this.tiles = []
+                let id = 1
 
-        // blank map
-        for (let r = 0; r < this.rows; r++) {
-                for (let c = 0; c < this.cols; c++) {
-                        this.tiles.push({
-                                id: id++,
-                                row: r,
-                                col: c,
-                                type: 'none',
-                                selected: false,
-                                ownerTeam: null,
-                                area: null
+                // blank map
+                for (let r = 0; r < this.rows; r++) {
+                        for (let c = 0; c < this.cols; c++) {
+                                this.tiles.push({
+                                        id: id++,
+                                        row: r,
+                                        col: c,
+                                        type: 'none',
+                                        selected: false,
+                                        ownerTeam: null,
+                                        area: null
+                                })
+                        }
+                }
+
+                // oceans and rivers
+                this.makeOcean()
+                this.makeRivers(3)
+
+                // --- Create town clusters ---
+                const townSeeds = 8  // increase for larger towns
+                for (let i = 0; i < townSeeds; i++) {
+                        const r = Math.floor(Math.random() * this.rows)
+                        const c = Math.floor(Math.random() * this.cols)
+                        const tile = this.tiles.find(t => t.row === r && t.col === c)
+                        if (!tile || tile.area) continue
+                        tile.area = 'town'
+                }
+
+                // Expand towns more aggressively
+                for (let i = 0; i < 400; i++) {
+                        const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
+                        if (tile.area !== 'town') continue
+                        
+                        const neighbors = this.getNeighbors(tile)
+                        neighbors.forEach(n => {
+                                if (!n.area && Math.random() < 0.75) {  
+                                        n.area = 'town'
+                                }
                         })
                 }
-        }
 
-        // oceans and rivers
-        this.makeOcean()
-        this.makeRivers(3)
-
-        // --- Create town clusters ---
-        const townSeeds = 8  // increase for larger towns
-        for (let i = 0; i < townSeeds; i++) {
-                const r = Math.floor(Math.random() * this.rows)
-                const c = Math.floor(Math.random() * this.cols)
-                const tile = this.tiles.find(t => t.row === r && t.col === c)
-                if (!tile || tile.area) continue
-                tile.area = 'town'
-        }
-
-        // Expand towns more aggressively
-        for (let i = 0; i < 400; i++) {
-                const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
-                if (tile.area !== 'town') continue
-                
-                const neighbors = this.getNeighbors(tile)
-                neighbors.forEach(n => {
-                        if (!n.area && Math.random() < 0.75) {  
-                                n.area = 'town'
-                        }
-                })
-        }
-
-        // seeds for other land areas
-        const seedCount = 12
-        for (let i = 0; i < seedCount; i++) {
-                const r = Math.floor(Math.random() * this.rows)
-                const c = Math.floor(Math.random() * this.cols)
-                const tile = this.tiles.find(t => t.row === r && t.col === c)
-                if (!tile || tile.area) continue
-                tile.area = this.randomArea()
-        }
-
-        // expand land areas
-        for (let i = 0; i < 300; i++) {
-                const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
-                if (!tile.area || tile.area === 'sea' || tile.area === 'river') continue
-                const neighbors = this.getNeighbors(tile)
-                neighbors.forEach(n => {
-                        if (!n.area && Math.random() < 0.6) n.area = tile.area
-                })
-        }
-
-        // leftover / undeveloped tiles
-        this.tiles.forEach(t => {
-                if (!t.area) {
-                        // ~1 in 7.5 tiles becomes undeveloped
-                        if (Math.random() < 1/8) {
-                                t.area = 'undeveloped'
-                        } else {
-                                t.area = this.randomArea()
-                        }
-                }
-        })
-},
-        setArea(r, c, area) {
-            const t = this.tiles.find(t => t.row === r && t.col === c)
-            if (t) t.area = area
-        },
-        makeRivers(count = 2) {
-        for (let r = 0; r < count; r++) {
-                // pick random start edge: top, bottom, left, right
-                const edges = ['top', 'bottom', 'left', 'right']
-                const startEdge = edges[Math.floor(Math.random() * edges.length)]
-                let row, col
-
-                switch(startEdge) {
-                        case 'top':
-                                row = 0
-                                col = Math.floor(Math.random() * this.cols)
-                                break
-                        case 'bottom':
-                                row = this.rows - 1
-                                col = Math.floor(Math.random() * this.cols)
-                                break
-                        case 'left':
-                                row = Math.floor(Math.random() * this.rows)
-                                col = 0
-                                break
-                        case 'right':
-                                row = Math.floor(Math.random() * this.rows)
-                                col = this.cols - 1
-                                break
+                // seeds for other land areas
+                const seedCount = 12
+                for (let i = 0; i < seedCount; i++) {
+                        const r = Math.floor(Math.random() * this.rows)
+                        const c = Math.floor(Math.random() * this.cols)
+                        const tile = this.tiles.find(t => t.row === r && t.col === c)
+                        if (!tile || tile.area) continue
+                        tile.area = this.randomArea()
                 }
 
-                // random walk until reaching opposite side or map edge
-                const maxSteps = this.rows * this.cols
-                let steps = 0
-
-                while (steps < maxSteps) {
-                        this.setArea(row, col, 'river')
-
-                        // random direction: up/down/left/right
-                        const dirs = []
-                        if (row > 0) dirs.push([-1, 0])
-                        if (row < this.rows - 1) dirs.push([1, 0])
-                        if (col > 0) dirs.push([0, -1])
-                        if (col < this.cols - 1) dirs.push([0, 1])
-
-                        const [dr, dc] = dirs[Math.floor(Math.random() * dirs.length)]
-                        row += dr
-                        col += dc
-
-                        steps++
-
-                        // stop early if river hits ocean
-                        const tile = this.tiles.find(t => t.row === row && t.col === col)
-                        if (tile && tile.area === 'sea') break
-                }
-        }
-},
-        makeOcean() {
-        const edges = ['top', 'bottom', 'left', 'right']
-
-        // pick 1–4 edges randomly
-        const oceanEdges = edges.filter(() => Math.random() < 0.5)
-        if (oceanEdges.length === 0) oceanEdges.push(edges[Math.floor(Math.random() * edges.length)])
-
-        const seeds = []
-
-        oceanEdges.forEach(edge => {
-                let positions = []
-                if (edge === 'top') positions = Array.from({length: this.cols}, (_, i) => ({row: 0, col: i}))
-                if (edge === 'bottom') positions = Array.from({length: this.cols}, (_, i) => ({row: this.rows - 1, col: i}))
-                if (edge === 'left') positions = Array.from({length: this.rows}, (_, i) => ({row: i, col: 0}))
-                if (edge === 'right') positions = Array.from({length: this.rows}, (_, i) => ({row: i, col: this.cols - 1}))
-
-                const count = Math.max(3, Math.floor(Math.random() * positions.length * 0.5)) // bigger starting ocean
-                for (let i = 0; i < count; i++) {
-                        const p = positions[Math.floor(Math.random() * positions.length)]
-                        seeds.push(p)
-                        this.setArea(p.row, p.col, 'sea')
-                }
-        })
-
-        // expand ocean inward more aggressively
-        for (let i = 0; i < 800; i++) {  // more iterations = bigger ocean blobs
-                const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
-                if (tile.area !== 'sea') continue
-
-                const neighbors = this.getNeighbors(tile)
-                neighbors.forEach(n => {
-                        if (!n.area && Math.random() < 0.8) {  // 50% chance to expand
-                                n.area = 'sea'
-                        }
-                })
-        }
-},
-makeTowns(count = 4) {
-        const townSeeds = []
-
-        // 1. pick random town center seeds
-        for (let i = 0; i < count; i++) {
-                let tile = null
-
-                // avoid water
-                while (!tile || tile.area === 'sea' || tile.area === 'river') {
-                        tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
+                // expand land areas
+                for (let i = 0; i < 300; i++) {
+                        const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
+                        if (!tile.area || tile.area === 'sea' || tile.area === 'river') continue
+                        const neighbors = this.getNeighbors(tile)
+                        neighbors.forEach(n => {
+                                if (!n.area && Math.random() < 0.6) n.area = tile.area
+                        })
                 }
 
-                tile.area = 'town'
-                townSeeds.push(tile)
-        }
-
-        // 2. town expansion
-        for (let i = 0; i < 300; i++) {
-                const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
-                if (tile.area !== 'town') continue
-
-                const neighbors = this.getNeighbors(tile)
-                neighbors.forEach(n => {
-                        if (n.area === null || n.area === 'forest' || n.area === 'dirt') {
-                                if (Math.random() < 0.4) {
-                                        n.area = 'town'
+                // leftover / undeveloped tiles
+                this.tiles.forEach(t => {
+                        if (!t.area) {
+                                // ~1 in 7.5 tiles becomes undeveloped
+                                if (Math.random() < 1/8) {
+                                        t.area = 'undeveloped'
+                                } else {
+                                        t.area = this.randomArea()
                                 }
                         }
                 })
+        },
+                setArea(r, c, area) {
+                    const t = this.tiles.find(t => t.row === r && t.col === c)
+                    if (t) t.area = area
+                },
+                makeRivers(count = 2) {
+                for (let r = 0; r < count; r++) {
+                        // pick random start edge: top, bottom, left, right
+                        const edges = ['top', 'bottom', 'left', 'right']
+                        const startEdge = edges[Math.floor(Math.random() * edges.length)]
+                        let row, col
+
+                        switch(startEdge) {
+                                case 'top':
+                                        row = 0
+                                        col = Math.floor(Math.random() * this.cols)
+                                        break
+                                case 'bottom':
+                                        row = this.rows - 1
+                                        col = Math.floor(Math.random() * this.cols)
+                                        break
+                                case 'left':
+                                        row = Math.floor(Math.random() * this.rows)
+                                        col = 0
+                                        break
+                                case 'right':
+                                        row = Math.floor(Math.random() * this.rows)
+                                        col = this.cols - 1
+                                        break
+                        }
+
+                        // random walk until reaching opposite side or map edge
+                        const maxSteps = this.rows * this.cols
+                        let steps = 0
+
+                        while (steps < maxSteps) {
+                                this.setArea(row, col, 'river')
+
+                                // random direction: up/down/left/right
+                                const dirs = []
+                                if (row > 0) dirs.push([-1, 0])
+                                if (row < this.rows - 1) dirs.push([1, 0])
+                                if (col > 0) dirs.push([0, -1])
+                                if (col < this.cols - 1) dirs.push([0, 1])
+
+                                const [dr, dc] = dirs[Math.floor(Math.random() * dirs.length)]
+                                row += dr
+                                col += dc
+
+                                steps++
+
+                                // stop early if river hits ocean
+                                const tile = this.tiles.find(t => t.row === row && t.col === col)
+                                if (tile && tile.area === 'sea') break
+                        }
+                }
+        },
+                makeOcean() {
+                const edges = ['top', 'bottom', 'left', 'right']
+
+                // pick 1–4 edges randomly
+                const oceanEdges = edges.filter(() => Math.random() < 0.5)
+                if (oceanEdges.length === 0) oceanEdges.push(edges[Math.floor(Math.random() * edges.length)])
+
+                const seeds = []
+
+                oceanEdges.forEach(edge => {
+                        let positions = []
+                        if (edge === 'top') positions = Array.from({length: this.cols}, (_, i) => ({row: 0, col: i}))
+                        if (edge === 'bottom') positions = Array.from({length: this.cols}, (_, i) => ({row: this.rows - 1, col: i}))
+                        if (edge === 'left') positions = Array.from({length: this.rows}, (_, i) => ({row: i, col: 0}))
+                        if (edge === 'right') positions = Array.from({length: this.rows}, (_, i) => ({row: i, col: this.cols - 1}))
+
+                        const count = Math.max(3, Math.floor(Math.random() * positions.length * 0.5)) // bigger starting ocean
+                        for (let i = 0; i < count; i++) {
+                                const p = positions[Math.floor(Math.random() * positions.length)]
+                                seeds.push(p)
+                                this.setArea(p.row, p.col, 'sea')
+                        }
+                })
+
+                // expand ocean inward more aggressively
+                for (let i = 0; i < 800; i++) {  // more iterations = bigger ocean blobs
+                        const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
+                        if (tile.area !== 'sea') continue
+
+                        const neighbors = this.getNeighbors(tile)
+                        neighbors.forEach(n => {
+                                if (!n.area && Math.random() < 0.8) {  // 50% chance to expand
+                                        n.area = 'sea'
+                                }
+                        })
+                }
+        },
+        makeTowns(count = 4) {
+                const townSeeds = []
+
+                // 1. pick random town center seeds
+                for (let i = 0; i < count; i++) {
+                        let tile = null
+
+                        // avoid water
+                        while (!tile || tile.area === 'sea' || tile.area === 'river') {
+                                tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
+                        }
+
+                        tile.area = 'town'
+                        townSeeds.push(tile)
+                }
+
+                // 2. town expansion
+                for (let i = 0; i < 300; i++) {
+                        const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
+                        if (tile.area !== 'town') continue
+
+                        const neighbors = this.getNeighbors(tile)
+                        neighbors.forEach(n => {
+                                if (n.area === null || n.area === 'forest' || n.area === 'dirt') {
+                                        if (Math.random() < 0.4) {
+                                                n.area = 'town'
+                                        }
+                                }
+                        })
+                }
+        },
+
+        initializeHands() {
+            //initializeHands() {
+            this.players.forEach(player => {
+                        this.hands[player.id] = [
+                ...this.buildSortedHand(this.landAreaCards),
+                ...this.buildSortedHand(this.waterAreaCards)
+            ];
+
+            });
+        },
+
+        buildSortedHand(cardDefs) {
+            // tier昇順 → label順
+            return cardDefs
+                .slice()
+                .sort((a, b) => {
+                    if (a.tier !== b.tier) {
+                        return a.tier - b.tier;
+                    }
+                    return a.label.localeCompare(b.label, 'ja');
+                })
+                .map(card => ({
+                    id: card.id,
+            label: card.label,
+            tier: card.tier,
+            count: card.count,
+            area: card.area   // ← これ重要
+                }));
+        },
+        areaBadgeClass(area) {
+            switch (area) {
+                case 'land':
+    return 'bg-[#D7B899] text-[#6B4E2E] border-[#C5A57E]';
+                case 'water':
+    return 'bg-[#9ECAD6] text-[#355F6B] border-[#7FB3C8]';
+
+                default:
+                    return 'bg-slate-100 text-slate-700 border-slate-300';
+            }
         }
-},
-
-
-
 
 
 
     },
-   mounted() {
-        console.clear()
-        // set the first player as the current player on mount
-        if (this.players.length > 0) {
-            this.currentPlayer = this.players[0].id
-        }
+    mounted() {
+            console.clear()
 
-        this.generateTiles();
-    },
-}
+            this.initializeHands();
+
+            // set the first player as the current player on mount
+            if (this.players.length > 0) {
+                this.currentPlayer = this.players[0].id
+            }
+            
+
+            this.generateTiles();
+        },
+    }
 </script>
 
 <style scoped>
