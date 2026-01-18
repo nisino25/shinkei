@@ -24,7 +24,7 @@
         class="inline-flex items-center gap-2
                px-3 py-1 rounded-full
                text-xs font-medium
-               bg-slate-100 text-slate-700
+                text-slate-700
                border border-slate-300"
         :class="areaBadgeClass(card.area)"
     >
@@ -595,10 +595,9 @@ export default {
         areaBadgeClass(area) {
             switch (area) {
                 case 'land':
-    return 'bg-[#D7B899] text-[#6B4E2E] border-[#C5A57E]';
+                    return 'bg-[#D7B899] text-[#6B4E2E] border-[#C5A57E]';
                 case 'water':
-    return 'bg-[#9ECAD6] text-[#355F6B] border-[#7FB3C8]';
-
+                    return 'bg-[#9ECAD6] text-[#355F6B] border-[#7FB3C8]';
                 default:
                     return 'bg-slate-100 text-slate-700 border-slate-300';
             }

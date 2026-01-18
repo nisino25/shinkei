@@ -31,11 +31,12 @@
                         </template>
                         <div class="flag-container absolute right-[15px] bottom-[15px] flex flex-wrap gap-2 text-[37.5px] items-center">
                             <template v-for="(info,index) in manualInfo.filter(i => i.isInternational)" :key="index" >
-                                <a v-if="(!isTesting && !info.isDemo) || (isTesting)" href="#location-intro" @click="selectLocation(info.location)" class="btn">
+                                <a v-if="(!isTesting && !info.isDemo) || (isTesting)" href="#location-intro" @click="selectLocation(info.location)" class="btn text-center">
                                     <span v-if="info.countryCode !== 'af'"
                                         :class="`fi fi-${info.countryCode}`" >
                                     </span>
                                     <span v-else>🦁</span>
+                                    <small class="block text-[10px]">{{ info.location }}</small>
                                 </a>
                             </template>
                         </div>
@@ -446,6 +447,43 @@
             {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
         ]
       },
+      {
+        location: 'ドイツ',
+        isDemo: true,
+        isInternational: true,
+        countryCode: 'de',
+        wholeCardSet: [
+            {imgSrc: './card-pics/germany/hunter/1.png', group: 1, type: 'regular', name: `アカキツネ` , },
+            {imgSrc: './card-pics/germany/food/1.png', group: 1, type: 'regular', foodType: "mammal", name: `うさぎ<br>（アカキツネ）`,},
+
+            {imgSrc: './card-pics/germany/hunter/2.png', group: 2, type: 'regular', name: `アカシカ` ,},
+            {imgSrc: './card-pics/germany/food/2.png', group: 2, type: 'regular', foodType: "plant", name: `草<br>（アカシカ）`,},
+
+            {imgSrc: './card-pics/germany/hunter/3.png', group: 3, type: 'regular', name: `イノシシ` ,},
+            {imgSrc: './card-pics/germany/food/3.png', group: 3, type: 'regular', foodType: "insect", name: `ミミズ<br>（イノシシ）`,},
+
+            {imgSrc: './card-pics/germany/hunter/4.png', group: 4, type: 'regular', name: `オコジョ` ,},
+            {imgSrc: './card-pics/germany/food/4.png', group: 4, type: 'regular', foodType: "mammal", name: `ネズミ<br>（オコジョ）`,},
+
+            {imgSrc: './card-pics/germany/hunter/5.png', group: 5, type: 'regular', name: `キタリス` ,},
+            {imgSrc: './card-pics/germany/food/5.png', group: 5, type: 'regular', foodType: "fruit", name: `クルミ<br>（キタリス）`,},
+
+            {imgSrc: './card-pics/germany/hunter/6.png', group: 6, type: 'regular', name: `シュバシコウ` ,},
+            {imgSrc: './card-pics/germany/food/6.png', group: 6, type: 'regular', foodType: "vertebrate", name: `カエル<br>（シュバシコウ）`,},
+
+            {imgSrc: './card-pics/germany/hunter/7.png', group: 7, type: 'regular', name: `ヨーロッパヤマネ` ,},
+            {imgSrc: './card-pics/germany/food/7.png', group: 7, type: 'regular', foodType: "insect", name: `アブラムシ<br>（ヨーロッパヤマネ）`,},
+
+            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
+            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
+
+            {imgSrc: './card-pics//bad/1.jpg', group: null, type: 'destructive', name: `森林伐採` ,},
+            {imgSrc: './card-pics/bad/2.jpg', group: null, type: 'destructive', name: `海水汚染` ,},
+            {imgSrc: './card-pics/bad/3.jpg', group: null, type: 'destructive', name: `動物との<br>交通事故` ,},
+
+            {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
+        ]
+      },
     ],
   );
 
@@ -749,7 +787,7 @@
     }
   
     #app .manual span{
-        display: block;
+        /* display: block; */
   
         font-size: .9em;
     }
