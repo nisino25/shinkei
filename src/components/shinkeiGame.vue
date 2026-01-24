@@ -449,7 +449,7 @@
       },
       {
         location: 'ドイツ',
-        isDemo: true,
+        isDemo: false,
         isInternational: true,
         countryCode: 'de',
         wholeCardSet: [
