@@ -1,14 +1,14 @@
 <template>
     <div class="tiles-app flex gap-6 px-6">
-        <aside class="w-72 flex-shrink-0 flex flex-col gap-4">
+        <aside class="w-80 flex-shrink-0 flex flex-col gap-4">
             <div class="space-y-3">
-                <h2 class="text-lg font-semibold">プレイヤー</h2>
-                <div
-                    v-for="player in players"
-                    :key="player.id"
-                    class="p-3 border rounded-md flex flex-col gap-2 relative"
-                    :style="{ background: currentPlayer === player.id ? '#FFC72C' : '' }"
-                >
+                    <h2 class="text-lg font-semibold">プレイヤー</h2>
+                    <div
+                        v-for="player in players"
+                        :key="player.id"
+                        class="p-3 border rounded-md flex flex-col gap-2 relative"
+                        :style="{ background: currentPlayer === player.id ? '#FFC72C' : '' }"
+                    >
                     <div class="flex items-center gap-3">
                         <div class="w-7 h-7 rounded-md" :style="{ background: player.color }"></div>
                         <div class="flex-1 text-sm">
@@ -18,46 +18,27 @@
                         </div>
                     </div>
                     <div class="flex flex-wrap gap-2">
-    <div
-        v-for="card in hands[player.id]"
-        :key="card.id"
-        class="inline-flex items-center gap-2
-               px-3 py-1 rounded-full
-               text-xs font-medium
-                text-slate-700
-               border border-slate-300"
-        :class="areaBadgeClass(card.area)"
-    >
-        <span class="text-[10px] text-slate-500">
-            Lv{{ card.tier }}
-        </span>
-        <span>
-            {{ card.label }}
-        </span>
-        <span class="text-slate-500">
-            ×{{ card.count }}
-        </span>
-    </div>
-</div>
-
-                    <!-- <div class="flex gap-2">
-                      <template v-for="(color, type) in typeColors" :key="type">
-                        <button
-                            v-if="type !== 'none'"
-                            class="flex-1 px-2 py-1 text-xs rounded-md text-black border transition-colors duration-200"
-                            :style="{
-                                borderColor: color,
-                                background:
-                                    currentPlayer === player.id && currentType === type
-                                        ? color
-                                        : 'transparent',
-                            }"
-                            @click="setSelectType(player.id, type)"
+                        <div
+                            v-for="card in getDisplayHand(hands[player.id])"
+                            :key="card.id"
+                            class="inline-flex items-center gap-2
+                                px-3 py-1 rounded-full
+                                text-xs font-medium
+                                    text-slate-700
+                                border border-slate-300"
+                            :class="areaBadgeClass(card.area)"
                         >
-                            {{ type.charAt(0).toUpperCase() + type.slice(1) }}
-                        </button>
-                      </template>
-                    </div> -->
+                            <span class="text-[10px] text-slate-500">
+                                Lv{{ card.tier }}
+                            </span>
+                            <span>
+                                {{ card.label }}
+                            </span>
+                            <span class="text-slate-500">
+                                ×{{ card.holdingCount }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -147,18 +128,6 @@
                     </div>
 
                 </div>
-
-                
-                    <!-- <div
-                        v-for="tile in tiles"
-                        :key="tile.id"
-                        class="relative rounded-sm transition-transform duration-150 cursor-pointer"
-                        :class="{ 'scale-[1.03] ring-4 ring-offset-1': tile.selected }"
-                        @click="onTileClick(tile)"
-                        :style="tileStyle(tile)"
-                    >
-                        
-                    </div> -->
                 </div>
             </div>
         </main>
@@ -213,7 +182,7 @@ export default {
             ],
 
             landAreaCards: [
-                { id: 'monshirocho', label: 'モンシロチョウ', tier: 1, area: 'land', count: 6 },
+                { id: 'モンシロチョウ', label: 'モンシロチョウ', tier: 1, area: 'land', count: 6 },
                 { id: 'mimizu', label: 'ミミズ', tier: 1, area: 'land', count: 6 },
                 { id: 'shimaenaga', label: 'シマエナガ', tier: 2, area: 'land', count: 4 },
                 { id: 'kitakitsune', label: 'キタキツネ', tier: 3, area: 'land', count: 3 }
@@ -224,6 +193,153 @@ export default {
                 { id: 'yago', label: 'やご', tier: 1, area: 'water', count: 6 },
                 { id: 'tanago', label: 'タナゴ', tier: 2, area: 'water', count: 4 },
                 { id: 'dojo', label: 'ドジョウ', tier: 3, area: 'water', count: 3 }
+            ],
+
+            allCards: [
+                {
+                    id:'オオワシ', get label(){return this.id},
+                    area: 'land', count: 1,
+                },
+                {
+                    id:'キタキツネ', get label(){return this.id},
+                    area: 'land', count: 2,
+                },
+                {
+                    id:'エゾタヌキ', get label(){return this.id},
+                    area: 'land', count: 2,
+                },
+                {
+                    id:'エゾリス', get label(){return this.id},
+                    area: 'land', count: 3,
+                },
+                {
+                    id:'オコジョ', get label(){return this.id},
+                    area: 'land', count: 3,
+                },
+                {
+                    id:'カヤネズミ', get label(){return this.id},
+                    area: 'land', count: 3,
+                },
+                {
+                    id:'エゾウサギ', get label(){return this.id},
+                    area: 'land', count: 3,
+                },
+                {
+                    id:'ミミズ', get label(){return this.id},
+                    area: 'land', count: 10,
+                },
+                {
+                    id:'アブラムシ', get label(){return this.id},
+                    area: 'land', count: 4,
+                },
+                {
+                    id:'カナブン', get label(){return this.id},
+                    area: 'land', count: 4,
+                },
+                {
+                    id:'シオカラトンボ', get label(){return this.id},
+                    area: 'land', count: 3,
+                },
+                {
+                    id:'モンシロチョウ', get label(){return this.id},
+                    area: 'land', count: 4,
+                },
+                {
+                    id:'カマキリ', get label(){return this.id},
+                    area: 'land', count: 3,
+                },
+                {
+                    id:'ミツバチ', get label(){return this.id},
+                    area: 'land', count: 4,
+                },
+                {
+                    id:'シジミチョウ', get label(){return this.id},
+                    area: 'land', count: 4,
+                },
+                {
+                    id:'イトウ', get label(){return this.id},
+                    area: 'water', count: 1,
+                },
+                {
+                    id:'オショロコマ', get label(){return this.id},
+                    area: 'water', count: 1,
+                },
+                {
+                    id:'ニジマス', get label(){return this.id},
+                    area: 'water', count: 1,
+                },
+                {
+                    id:'ヤマメ', get label(){return this.id},
+                    area: 'water', count: 1,
+                },
+                {
+                    id:'ウグイ', get label(){return this.id},
+                    area: 'water', count: 1,
+                },
+                {
+                    id:'ヤゴ', get label(){return this.id},
+                    area: 'water', count: 1,
+                },
+                {
+                    id:'カゲロウの幼虫', get label(){return this.id},
+                    area: 'water', count: 2,
+                },
+                {
+                    id:'ゲンゴロウ', get label(){return this.id},
+                    area: 'water', count: 1,
+                },
+                {
+                    id:'川エビ', get label(){return this.id},
+                    area: 'water', count: 4,
+                },
+                {
+                    id:'オタマジャクシ', get label(){return this.id},
+                    area: 'water', count: 4,
+                },
+                {
+                    id:'シマエナガ', get label(){return this.id},
+                    area: 'land', count: 3,
+                },
+                {
+                    id:'エゾモモンガ', get label(){return this.id},
+                    area: 'land', count: 3,
+                },
+                {
+                    id:'ヒグマ', get label(){return this.id},
+                    area: 'land', count: 1,
+                },
+                {
+                    id:'タンチョウツル', get label(){return this.id},
+                    area: 'land', count: 1,
+                },
+                {
+                    id:'エゾサンショウウオ', get label(){return this.id},
+                    area: 'water', count: 1,
+                },
+                {
+                    id:'シマフクロウ', get label(){return this.id},
+                    area: 'land', count: 1,
+                },
+                {
+                    id:'ヒメネズミ', get label(){return this.id},
+                    area: 'land', count: 3,
+                },
+                {
+                    id:'モグラ', get label(){return this.id},
+                    area: 'land', count: 3,
+                },
+                {
+                    id:'アカガエル', get label(){return this.id},
+                    area: 'water', count: 3,
+                },
+                {
+                    id:'アブ', get label(){return this.id},
+                    area: 'land', count: 3,
+                },
+                {
+                    id:'エゾシカ', get label(){return this.id},
+                    area: 'land', count: 2,
+                },
             ],
 
             // プレイヤーごとの手札
@@ -252,6 +368,7 @@ export default {
         },
         resetTiles() {
             this.generateTiles()
+            this.initializeHands()
 
             this.players.forEach(p => (p.score = 0))
         },
@@ -438,11 +555,11 @@ export default {
                         }
                 })
         },
-                setArea(r, c, area) {
-                    const t = this.tiles.find(t => t.row === r && t.col === c)
-                    if (t) t.area = area
-                },
-                makeRivers(count = 2) {
+        setArea(r, c, area) {
+            const t = this.tiles.find(t => t.row === r && t.col === c)
+            if (t) t.area = area
+        },
+        makeRivers(count = 2) {
                 for (let r = 0; r < count; r++) {
                         // pick random start edge: top, bottom, left, right
                         const edges = ['top', 'bottom', 'left', 'right']
@@ -494,7 +611,7 @@ export default {
                         }
                 }
         },
-                makeOcean() {
+        makeOcean() {
                 const edges = ['top', 'bottom', 'left', 'right']
 
                 // pick 1–4 edges randomly
@@ -563,35 +680,75 @@ export default {
                 }
         },
 
-        initializeHands() {
-            //initializeHands() {
-            this.players.forEach(player => {
-                        this.hands[player.id] = [
-                ...this.buildSortedHand(this.landAreaCards),
-                ...this.buildSortedHand(this.waterAreaCards)
-            ];
+        // initializeHands() {
+        //     this.players.forEach(player => {
+        //         this.hands[player.id] = [
+        //             // ...this.buildSortedHand(this.landAreaCards),
+        //             // ...this.buildSortedHand(this.waterAreaCards)
+        //             ...this.buildSortedHand(this.allCards)
+        //         ];
 
+        //     });
+        // },
+        shuffleArray(array) {
+            const arr = array.slice();
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        },
+
+        buildDeck(cardDefs) {
+            return cardDefs.flatMap(card => {
+                return Array.from({ length: card.count }, (_, index) => ({
+                    id: card.id,
+                    label: card.label,
+                    area: card.area,
+                    tier: card.tier,
+                    // optional: unique instance id
+                    instanceId: `${card.id}-${index}`
+                }));
             });
         },
 
-        buildSortedHand(cardDefs) {
-            // tier昇順 → label順
-            return cardDefs
-                .slice()
-                .sort((a, b) => {
-                    if (a.tier !== b.tier) {
-                        return a.tier - b.tier;
-                    }
-                    return a.label.localeCompare(b.label, 'ja');
-                })
-                .map(card => ({
-                    id: card.id,
-            label: card.label,
-            tier: card.tier,
-            count: card.count,
-            area: card.area   // ← これ重要
-                }));
+
+        initializeHands() {
+             const deck = this.shuffleArray(
+                this.buildDeck(this.allCards)
+            );
+
+            console.log("Shuffled Deck:", deck);
+
+            const playerCount = this.players.length;
+            const cardsPerPlayer = Math.floor(deck.length / playerCount);
+
+            this.players.forEach((player, index) => {
+                this.hands[player.id] = deck.slice(
+                    index * cardsPerPlayer,
+                    (index + 1) * cardsPerPlayer
+                );
+            });
         },
+
+        // buildSortedHand(cardDefs) {
+        //     // tier昇順 → label順
+        //     return cardDefs
+        //         .slice()
+        //         .sort((a, b) => {
+        //             if (a.tier !== b.tier) {
+        //                 return a.tier - b.tier;
+        //             }
+        //             return a.label.localeCompare(b.label, 'ja');
+        //         })
+        //         .map(card => ({
+        //                     id: card.id,
+        //             label: card.label,
+        //             tier: card.tier,
+        //             count: card.count,
+        //             area: card.area   // ← これ重要
+        //         }));
+        // },
         areaBadgeClass(area) {
             switch (area) {
                 case 'land':
@@ -601,25 +758,66 @@ export default {
                 default:
                     return 'bg-slate-100 text-slate-700 border-slate-300';
             }
-        }
+        },
+
+        sortHandByArea(hand) {
+            return hand?.slice().sort((a, b) => {
+                // area
+                if (a.area !== b.area) {
+                    return a.area.localeCompare(b.area, 'ja');
+                }
+
+                // tier
+                if (a.tier !== b.tier) {
+                    return a.tier - b.tier;
+                }
+
+                // label
+                return a.label.localeCompare(b.label, 'ja');
+            });
+        },
+        compressHand(sortedHand) {
+            if(!sortedHand) return [];
+            const map = new Map();
+
+            sortedHand?.forEach(card => {
+                const key = card.label;
+
+                if (!map.has(key)) {
+                    map.set(key, {
+                        ...card,
+                        holdingCount: 1,
+                    });
+                } else {
+                    map.get(key).holdingCount++;
+                }
+            });
+
+            return Array.from(map.values());
+        },
+        getDisplayHand(hand) {
+            if(!hand) return [];
+            return this.compressHand(
+                this.sortHandByArea(hand)
+            );
+        },
 
 
 
     },
     mounted() {
-            console.clear()
+        console.clear()
 
-            this.initializeHands();
+        this.initializeHands();
 
-            // set the first player as the current player on mount
-            if (this.players.length > 0) {
-                this.currentPlayer = this.players[0].id
-            }
-            
-
-            this.generateTiles();
-        },
-    }
+        // set the first player as the current player on mount
+        if (this.players.length > 0) {
+            this.currentPlayer = this.players[0].id
+        }
+        
+        this.generateTiles();
+    },
+}
 </script>
 
 <style scoped>
