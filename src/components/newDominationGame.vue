@@ -169,8 +169,8 @@
 export default {
     // name: 'Tiles20x20',
     data() {
-        const cols = 25
-        const rows = 25
+        const cols = 15
+        const rows = 15
 
         return {
             cols,
