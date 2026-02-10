@@ -1,137 +1,149 @@
 <template>
-    <div class="tiles-app flex gap-6 px-6">
-        <aside class="w-80 flex-shrink-0 flex flex-col gap-4">
-            <div class="space-y-3">
-                    <h2 class="text-lg font-semibold">プレイヤー</h2>
-                    <div
-                        v-for="player in players"
-                        :key="player.id"
-                        class="p-3 border rounded-md flex flex-col gap-2 relative"
-                        :style="{ background: currentPlayer === player.id ? '#FFC72C' : '' }"
-                    >
-                    <div class="flex items-center gap-3">
-                        <div class="w-7 h-7 rounded-md" :style="{ background: player.color }"></div>
-                        <div class="flex-1 text-sm">
-                            <div class="font-medium">{{ player.name }}</div>
-                            <!-- <div class="text-xs text-gray-500">チーム {{ player.id }}</div> -->
-                            <div class="text-xs font-semibold text-gray-700 mt-1">スコア: {{ player.score }}</div>
+    <button class="m-2 px-3 py-1 bg-blue-500 text-white rounded-md text-sm" @click="changeMode()">Change Mode</button>
+    <template v-if="dominationMode == 'standard'">
+        <div class="tiles-app flex gap-6 px-6">
+            <aside class="w-80 flex-shrink-0 flex flex-col gap-4">
+                <div class="space-y-3">
+                        <h2 class="text-lg font-semibold">プレイヤー</h2>
+                        <div
+                            v-for="player in players"
+                            :key="player.id"
+                            class="p-3 border rounded-md flex flex-col gap-2 relative"
+                            :style="{ background: currentPlayer === player.id ? '#FFC72C' : '' }"
+                        >
+                        <div class="flex items-center gap-3">
+                            <div class="w-7 h-7 rounded-md" :style="{ background: player.color }"></div>
+                            <div class="flex-1 text-sm">
+                                <div class="font-medium">{{ player.name }}</div>
+                                <!-- <div class="text-xs text-gray-500">チーム {{ player.id }}</div> -->
+                                <div class="text-xs font-semibold text-gray-700 mt-1">スコア: {{ player.score }}</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <div
+                                v-for="card in getDisplayHand(hands[player.id])"
+                                :key="card.id"
+                                class="inline-flex items-center gap-2
+                                    px-3 py-1 rounded-full
+                                    text-xs font-medium
+                                        text-slate-700
+                                    border border-slate-300"
+                                :class="areaBadgeClass(card.area)"
+                            >
+                                <span class="text-[10px] text-slate-500">
+                                    Lv{{ card.tier }}
+                                </span>
+                                <span>
+                                    {{ card.label }}
+                                </span>
+                                <span class="text-slate-500">
+                                    ×{{ card.holdingCount }}
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex flex-wrap gap-2">
-                        <div
-                            v-for="card in getDisplayHand(hands[player.id])"
-                            :key="card.id"
-                            class="inline-flex items-center gap-2
-                                px-3 py-1 rounded-full
-                                text-xs font-medium
-                                    text-slate-700
-                                border border-slate-300"
-                            :class="areaBadgeClass(card.area)"
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="text-sm font-medium">アクションボタン</h3>
+                    <div class="flex flex-col gap-2">
+                        <button
+                            class="w-full px-3 py-2 rounded-md border bg-gray-200 text-sm"
+                            @click="resetTiles"
                         >
-                            <span class="text-[10px] text-slate-500">
-                                Lv{{ card.tier }}
-                            </span>
-                            <span>
-                                {{ card.label }}
-                            </span>
-                            <span class="text-slate-500">
-                                ×{{ card.holdingCount }}
-                            </span>
+                            タイルをリセット
+                        </button>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="text-sm font-medium">色の説明</h3>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div
+                            v-for="item in terrainList"
+                            :key="item.key"
+                            class="flex items-center gap-2"
+                        >
+                            <div
+                                class="w-4 h-4 rounded-full"
+                                :style="{ background: areaColors[item.key] }"
+                            ></div>
+                            <span class="text-xs">{{ item.label }}</span>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="space-y-2">
-                <h3 class="text-sm font-medium">アクションボタン</h3>
-                <div class="flex flex-col gap-2">
-                    <button
-                        class="w-full px-3 py-2 rounded-md border bg-gray-200 text-sm"
-                        @click="resetTiles"
-                    >
-                        タイルをリセット
-                    </button>
                 </div>
-            </div>
-            <div class="space-y-2">
-                <h3 class="text-sm font-medium">色の説明</h3>
-                <div class="grid grid-cols-3 gap-2">
+            </aside>
+
+            <main class="flex-1">
+                <div class="w-full rounded-md bg-gray-200 p-4">
                     <div
-                        v-for="item in terrainList"
-                        :key="item.key"
-                        class="flex items-center gap-2"
+                        class="grid gap-1 w-full h-full"
+                        :style="{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }"
                     >
-                        <div
-                            class="w-4 h-4 rounded-full"
-                            :style="{ background: areaColors[item.key] }"
-                        ></div>
-                        <span class="text-xs">{{ item.label }}</span>
-                    </div>
-                </div>
-
-            </div>
-        </aside>
-
-        <main class="flex-1">
-            <div class="w-full rounded-md bg-gray-200 p-4">
-                <div
-                    class="grid gap-1 w-full h-full"
-                    :style="{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }"
-                >
-                <div
-                    v-for="tile in tiles"
-                    :key="tile.id"
-                    class="relative rounded-sm transition-transform duration-150 cursor-pointer"
-                    :class="{
-                        'scale-[1.03] ring-4 ring-offset-1': tile.selected
-                    }"
-                    @click="onTileClick(tile)"
-                    :style="tileStyle(tile)"
-                >
-                    <div 
-                        v-if="tile.validForSelection"
-                        class="
-                        animate-pulse
-                        absolute
-                        top-1/2
-                        left-1/2
-                        -translate-x-1/2
-                        -translate-y-1/2
-                        bg-golden
-                        w-[70%]
-                        rounded-full
-                        aspect-square
-                        bg-yellow-100"
-                        >
-                    </div>
-                    <div v-if="tile.ownerTeam !== null">
-                        <div class="
-                            block
+                    <div
+                        v-for="tile in tiles"
+                        :key="tile.id"
+                        class="relative rounded-sm transition-transform duration-150 cursor-pointer"
+                        :class="{
+                            'scale-[1.03] ring-4 ring-offset-1': tile.selected
+                        }"
+                        @click="onTileClick(tile)"
+                        :style="tileStyle(tile)"
+                    >
+                        <div 
+                            v-if="tile.validForSelection"
+                            class="
+                            animate-pulse
                             absolute
                             top-1/2
                             left-1/2
                             -translate-x-1/2
                             -translate-y-1/2
-                            bg-white
-                            w-[60%]
+                            bg-golden
+                            w-[70%]
                             rounded-full
                             aspect-square
-                        "
-                        ></div>
-                        <div
-                            class="absolute left-1/2 top-1/2 w-1/2 aspect-square rounded-full border-[6px] bg-opacity-90 transform -translate-x-1/2 -translate-y-1/2 tile-circle z-10"
-                            :style="{
-                                background: typeColors[tile.type],
-                                borderColor: teamColor(tile.ownerTeam)
-                            }"
-                        ></div>
-                    </div>
+                            bg-yellow-100"
+                            >
+                        </div>
+                        <div v-if="tile.ownerTeam !== null">
+                            <div class="
+                                block
+                                absolute
+                                top-1/2
+                                left-1/2
+                                -translate-x-1/2
+                                -translate-y-1/2
+                                bg-white
+                                w-[60%]
+                                rounded-full
+                                aspect-square
+                            "
+                            ></div>
+                            <div
+                                class="absolute left-1/2 top-1/2 w-1/2 aspect-square rounded-full border-[6px] bg-opacity-90 transform -translate-x-1/2 -translate-y-1/2 tile-circle z-10"
+                                :style="{
+                                    background: typeColors[tile.type],
+                                    borderColor: teamColor(tile.ownerTeam)
+                                }"
+                            ></div>
+                        </div>
 
+                    </div>
+                    </div>
                 </div>
-                </div>
-            </div>
-        </main>
-    </div>
+            </main>
+        </div>
+    </template>
+    <template v-else>
+        <div class="map-control-mode p-6">
+            <h2 class="text-2xl font-bold mb-4">Map Control Mode</h2>
+            <img v-if="mapStep == 0" src="https://cdn.qleanmarket.amanaimages.com/uploads/items/049/874/36/preview/FYI04987436.jpg" @click="mapStep++">
+            <img v-if="mapStep == 1" src="https://img.jtrip.co.jp/uploads/210720185839_hokkaido.jpg" @click="mapStep++">
+            <img v-if="mapStep == 2" src="https://www.kushiro.pref.hokkaido.lg.jp/fs/2/5/9/8/5/5/3/_/map350_kushiro.gif" @click="changeMode()">
+            <!-- Add your Map Control Mode specific UI here -->
+        </div>
+    </template>
 </template>
 
 <script>
@@ -343,7 +355,11 @@ export default {
             ],
 
             // プレイヤーごとの手札
-            hands: {}
+            hands: {},
+
+            // dominationMode: 'standard',
+            dominationMode: 'mapControl',
+            mapStep: 0, 
 
 
         }
@@ -800,6 +816,15 @@ export default {
             return this.compressHand(
                 this.sortHandByArea(hand)
             );
+        },
+
+        changeMode() {
+            if(this.dominationMode === 'standard') {
+                this.dominationMode = 'mapControl';
+                this.mapStep = 0;
+            } else {
+                this.dominationMode = 'standard';
+            }
         },
 
 
