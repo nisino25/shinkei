@@ -27,8 +27,10 @@
                                     px-3 py-1 rounded-full
                                     text-xs font-medium
                                         text-slate-700
-                                    border border-slate-300"
+                                    border border-slate-300
+                                    cursor-pointer"
                                 :class="areaBadgeClass(card.area)"
+                                @click="previewCard(card)"
                             >
                                 <span class="text-[10px] text-slate-500">
                                     Lv{{ card.tier }}
@@ -44,38 +46,11 @@
                     </div>
                 </div>
 
-                <div class="space-y-2">
-                    <h3 class="text-sm font-medium">アクションボタン</h3>
-                    <div class="flex flex-col gap-2">
-                        <button
-                            class="w-full px-3 py-2 rounded-md border bg-gray-200 text-sm"
-                            @click="resetTiles"
-                        >
-                            タイルをリセット
-                        </button>
-                    </div>
-                </div>
-                <div class="space-y-2">
-                    <h3 class="text-sm font-medium">色の説明</h3>
-                    <div class="grid grid-cols-3 gap-2">
-                        <div
-                            v-for="item in terrainList"
-                            :key="item.key"
-                            class="flex items-center gap-2"
-                        >
-                            <div
-                                class="w-4 h-4 rounded-full"
-                                :style="{ background: areaColors[item.key] }"
-                            ></div>
-                            <span class="text-xs">{{ item.label }}</span>
-                        </div>
-                    </div>
-
-                </div>
+                
             </aside>
 
             <main class="flex-1">
-                <div class="w-full rounded-md bg-gray-200 p-4">
+                <div class="w-full rounded-md bg-gray-200 p-4 mb-6">
                     <div
                         class="grid gap-1 w-full h-full"
                         :style="{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }"
@@ -132,7 +107,72 @@
                     </div>
                     </div>
                 </div>
+
+                <div class="space-y-2 max-w-sm">
+                    <h3 class="text-sm font-medium">アクションボタン</h3>
+                    <div class="flex flex-col gap-2">
+                        <button
+                            class="w-full px-3 py-2 rounded-md border bg-gray-200 text-sm"
+                            @click="resetTiles"
+                        >
+                            タイルをリセット
+                        </button>
+                    </div>
+                </div>
+                <div class="space-y-2 max-w-sm mt-4">
+                    <h3 class="text-sm font-medium">色の説明</h3>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div
+                            v-for="item in terrainList"
+                            :key="item.key"
+                            class="flex items-center gap-2"
+                        >
+                            <div
+                                class="w-4 h-4 rounded-full"
+                                :style="{ background: areaColors[item.key] }"
+                            ></div>
+                            <span class="text-xs">{{ item.label }}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ---------preview------------- -->
+                <hr class="my-6">
+                <div class="grid grid-cols-3 gap-4">
+                    <!-- <template > -->
+                        <CreatureCard 
+                            :creature="card" 
+                            v-for="(card, index) in allCards.sort((a, b) =>
+                                a.area === b.area
+                                ? a.tier - b.tier
+                                : a.area.localeCompare(b.area)
+                            )" :key="index"
+                            />
+                    <!-- </template> -->
+                </div>
             </main>
+        </div>
+        <!-- Modal -->
+        <div
+            v-if="selectedCard"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+            @click.self="closePreview"
+        >
+            <div class="relative p-4 bg-white rounded-lg shadow-lg w-full max-w-sm">
+
+                <!-- Close Button -->
+                <button
+                    class="absolute -top-3 -right-3 bg-white rounded-full shadow px-2 py-1 text-sm"
+                    @click="closePreview"
+                >
+                    ✕
+                </button>
+
+                <!-- 🔥 ここで既存コンポーネントを使う -->
+                <CreatureCard :creature="selectedCard" class="mx-auto"/>
+
+            </div>
         </div>
     </template>
     <template v-else>
@@ -147,6 +187,7 @@
 </template>
 
 <script>
+import CreatureCard from '@/components/domination/creatureCard.vue'
 export default {
     // name: 'Tiles20x20',
     data() {
@@ -210,147 +251,147 @@ export default {
             allCards: [
                 {
                     id:'オオワシ', get label(){return this.id},
-                    area: 'land', count: 1,
+                    area: 'land', count: 1, food:["虫","小動物"], tier: 4
                 },
                 {
                     id:'キタキツネ', get label(){return this.id},
-                    area: 'land', count: 2,
+                    area: 'land', count: 2, food:["さかな"], tier: 3
                 },
                 {
                     id:'エゾタヌキ', get label(){return this.id},
-                    area: 'land', count: 2,
+                    area: 'land', count: 2, food:["虫","植物"], tier: 2
                 },
                 {
                     id:'エゾリス', get label(){return this.id},
-                    area: 'land', count: 3,
+                    area: 'land', count: 3, food:["植物"], tier: 2
                 },
                 {
                     id:'オコジョ', get label(){return this.id},
-                    area: 'land', count: 3,
+                    area: 'land', count: 3, food:["虫","小動物"], tier: 2
                 },
                 {
                     id:'カヤネズミ', get label(){return this.id},
-                    area: 'land', count: 3,
+                    area: 'land', count: 3, food:["植物"], tier: 2
                 },
                 {
                     id:'エゾウサギ', get label(){return this.id},
-                    area: 'land', count: 3,
+                    area: 'land', count: 3, food:["植物"], tier: 2
                 },
                 {
                     id:'ミミズ', get label(){return this.id},
-                    area: 'land', count: 10,
+                    area: 'land', count: 10, food:["植物"], tier: 1
                 },
                 {
                     id:'アブラムシ', get label(){return this.id},
-                    area: 'land', count: 4,
+                    area: 'land', count: 4, food:["植物"], tier: 1
                 },
                 {
                     id:'カナブン', get label(){return this.id},
-                    area: 'land', count: 4,
+                    area: 'land', count: 4, food:["植物"], tier: 1
                 },
                 {
                     id:'シオカラトンボ', get label(){return this.id},
-                    area: 'land', count: 3,
+                    area: 'land', count: 3, food:["虫"], tier: 1
                 },
                 {
                     id:'モンシロチョウ', get label(){return this.id},
-                    area: 'land', count: 4,
+                    area: 'land', count: 4, food:["植物"], tier: 1
                 },
                 {
                     id:'カマキリ', get label(){return this.id},
-                    area: 'land', count: 3,
+                    area: 'land', count: 3, food:["虫"], tier: 1
                 },
                 {
                     id:'ミツバチ', get label(){return this.id},
-                    area: 'land', count: 4,
+                    area: 'land', count: 4, food:["植物"], tier: 1
                 },
                 {
                     id:'シジミチョウ', get label(){return this.id},
-                    area: 'land', count: 4,
+                    area: 'land', count: 4, food:["植物"], tier: 1
                 },
                 {
                     id:'イトウ', get label(){return this.id},
-                    area: 'water', count: 1,
+                    area: 'water', count: 1, food:["魚","小動物"], tier: 4
                 },
                 {
                     id:'オショロコマ', get label(){return this.id},
-                    area: 'water', count: 1,
+                    area: 'water', count: 1, food:["魚","小動物"], tier: 3
                 },
                 {
                     id:'ニジマス', get label(){return this.id},
-                    area: 'water', count: 1,
+                    area: 'water', count: 1, food:["虫"], tier: 3
                 },
                 {
                     id:'ヤマメ', get label(){return this.id},
-                    area: 'water', count: 1,
+                    area: 'water', count: 1, food:["虫"], tier: 2
                 },
                 {
                     id:'ウグイ', get label(){return this.id},
-                    area: 'water', count: 1,
+                    area: 'water', count: 1, food:["藻類"], tier: 2
                 },
                 {
                     id:'ヤゴ', get label(){return this.id},
-                    area: 'water', count: 1,
+                    area: 'water', count: 1, food:["虫"], tier: 1
                 },
                 {
                     id:'カゲロウの幼虫', get label(){return this.id},
-                    area: 'water', count: 2,
+                    area: 'water', count: 2, food:["藻類"], tier: 1
                 },
                 {
                     id:'ゲンゴロウ', get label(){return this.id},
-                    area: 'water', count: 1,
+                    area: 'water', count: 1, food:["植物"], tier: 1
                 },
                 {
                     id:'川エビ', get label(){return this.id},
-                    area: 'water', count: 4,
+                    area: 'water', count: 4, food:["藻類"], tier: 1
                 },
                 {
                     id:'オタマジャクシ', get label(){return this.id},
-                    area: 'water', count: 4,
+                    area: 'water', count: 4, food:["藻類"], tier: 2
                 },
                 {
                     id:'シマエナガ', get label(){return this.id},
-                    area: 'land', count: 3,
+                    area: 'land', count: 3, food:["虫"], tier: 2
                 },
                 {
                     id:'エゾモモンガ', get label(){return this.id},
-                    area: 'land', count: 3,
+                    area: 'land', count: 3, food:["植物"], tier: 2
                 },
                 {
                     id:'ヒグマ', get label(){return this.id},
-                    area: 'land', count: 1,
+                    area: 'land', count: 1, food:["植物","小動物"], tier: 4
                 },
                 {
                     id:'タンチョウツル', get label(){return this.id},
-                    area: 'land', count: 1,
+                    area: 'land', count: 1, food:["植物","虫","魚"], tier: 4
                 },
                 {
                     id:'エゾサンショウウオ', get label(){return this.id},
-                    area: 'water', count: 1,
+                    area: 'water', count: 1, food:["植物"], tier: 2
                 },
                 {
                     id:'シマフクロウ', get label(){return this.id},
-                    area: 'land', count: 1,
+                    area: 'land', count: 1, food:["魚","小動物"], tier: 4
                 },
                 {
                     id:'ヒメネズミ', get label(){return this.id},
-                    area: 'land', count: 3,
+                    area: 'land', count: 3, food:["植物"], tier: 2
                 },
                 {
                     id:'モグラ', get label(){return this.id},
-                    area: 'land', count: 3,
+                    area: 'land', count: 3, food:["虫"], tier: 2
                 },
                 {
                     id:'アカガエル', get label(){return this.id},
-                    area: 'water', count: 3,
+                    area: 'water', count: 3, food:["植物"], tier: 2
                 },
                 {
                     id:'アブ', get label(){return this.id},
-                    area: 'land', count: 3,
+                    area: 'land', count: 3, food:["小動物","中動物","大動物"], tier: 1
                 },
                 {
                     id:'エゾシカ', get label(){return this.id},
-                    area: 'land', count: 2,
+                    area: 'land', count: 2, food:["植物"], tier: 4
                 },
             ],
 
@@ -360,6 +401,8 @@ export default {
             // dominationMode: 'standard',
             dominationMode: 'mapControl',
             mapStep: 0, 
+
+            selectedCard: null
 
 
         }
@@ -576,93 +619,121 @@ export default {
             if (t) t.area = area
         },
         makeRivers(count = 2) {
-                for (let r = 0; r < count; r++) {
-                        // pick random start edge: top, bottom, left, right
-                        const edges = ['top', 'bottom', 'left', 'right']
-                        const startEdge = edges[Math.floor(Math.random() * edges.length)]
-                        let row, col
+            for (let r = 0; r < count; r++) {
 
-                        switch(startEdge) {
-                                case 'top':
-                                        row = 0
-                                        col = Math.floor(Math.random() * this.cols)
-                                        break
-                                case 'bottom':
-                                        row = this.rows - 1
-                                        col = Math.floor(Math.random() * this.cols)
-                                        break
-                                case 'left':
-                                        row = Math.floor(Math.random() * this.rows)
-                                        col = 0
-                                        break
-                                case 'right':
-                                        row = Math.floor(Math.random() * this.rows)
-                                        col = this.cols - 1
-                                        break
-                        }
+                const edges = ['top', 'bottom', 'left', 'right']
+                const startEdge = edges[Math.floor(Math.random() * edges.length)]
 
-                        // random walk until reaching opposite side or map edge
-                        const maxSteps = this.rows * this.cols
-                        let steps = 0
+                let row, col
+                let direction
 
-                        while (steps < maxSteps) {
-                                this.setArea(row, col, 'river')
+                switch (startEdge) {
+                    case 'top':
+                        row = 0
+                        col = Math.floor(Math.random() * this.cols)
+                        direction = [1, 0] // go downward
+                        break
 
-                                // random direction: up/down/left/right
-                                const dirs = []
-                                if (row > 0) dirs.push([-1, 0])
-                                if (row < this.rows - 1) dirs.push([1, 0])
-                                if (col > 0) dirs.push([0, -1])
-                                if (col < this.cols - 1) dirs.push([0, 1])
+                    case 'bottom':
+                        row = this.rows - 1
+                        col = Math.floor(Math.random() * this.cols)
+                        direction = [-1, 0]
+                        break
 
-                                const [dr, dc] = dirs[Math.floor(Math.random() * dirs.length)]
-                                row += dr
-                                col += dc
+                    case 'left':
+                        row = Math.floor(Math.random() * this.rows)
+                        col = 0
+                        direction = [0, 1]
+                        break
 
-                                steps++
-
-                                // stop early if river hits ocean
-                                const tile = this.tiles.find(t => t.row === row && t.col === col)
-                                if (tile && tile.area === 'sea') break
-                        }
+                    case 'right':
+                        row = Math.floor(Math.random() * this.rows)
+                        col = this.cols - 1
+                        direction = [0, -1]
+                        break
                 }
+
+                const maxSteps = Math.floor((this.rows + this.cols) * 0.6)
+                let steps = 0
+
+                while (steps < maxSteps) {
+
+                    const tile = this.tiles.find(t => t.row === row && t.col === col)
+                    if (!tile || tile.area === 'sea' || tile.area === 'river') break
+
+                    this.setArea(row, col, 'river')
+
+                    // 70% go forward, 30% slight turn
+                    if (Math.random() < 0.3) {
+                        const turns = [
+                            [direction[1], direction[0]],
+                            [-direction[1], -direction[0]]
+                        ]
+                        direction = turns[Math.floor(Math.random() * turns.length)]
+                    }
+
+                    row += direction[0]
+                    col += direction[1]
+
+                    // boundary check
+                    if (row < 0 || row >= this.rows || col < 0 || col >= this.cols) break
+
+                    steps++
+                }
+            }
         },
         makeOcean() {
-                const edges = ['top', 'bottom', 'left', 'right']
+            const edges = ['top', 'bottom', 'left', 'right']
 
-                // pick 1–4 edges randomly
-                const oceanEdges = edges.filter(() => Math.random() < 0.5)
-                if (oceanEdges.length === 0) oceanEdges.push(edges[Math.floor(Math.random() * edges.length)])
+            // pick 1–2 edges only (reduce starting power)
+            const shuffled = edges.sort(() => Math.random() - 0.5)
+            const oceanEdges = shuffled.slice(0, Math.floor(Math.random() * 2) + 1)
 
-                const seeds = []
+            const seeds = []
 
-                oceanEdges.forEach(edge => {
-                        let positions = []
-                        if (edge === 'top') positions = Array.from({length: this.cols}, (_, i) => ({row: 0, col: i}))
-                        if (edge === 'bottom') positions = Array.from({length: this.cols}, (_, i) => ({row: this.rows - 1, col: i}))
-                        if (edge === 'left') positions = Array.from({length: this.rows}, (_, i) => ({row: i, col: 0}))
-                        if (edge === 'right') positions = Array.from({length: this.rows}, (_, i) => ({row: i, col: this.cols - 1}))
+            oceanEdges.forEach(edge => {
+                let positions = []
 
-                        const count = Math.max(3, Math.floor(Math.random() * positions.length * 0.5)) // bigger starting ocean
-                        for (let i = 0; i < count; i++) {
-                                const p = positions[Math.floor(Math.random() * positions.length)]
-                                seeds.push(p)
-                                this.setArea(p.row, p.col, 'sea')
-                        }
-                })
-
-                // expand ocean inward more aggressively
-                for (let i = 0; i < 800; i++) {  // more iterations = bigger ocean blobs
-                        const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
-                        if (tile.area !== 'sea') continue
-
-                        const neighbors = this.getNeighbors(tile)
-                        neighbors.forEach(n => {
-                                if (!n.area && Math.random() < 0.8) {  // 50% chance to expand
-                                        n.area = 'sea'
-                                }
-                        })
+                if (edge === 'top') {
+                    positions = Array.from({ length: this.cols }, (_, i) => ({ row: 0, col: i }))
                 }
+
+                if (edge === 'bottom') {
+                    positions = Array.from({ length: this.cols }, (_, i) => ({ row: this.rows - 1, col: i }))
+                }
+
+                if (edge === 'left') {
+                    positions = Array.from({ length: this.rows }, (_, i) => ({ row: i, col: 0 }))
+                }
+
+                if (edge === 'right') {
+                    positions = Array.from({ length: this.rows }, (_, i) => ({ row: i, col: this.cols - 1 }))
+                }
+
+                // smaller seed count
+                const count = Math.max(2, Math.floor(positions.length * 0.25))
+
+                for (let i = 0; i < count; i++) {
+                    const p = positions[Math.floor(Math.random() * positions.length)]
+                    seeds.push(p)
+                    this.setArea(p.row, p.col, 'sea')
+                }
+            })
+
+            // softer expansion
+            for (let i = 0; i < 350; i++) {
+                const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
+
+                if (tile.area !== 'sea') continue
+
+                const neighbors = this.getNeighbors(tile)
+
+                neighbors.forEach(n => {
+                    if (!n.area && Math.random() < 0.35) {
+                        n.area = 'sea'
+                    }
+                })
+            }
         },
         makeTowns(count = 4) {
                 const townSeeds = []
@@ -695,17 +766,6 @@ export default {
                         })
                 }
         },
-
-        // initializeHands() {
-        //     this.players.forEach(player => {
-        //         this.hands[player.id] = [
-        //             // ...this.buildSortedHand(this.landAreaCards),
-        //             // ...this.buildSortedHand(this.waterAreaCards)
-        //             ...this.buildSortedHand(this.allCards)
-        //         ];
-
-        //     });
-        // },
         shuffleArray(array) {
             const arr = array.slice();
             for (let i = arr.length - 1; i > 0; i--) {
@@ -722,6 +782,7 @@ export default {
                     label: card.label,
                     area: card.area,
                     tier: card.tier,
+                    food: card.food,
                     // optional: unique instance id
                     instanceId: `${card.id}-${index}`
                 }));
@@ -730,7 +791,7 @@ export default {
 
 
         initializeHands() {
-             const deck = this.shuffleArray(
+            const deck = this.shuffleArray(
                 this.buildDeck(this.allCards)
             );
 
@@ -746,25 +807,6 @@ export default {
                 );
             });
         },
-
-        // buildSortedHand(cardDefs) {
-        //     // tier昇順 → label順
-        //     return cardDefs
-        //         .slice()
-        //         .sort((a, b) => {
-        //             if (a.tier !== b.tier) {
-        //                 return a.tier - b.tier;
-        //             }
-        //             return a.label.localeCompare(b.label, 'ja');
-        //         })
-        //         .map(card => ({
-        //                     id: card.id,
-        //             label: card.label,
-        //             tier: card.tier,
-        //             count: card.count,
-        //             area: card.area   // ← これ重要
-        //         }));
-        // },
         areaBadgeClass(area) {
             switch (area) {
                 case 'land':
@@ -827,6 +869,16 @@ export default {
             }
         },
 
+        // ------------------------
+        previewCard(card) {
+            this.selectedCard = card
+            console.log("Previewing card:", card)
+        },
+
+        closePreview() {
+            this.selectedCard = null
+        }
+
 
 
     },
@@ -841,7 +893,13 @@ export default {
         }
         
         this.generateTiles();
+
+        this.dominationMode = 'standard';
     },
+    components: {
+        CreatureCard
+    },
+
 }
 </script>
 
