@@ -29,8 +29,8 @@
                                         text-slate-700
                                     border border-slate-300
                                     cursor-pointer"
-                                :class="areaBadgeClass(card.area)"
-                                @click="previewCard(card)"
+                                :class="areaBadgeClass(card, player.id)"
+                                @click="previewCard(card, player.id)"
                             >
                                 <span class="text-[10px] text-slate-500">
                                     Lv{{ card.tier }}
@@ -49,7 +49,9 @@
                 
             </aside>
 
+            <!--  --- Right side Area --- -->
             <main class="flex-1">
+                <!-- Tiles Area -->
                 <div class="w-full rounded-md bg-gray-200 p-4 mb-6">
                     <div
                         class="grid gap-1 w-full h-full"
@@ -81,7 +83,7 @@
                             bg-yellow-100"
                             >
                         </div>
-                        <div v-if="tile.ownerTeam !== null">
+                        <div v-if="tile.ownerTeam">
                             <div class="
                                 block
                                 absolute
@@ -98,7 +100,7 @@
                             <div
                                 class="absolute left-1/2 top-1/2 w-1/2 aspect-square rounded-full border-[6px] bg-opacity-90 transform -translate-x-1/2 -translate-y-1/2 tile-circle z-10"
                                 :style="{
-                                    background: typeColors[tile.type],
+                                    background: teamColor(tile.ownerTeam),
                                     borderColor: teamColor(tile.ownerTeam)
                                 }"
                             ></div>
@@ -155,7 +157,7 @@
         </div>
         <!-- Modal -->
         <div
-            v-if="selectedCard"
+            v-if="selectedCard && isPreviewing"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
             @click.self="closePreview"
         >
@@ -171,6 +173,10 @@
 
                 <!-- 🔥 ここで既存コンポーネントを使う -->
                 <CreatureCard :creature="selectedCard" class="mx-auto"/>
+
+                <div class="button-container flex justify-center mt-4">
+                    <button @click="useCard()" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">選択する</button>
+                </div>
 
             </div>
         </div>
@@ -201,9 +207,9 @@ export default {
             currentPlayer: null,
             currentType: null,
             players: [
-                { id: 1, name: 'Player 1', color: '#2563eb', score: 0 },
-                { id: 2, name: 'Player 2', color: '#7c3aed', score: 0 },
-                { id: 3, name: 'Player 3', color: '#f97316', score: 0 }
+                { id: 1, name: 'Player 1', color: '#E84A5F', score: 0 },
+                { id: 2, name: 'Player 2', color: '#A64DFF', score: 0 },
+                { id: 3, name: 'Player 3', color: '#FFD93D', score: 0 }
             ],
             typeColors: {
                 grass: '#7ED957', // green
@@ -217,13 +223,21 @@ export default {
                 animal: 10
             },
             areaTypes: ['town', 'forest', 'river', 'sea'],
+            // areaColors: {
+            //     town: '#E59A4F',       // darker grey
+            //     forest: '#5FA86E',
+            //     dirt: '#D7B899',       // lighter dirt
+            //     river: '#6EC4E8',
+            //     sea: '#3A83C3',
+            //     undeveloped: '#4A4A4A' // reddish, new
+            // },
             areaColors: {
-                town: '#E59A4F',       // darker grey
-                forest: '#5FA86E',
-                dirt: '#D7B899',       // lighter dirt
-                river: '#6EC4E8',
-                sea: '#3A83C3',
-                undeveloped: '#4A4A4A' // reddish, new
+                town: '#B88E66',
+                forest: '#768F7C',
+                dirt: '#C2B5A6',
+                river: '#8FAFBD',
+                sea: '#5E7F9B',
+                undeveloped: '#666666'
             },
             terrainList: [
                 { key: 'town', label: '町' },
@@ -402,25 +416,32 @@ export default {
             dominationMode: 'mapControl',
             mapStep: 0, 
 
-            selectedCard: null
+            selectedCard: null,
+
+            isPreviewing: false
 
 
         }
     },
     methods: {
         onTileClick(tile) {
-            if(tile.area === 'undeveloped') {
-                alert("まだ動物たちが住めないから、環境をなおしてね")
-                return; // cannot select undeveloped
-            }
+          if(!this.selectedCard) {
+              alert("カードを選択してからタイルを選んでね")
+              return
+          } 
+          console.log(tile)
+          if(tile.area === 'undeveloped') {
+              alert("まだ動物たちが住めないから、環境をなおしてね")
+              return; // cannot select undeveloped
+          }
           if(tile.ownerTeam !== null) return; // already owned
-          if(this.currentType === null) return; // no type selected
-          if (!tile.validForSelection) return // not valid for selection
+          // if(this.currentType === null) return; // no type selected
+          // if (!tile.validForSelection) return // not valid for selection
 
           tile.ownerTeam = this.currentPlayer
-          tile.type = this.currentType
+          // tile.type = this.currentType
 
-          this.currentType = null
+          this.selectedCard = null
           this.updateValidTiles()
           this.updateScores()
           this.goToNextPlayer()
@@ -807,15 +828,27 @@ export default {
                 );
             });
         },
-        areaBadgeClass(area) {
-            switch (area) {
+        areaBadgeClass(card, playerId) {
+            let baseClass = ''
+
+            switch (card.area) {
                 case 'land':
-                    return 'bg-[#D7B899] text-[#6B4E2E] border-[#C5A57E]';
+                    baseClass = 'bg-[#D7B899] text-[#6B4E2E] border-[#C5A57E]'
+                    break
                 case 'water':
-                    return 'bg-[#9ECAD6] text-[#355F6B] border-[#7FB3C8]';
+                    baseClass = 'bg-[#9ECAD6] text-[#355F6B] border-[#7FB3C8]'
+                    break
                 default:
-                    return 'bg-slate-100 text-slate-700 border-slate-300';
+                    baseClass = 'bg-slate-100 text-slate-700 border-slate-300'
             }
+
+            const isCurrent = this.selectedCard?.id === card.id && playerId === this.currentPlayer
+
+            if (isCurrent) {
+                baseClass += ' animate-pulse ring-2 ring-yellow-400'
+            }
+
+            return baseClass
         },
 
         sortHandByArea(hand) {
@@ -870,13 +903,22 @@ export default {
         },
 
         // ------------------------
-        previewCard(card) {
+        previewCard(card, playerId) {
+            if(this.currentPlayer !== playerId) return
+            this.isPreviewing = true
             this.selectedCard = card
             console.log("Previewing card:", card)
         },
 
+        useCard() {
+            // alert(`You selected ${card.label}! Implement card effects here.`)
+            // this.selectedCard = null
+            this.isPreviewing = false
+        },
+
         closePreview() {
             this.selectedCard = null
+            this.isPreviewing = false
         }
 
 
