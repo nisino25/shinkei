@@ -486,7 +486,7 @@
       },
       {
         location: '醍醐',
-        isDemo: true,
+        isDemo: false,
         isInternational: false,
         wholeCardSet: [
             {imgSrc: './card-pics/daigo/hunter/1.png?v=2', group: 1, type: 'regular', name: `アカキツネ` , },
