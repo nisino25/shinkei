@@ -101,6 +101,7 @@
                       class="flex items-center gap-1"
                   >
                     <div
+                      v-if="tier !== 1"
                         :class="tierShapeClass(tier)"
                         :style="tierShapeStyle(tier,'#555')"
                         style="background: #555; border-color: #555"
@@ -994,7 +995,7 @@ export default {
 
         tierShapeClass(tier) {
 
-            // if (tier === 1) return "triangle"
+            if (tier === 1) return "triangle"
             if (tier === 2) return "w-5 h-5"
             if (tier === 3) return "w-5 h-5 rounded-full"
             if (tier === 4) return "text-3xl"
@@ -1002,11 +1003,11 @@ export default {
         },
         tierShapeStyle(tier,color) {
 
-            // if (tier === 1) {
-            //     return {
-            //         borderBottomColor: this.teamColor(color)
-            //     }
-            // }
+            if (tier === 1) {
+                return {
+                    borderBottomColor: this.teamColor(color)
+                }
+            }
 
             if (tier === 4) {
                 return { color: this.teamColor(color) }
