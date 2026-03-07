@@ -484,6 +484,42 @@
             {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
         ]
       },
+      {
+        location: '醍醐',
+        isDemo: true,
+        isInternational: false,
+        wholeCardSet: [
+            {imgSrc: './card-pics/daigo/hunter/1.png?v=2', group: 1, type: 'regular', name: `アカキツネ` , },
+            {imgSrc: './card-pics/daigo/food/1.png?v=2', group: 1, type: 'regular', foodType: "mammal", name: `ねずみ<br>（アカキツネ）`,},
+
+            {imgSrc: './card-pics/daigo/hunter/2.png?v=2', group: 2, type: 'regular', name: `アサギマダラ` ,},
+            {imgSrc: './card-pics/daigo/food/2.png?v=2', group: 2, type: 'regular', foodType: "plant", name: `フジバカマ<br>（アサギマダラ）`,},
+
+            {imgSrc: './card-pics/daigo/hunter/3.png?v=2', group: 3, type: 'regular', name: `アマガエル` ,},
+            {imgSrc: './card-pics/daigo/food/3.png?v=2', group: 3, type: 'regular', foodType: "insect", name: `コオロギ<br>（アマガエル）`,},
+
+            {imgSrc: './card-pics/daigo/hunter/4.png?v=2', group: 4, type: 'regular', name: `カワセミ` ,},
+            {imgSrc: './card-pics/daigo/food/4.png?v=2', group: 4, type: 'regular', foodType: "fish", name: `小魚<br>（カワセミ）`,},
+
+            {imgSrc: './card-pics/daigo/hunter/5.png?v=2', group: 5, type: 'regular', name: `キリギリス` ,},
+            {imgSrc: './card-pics/daigo/food/5.png?v=2', group: 5, type: 'regular', foodType: "plant", name: `イネ科植物<br>（キリギリス）`,},
+
+            {imgSrc: './card-pics/daigo/hunter/6.png?v=2', group: 6, type: 'regular', name: `クワガタ` ,},
+            {imgSrc: './card-pics/daigo/food/6.png?v=2', group: 6, type: 'regular', foodType: "sap", name: `じゅえき<br>（クワガタ）`,},
+
+            {imgSrc: './card-pics/daigo/hunter/7.png?v=2', group: 7, type: 'regular', name: `シカ` ,},
+            {imgSrc: './card-pics/daigo/food/7.png?v=2', group: 7, type: 'regular', foodType: "plant", name: `落葉樹<br>（シカ）`,},
+
+            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `エコバッグ` ,},
+            {imgSrc: './card-pics/good/1.jpg', group: null, type: 'beneficial', name: `省エネ` ,},
+
+            {imgSrc: './card-pics//bad/1.jpg', group: null, type: 'destructive', name: `森林伐採` ,},
+            {imgSrc: './card-pics/bad/2.jpg', group: null, type: 'destructive', name: `海水汚染` ,},
+            {imgSrc: './card-pics/bad/3.jpg', group: null, type: 'destructive', name: `動物との<br>交通事故` ,},
+
+            {imgSrc: './card-pics/gameover/1.png', group: null, type: 'bomb', name: `隕石到来` ,},
+        ]
+      },
     ],
   );
 
@@ -960,38 +996,38 @@
     /* -------------------------------- */
             
     #app .back {
-    position: relative;
-    /* top: 20px;
-    left: 50%; */
-    width: 500px;
-    aspect-ratio: 1;
-    max-width: 95%;
-    padding: 10px;
-    border-radius: 260px;
+        position: relative;
+        /* top: 20px;
+        left: 50%; */
+        width: 500px;
+        aspect-ratio: 1;
+        max-width: 95%;
+        padding: 10px;
+        border-radius: 260px;
     }
   
     #app .back > .pin {
-    position: absolute;
-    left: 50%;
-    top: 10px;
-    border-top: 50px solid #ab1234;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-radius: 20px;
-    transform: translatex(-50%);
-    z-index: 1;
+        position: absolute;
+        left: 50%;
+        top: 10px;
+        border-top: 50px solid #ab1234;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-radius: 20px;
+        transform: translatex(-50%);
+        z-index: 1;
     }
   
     #app .back > .wheel {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1;
-    background-color: white;
-    border-radius: 50%;
-    overflow: hidden;
-    transform-origin: center center;
-  
-    border: 2px solid black;
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1;
+        background-color: white;
+        border-radius: 50%;
+        overflow: hidden;
+        transform-origin: center center;
+    
+        border: 2px solid black;
     }
   
     @media only screen and (max-width: 1280px) {
@@ -1023,12 +1059,16 @@
         top: 89%;
         left: 5%;
     }.location-btn-京都{
-        top: 56%;
+        top: 52%;
+        left: 34%;
+    }.location-btn-醍醐{
+        top: 60%;
         left: 34%;
     }.location-btn-神奈川{
         top: 52%;
         left: 50%;
-    }.location-btn-アフリカ{
+    }
+    /* .location-btn-アフリカ{
         top: 65%;
         left: 67%;
     }.location-btn-オーストラリア{
@@ -1040,7 +1080,7 @@
     }.location-btn-ブラジル{
         top: 92.5%;
         left: 66.5%;
-    }
+    } */
 
 
   
