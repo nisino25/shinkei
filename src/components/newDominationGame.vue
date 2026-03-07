@@ -2,57 +2,122 @@
     <button class="m-2 px-3 py-1 bg-blue-500 text-white rounded-md text-sm" @click="changeMode()">Change Mode</button>
     <template v-if="dominationMode == 'standard'">
         <div class="tiles-app flex gap-6 px-6">
-            <aside class="w-80 flex-shrink-0 flex flex-col gap-4">
+            <aside class="w-[550px] flex-shrink-0 flex flex-col gap-4">
                 <div class="space-y-3">
-                        <h2 class="text-lg font-semibold">プレイヤー</h2>
-                        <div
-                            v-for="player in players"
-                            :key="player.id"
-                            class="p-3 border rounded-md flex flex-col gap-2 relative"
-                            :style="{ background: currentPlayer === player.id ? '#FFC72C' : '' }"
-                        >
+                  
+                  <!-- /スコアボード -->
+                  <h2>スコアボード</h2>
+                  <div class="flex gap-2 relative items-center">
+                  <template v-for="player in players" :key="player.id">
+                      <div
+                          class="p-3 border rounded-md "
+                          :style="{ background: player.score === highestPlayerScore() ? '#90EE90' : '' }" 
+                      >
+                      <!-- {{ player.id }}: {{ highestPlayer() }} -->
                         <div class="flex items-center gap-3">
                             <div class="w-7 h-7 rounded-md" :style="{ background: player.color }"></div>
                             <div class="flex-1 text-sm">
                                 <div class="font-medium">{{ player.name }}</div>
                                 <!-- <div class="text-xs text-gray-500">チーム {{ player.id }}</div> -->
                                 <div class="text-xs font-semibold text-gray-700 mt-1">スコア: {{ player.score }}</div>
-                            </div>
+                            </div>    
                         </div>
-                        <div class="flex flex-wrap gap-2">
-                            <div
-                                v-for="card in getDisplayHand(hands[player.id])"
-                                :key="card.id"
-                                class="inline-flex items-center gap-2
-                                    px-3 py-1 rounded-full
-                                    text-xs font-medium
-                                        text-slate-700
-                                    border border-slate-300
-                                    cursor-pointer"
-                                :class="areaBadgeClass(card, player.id)"
-                                @click="previewCard(card, player.id)"
-                            >
-                                <span class="text-[10px] text-slate-500">
-                                    Lv{{ card.tier }}
-                                </span>
-                                <span>
-                                    {{ card.label }}
-                                </span>
-                                <span class="text-slate-500">
-                                    ×{{ card.holdingCount }}
-                                </span>
-                            </div>
+                      </div>
+                    </template>
+                  </div>
+                
+                  <!-- プレイヤーリスト -->
+                  <h2 class="text-lg font-semibold">プレイヤーリスト</h2>
+                  <div
+                      v-for="player in players"
+                      :key="player.id"
+                      class="p-3 border rounded-md flex flex-col gap-2 relative"
+                      :style="{ background: currentPlayerId === player.id ? '#FFC72C' : '' }"
+                    >
+                    <div class="flex items-center gap-3">
+                        <div class="w-7 h-7 rounded-md" :style="{ background: player.color }"></div>
+                        <div class="flex-1 text-sm">
+                          <span class="font-medium">{{ player.name }}</span>
                         </div>
                     </div>
+                    <div class="flex flex-wrap gap-2">
+                        <template v-for="group in groupHandByTier(hands[player.id])" :key="group.tier">
+                          <div class="w-full border-b border-color-slate-300 pb-2">
+                            <div class="mb-1">
+                                <span class="text-xs text-slate-400 mb-1">Lv{{ group.tier }}</span> 
+                            </div>
+
+                            <div class="flex flex-wrap gap-2">
+                                <div
+                                    v-for="card in group.cards"
+                                    :key="card.id"
+                                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border cursor-pointer"
+                                    :class="areaBadgeClass(card, player.id)"
+                                    @click="previewCard(card, player.id)"
+                                >
+                                    <span>{{ card.label }}</span>
+                                    <span class="text-slate-500">×{{ card.holdingCount }}</span>
+                                </div>
+                            </div>
+                          </div>
+                        </template>
+                    </div>
+                  </div>
                 </div>
 
-                
             </aside>
 
             <!--  --- Right side Area --- -->
             <main class="flex-1">
-                <!-- Tiles Area -->
-                <div class="w-full rounded-md bg-gray-200 p-4 mb-6">
+
+              <!-- 色の説明 -->
+              <div class="space-y-2 my-3">
+                <h3 class="text-sm font-medium">色の説明</h3>
+                <div class="flex gap-2 mb-2">
+                  <div
+                      v-for="item in terrainList"
+                      :key="item.key"
+                      class="flex items-center gap-1"
+                  >
+                    <div
+                        class="w-4 h-4 rounded-full"
+                        :style="{ background: areaColors[item.key] }"
+                    ></div>
+                    <span class="text-xs">{{ item.label }}</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <hr>
+
+              <!-- レベルの説明 -->
+              <div class="space-y-2 my-3">
+                <h3 class="text-sm font-medium">レベルとポイントの説明</h3>
+                <div class="flex gap-2 mb-2">
+                  <div
+                      v-for="tier in [1, 2, 3, 4]"
+                      :key="tier"
+                      class="flex items-center gap-1"
+                  >
+                    <div
+                        :class="tierShapeClass(tier)"
+                        :style="tierShapeStyle(tier,'#555')"
+                        style="background: #555; border-color: #555"
+                    ></div>
+                    <span class="text-xs flex items-center gap-1">
+                      <strong v-if="tier === 1" class="text-xl">&#9650;</strong>
+                      <strong v-if="tier === 4" class="text-xl">★</strong>
+                      Lv{{ tier }}: ポイント{{ getScoreForTile(tier) }},
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <hr class="mb-3">
+
+              <!-- Tiles Area -->
+              <div class="w-full rounded-md bg-gray-200 p-4 mb-6">
                     <div
                         class="grid gap-1 w-full h-full"
                         :style="{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }"
@@ -83,61 +148,31 @@
                             bg-yellow-100"
                             >
                         </div>
-                        <div v-if="tile.ownerTeam">
-                            <div class="
-                                block
-                                absolute
-                                top-1/2
-                                left-1/2
-                                -translate-x-1/2
-                                -translate-y-1/2
-                                bg-white
-                                w-[60%]
-                                rounded-full
-                                aspect-square
-                            "
-                            ></div>
-                            <div
-                                class="absolute left-1/2 top-1/2 w-1/2 aspect-square rounded-full border-[6px] bg-opacity-90 transform -translate-x-1/2 -translate-y-1/2 tile-circle z-10"
-                                :style="{
-                                    background: teamColor(tile.ownerTeam),
-                                    borderColor: teamColor(tile.ownerTeam)
-                                }"
-                            ></div>
+
+                        <div v-if="tile.ownerTeam" class="flex justify-center items-center w-full h-full">
+                          <div
+                              :class="tierShapeClass(tile.tier)"
+                              :style="tierShapeStyle(tile.tier, tile.ownerTeam)"
+                          >
+                              <span v-if="tile.tier === 4">★</span>
+                          </div>
                         </div>
 
                     </div>
                     </div>
-                </div>
+              </div>
 
-                <div class="space-y-2 max-w-sm">
-                    <h3 class="text-sm font-medium">アクションボタン</h3>
-                    <div class="flex flex-col gap-2">
-                        <button
-                            class="w-full px-3 py-2 rounded-md border bg-gray-200 text-sm"
-                            @click="resetTiles"
-                        >
-                            タイルをリセット
-                        </button>
-                    </div>
-                </div>
-                <div class="space-y-2 max-w-sm mt-4">
-                    <h3 class="text-sm font-medium">色の説明</h3>
-                    <div class="grid grid-cols-3 gap-2">
-                        <div
-                            v-for="item in terrainList"
-                            :key="item.key"
-                            class="flex items-center gap-2"
-                        >
-                            <div
-                                class="w-4 h-4 rounded-full"
-                                :style="{ background: areaColors[item.key] }"
-                            ></div>
-                            <span class="text-xs">{{ item.label }}</span>
-                        </div>
-                    </div>
-
-                </div>
+              <div class="space-y-2 max-w-sm">
+                  <h3 class="text-sm font-medium">アクションボタン</h3>
+                  <div class="flex flex-col gap-2">
+                      <button
+                          class="w-full px-3 py-2 rounded-md border bg-gray-200 text-sm"
+                          @click="resetTiles"
+                      >
+                          タイルをリセット
+                      </button>
+                  </div>
+              </div>
 
                 <!-- ---------preview------------- -->
                 <hr class="my-6">
@@ -204,12 +239,12 @@ export default {
             cols,
             rows,
             tiles: [],
-            currentPlayer: null,
+            currentPlayerId: null,
             currentType: null,
             players: [
-                { id: 1, name: 'Player 1', color: '#E84A5F', score: 0 },
-                { id: 2, name: 'Player 2', color: '#A64DFF', score: 0 },
-                { id: 3, name: 'Player 3', color: '#FFD93D', score: 0 }
+                { id: 1, name: 'Team 1', color: '#FF2E4D', score: 0 }, // stronger red
+                { id: 2, name: 'Team 2', color: '#8A2EFF', score: 0 }, // vivid purple
+                { id: 3, name: 'Team 3', color: '#FFC300', score: 0 }  // rich yellow
             ],
             typeColors: {
                 grass: '#7ED957', // green
@@ -223,14 +258,6 @@ export default {
                 animal: 10
             },
             areaTypes: ['town', 'forest', 'river', 'sea'],
-            // areaColors: {
-            //     town: '#E59A4F',       // darker grey
-            //     forest: '#5FA86E',
-            //     dirt: '#D7B899',       // lighter dirt
-            //     river: '#6EC4E8',
-            //     sea: '#3A83C3',
-            //     undeveloped: '#4A4A4A' // reddish, new
-            // },
             areaColors: {
                 town: '#B88E66',
                 forest: '#768F7C',
@@ -248,19 +275,19 @@ export default {
                 { key: 'undeveloped', label: '未開発地' },
             ],
 
-            landAreaCards: [
-                { id: 'モンシロチョウ', label: 'モンシロチョウ', tier: 1, area: 'land', count: 6 },
-                { id: 'mimizu', label: 'ミミズ', tier: 1, area: 'land', count: 6 },
-                { id: 'shimaenaga', label: 'シマエナガ', tier: 2, area: 'land', count: 4 },
-                { id: 'kitakitsune', label: 'キタキツネ', tier: 3, area: 'land', count: 3 }
-            ],
+            // landAreaCards: [
+            //     { id: 'モンシロチョウ', label: 'モンシロチョウ', tier: 1, area: 'land', count: 6 },
+            //     { id: 'mimizu', label: 'ミミズ', tier: 1, area: 'land', count: 6 },
+            //     { id: 'shimaenaga', label: 'シマエナガ', tier: 2, area: 'land', count: 4 },
+            //     { id: 'kitakitsune', label: 'キタキツネ', tier: 3, area: 'land', count: 3 }
+            // ],
 
-            waterAreaCards: [
-                { id: 'gengoro', label: 'げんごろう', tier: 1, area: 'water', count: 6 },
-                { id: 'yago', label: 'やご', tier: 1, area: 'water', count: 6 },
-                { id: 'tanago', label: 'タナゴ', tier: 2, area: 'water', count: 4 },
-                { id: 'dojo', label: 'ドジョウ', tier: 3, area: 'water', count: 3 }
-            ],
+            // waterAreaCards: [
+            //     { id: 'gengoro', label: 'げんごろう', tier: 1, area: 'water', count: 6 },
+            //     { id: 'yago', label: 'やご', tier: 1, area: 'water', count: 6 },
+            //     { id: 'tanago', label: 'タナゴ', tier: 2, area: 'water', count: 4 },
+            //     { id: 'dojo', label: 'ドジョウ', tier: 3, area: 'water', count: 3 }
+            // ],
 
             allCards: [
                 {
@@ -438,13 +465,38 @@ export default {
           // if(this.currentType === null) return; // no type selected
           // if (!tile.validForSelection) return // not valid for selection
 
-          tile.ownerTeam = this.currentPlayer
-          // tile.type = this.currentType
+          tile.ownerTeam = this.currentPlayerId
+          tile.tier = this.selectedCard.tier
 
+          const points = this.getScoreForTile(this.selectedCard)
+          this.currentPlayer.score += points
+
+
+          //カードを削除
+          const hand = this.hands[this.currentPlayerId]
+
+          const index = hand.findIndex(card => card.id === this.selectedCard.id)
+
+          if (index !== -1) {
+              hand.splice(index, 1)
+          }
+
+
+          console.log(this.hands[this.currentPlayerId])
           this.selectedCard = null
-          this.updateValidTiles()
-          this.updateScores()
+          // this.updateValidTiles()
+          // this.updateScores()
           this.goToNextPlayer()
+        },
+        getScoreForTile(tier) {
+            if (!tier) return 0
+
+            if (tier === 1) return 1
+            if (tier === 2) return 3
+            if (tier === 3) return 5
+            if (tier === 4) return 8
+
+            return tier * 2
         },
         resetTiles() {
             this.generateTiles()
@@ -453,20 +505,10 @@ export default {
             this.players.forEach(p => (p.score = 0))
         },
         setSelectType(playerId, type) {
-            if(this.currentPlayer !== playerId) return
-            this.currentPlayer = playerId
+            if(this.currentPlayerId !== playerId) return
+            this.currentPlayerId = playerId
             this.currentType = type
             this.updateValidTiles()
-        },
-        updateScores() {
-            this.players.forEach(p => {
-                const owned = this.tiles.filter(t => t.ownerTeam === p.id)
-                let total = 0
-                owned.forEach(t => {
-                    total += this.typePoints[t.type] || 0
-                })
-                p.score = total
-            })
         },
         teamColor(teamId) {
             const player = this.players.find(p => p.id === teamId)
@@ -508,10 +550,10 @@ export default {
             this.currentType = null
 
             const currentIndex = this.players.findIndex(
-                (p) => p.id === this.currentPlayer
+                (p) => p.id === this.currentPlayerId
             )
             const nextIndex = (currentIndex + 1) % this.players.length
-            this.currentPlayer = this.players[nextIndex].id
+            this.currentPlayerId = this.players[nextIndex].id
         },
 
         updateValidTiles() {
@@ -842,21 +884,17 @@ export default {
                     baseClass = 'bg-slate-100 text-slate-700 border-slate-300'
             }
 
-            const isCurrent = this.selectedCard?.id === card.id && playerId === this.currentPlayer
+            const isCurrent = this.selectedCard?.id === card.id && playerId === this.currentPlayerId
 
             if (isCurrent) {
-                baseClass += ' animate-pulse ring-2 ring-yellow-400'
+                baseClass += ' animate-pulse ring-2 bg-[#90EE90] ring-green-400'
             }
 
             return baseClass
         },
 
-        sortHandByArea(hand) {
+        sortHandByTier(hand) {
             return hand?.slice().sort((a, b) => {
-                // area
-                if (a.area !== b.area) {
-                    return a.area.localeCompare(b.area, 'ja');
-                }
 
                 // tier
                 if (a.tier !== b.tier) {
@@ -889,8 +927,32 @@ export default {
         getDisplayHand(hand) {
             if(!hand) return [];
             return this.compressHand(
-                this.sortHandByArea(hand)
+                this.sortHandByTier(hand)
             );
+        },
+        groupHandByTier(hand) {
+            const map = new Map();
+
+            hand.forEach(card => {
+                if (!map.has(card.tier)) {
+                    map.set(card.tier, []);
+                }
+                map.get(card.tier).push(card);
+            });
+
+            return Array.from(map.entries())
+                .sort((a, b) => a[0] - b[0])
+                .map(([tier, cards]) => ({
+                    tier,
+                    cards: this.compressHand(
+                        cards.slice().sort((a, b) => {
+                            if (a.area !== b.area) {
+                                return a.area.localeCompare(b.area, 'ja');
+                            }
+                            return a.label.localeCompare(b.label, 'ja');
+                        })
+                    )
+                }));
         },
 
         changeMode() {
@@ -904,7 +966,7 @@ export default {
 
         // ------------------------
         previewCard(card, playerId) {
-            if(this.currentPlayer !== playerId) return
+            if(this.currentPlayerId !== playerId) return
             this.isPreviewing = true
             this.selectedCard = card
             console.log("Previewing card:", card)
@@ -919,7 +981,40 @@ export default {
         closePreview() {
             this.selectedCard = null
             this.isPreviewing = false
-        }
+        },
+
+        highestPlayerScore() {
+          // if everyone 0
+          if (this.players.every(p => p.score === 0)) {
+              return null
+          } 
+
+          return Math.max(...this.players.map(p => p.score))
+        },
+
+        tierShapeClass(tier) {
+
+            // if (tier === 1) return "triangle"
+            if (tier === 2) return "w-5 h-5"
+            if (tier === 3) return "w-5 h-5 rounded-full"
+            if (tier === 4) return "text-3xl"
+
+        },
+        tierShapeStyle(tier,color) {
+
+            // if (tier === 1) {
+            //     return {
+            //         borderBottomColor: this.teamColor(color)
+            //     }
+            // }
+
+            if (tier === 4) {
+                return { color: this.teamColor(color) }
+            }
+
+            return { background: this.teamColor(color) }
+        },
+
 
 
 
@@ -931,7 +1026,7 @@ export default {
 
         // set the first player as the current player on mount
         if (this.players.length > 0) {
-            this.currentPlayer = this.players[0].id
+            this.currentPlayerId = this.players[0].id
         }
         
         this.generateTiles();
@@ -941,6 +1036,11 @@ export default {
     components: {
         CreatureCard
     },
+    computed: {
+        currentPlayer() {
+            return this.players.find(p => p.id === this.currentPlayerId)
+        }
+    }
 
 }
 </script>
@@ -958,4 +1058,13 @@ export default {
 /* .animate-pulse {
     background: yellow;
 } */
+
+ .triangle{
+      width:0;
+      height:0;
+      border-left:12px solid transparent;
+      border-right:12px solid transparent;
+      border-bottom:20px solid;
+  }
+
 </style>
