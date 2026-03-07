@@ -469,7 +469,7 @@ export default {
           tile.ownerTeam = this.currentPlayerId
           tile.tier = this.selectedCard.tier
 
-          const points = this.getScoreForTile(this.selectedCard)
+          const points = this.getScoreForTile(this.selectedCard.tier)
           this.currentPlayer.score += points
 
 
