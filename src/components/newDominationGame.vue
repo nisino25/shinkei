@@ -24,8 +24,24 @@
                   </template>
                 </div>
 
-                <div class="space-y-3 h-[calc(100vh-600px)] overflow-y-auto bg-gray-300 p-1 rounded-md">
-                  <!-- プレイヤーリスト -->
+                <!-- プレイヤーリスト -->
+                <div class="relative space-y-3 h-[calc(100vh-600px)] overflow-y-auto bg-gray-100 p-2 rounded-md">
+                  <div v-if="gameState=='finished'">
+                    <div class="absolute inset-0 bg-black/50 z-10 flex items-center justify-center w-full h-full">
+                      <div class="bg-white p-6 rounded-lg shadow-lg text-center z-20">
+                        <h2 class="text-2xl font-bold mb-4">ゲーム終了！</h2>
+                        <p class="text-lg mb-4">最終スコア</p>  
+                        <ul class="text-left mb-4">
+                          <li v-for="player in players" :key="player.id" class="mb-2">
+                            <span :style="{ color: player.color }" class="font-semibold">{{ player.name }}</span>: {{ player.score }}点
+                          </li>
+                        </ul>
+                        <hr>
+                        <!-- もう一回 -->
+                        <button class="mt-4 px-4 py-2 bg-green-500 text-white rounded-md" @click="resetTiles()">もう一回遊ぶ</button>
+                      </div>
+                    </div>
+                  </div>
                   <h2 class="text-lg font-semibold">プレイヤーリスト</h2>
                   <div
                       v-for="player in players"
@@ -120,7 +136,7 @@
                 <hr>
 
                 <!-- アクションボタン -->
-                <div class="space-y-2 max-w-md">
+                <div class="space-y-2 w-full">
                     <h3 class="text-sm font-medium">アクションボタン</h3>
                     <div class="flex gap-2 w-full">
                       <button 
@@ -144,7 +160,13 @@
                           class="px-3 py-2 rounded-md border bg-red-200 text-sm"
                           @click="resetTiles"
                       >
-                          タイルをリセット
+                          ゲームリセット
+                      </button>
+                      <button
+                          class="px-3 py-2 rounded-md border bg-green-200 text-sm"
+                          @click="confirmFinish()"
+                      >
+                          ゲーム終了
                       </button>
                     </div>
                 </div>
@@ -498,7 +520,11 @@ export default {
             isPreviewing: false,
 
             tilePreviewCard: null,
-            previewStyle: {}
+            previewStyle: {},
+
+            skipCount: 0,
+
+            gameState: 'playing' // 'playing' or 'finished'
 
 
         }
@@ -547,10 +573,6 @@ export default {
           tile.ownerTeam = this.currentPlayerId
           tile.placedCard = this.selectedCard
 
-          //   console.log("--- ")
-          //   console.log(this.selectedCard)
-          //   console.log("--- ")
-
           const points = this.getScoreForTile(this.selectedCard.tier)
           this.currentPlayer.score += points
 
@@ -569,6 +591,7 @@ export default {
           this.selectedCard = null
           // this.updateValidTiles()
           // this.updateScores()
+          this.skipCount = 0
           this.goToNextPlayer()
         },
         getScoreForTile(tier) {
@@ -586,6 +609,8 @@ export default {
 
             this.generateTiles()
             this.initializeHands()
+            this.gameState = 'playing'
+            this.currentPlayerId = this.players[0].id
 
             this.players.forEach(p => (p.score = 0))
         },
@@ -640,6 +665,12 @@ export default {
             )
             const nextIndex = (currentIndex + 1) % this.players.length
             this.currentPlayerId = this.players[nextIndex].id
+
+            // check if everyones hand is empty
+            const allEmpty = this.players.every(p => this.hands[p.id].length === 0)
+            if (allEmpty) {
+                this.finishGame()
+            }
         },
 
         updateValidTiles() {
@@ -1103,11 +1134,28 @@ export default {
 
         confirmSkip() {
             if (confirm("本当にスキップしますか？")) {
+                this.skipCount++
+                if(this.skipCount >= this.players.length) {
+                    alert("全員がスキップしたので、ゲームを終了します。")
+                    this.finishGame();
+                    return;
+                    // this.skipCount = 0
+                } else {
                 this.goToNextPlayer()
             }
-        }
+          }
+        },
 
+        confirmFinish() {
+            if (confirm("本当にゲームを終了しますか？現在のスコアが表示されます。")) {
+                this.finishGame();
+            }
+        },
 
+        finishGame(){
+          this.gameState = 'finished'
+          this.currentPlayerId = null
+        },
 
 
     },
