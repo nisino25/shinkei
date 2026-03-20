@@ -3,29 +3,28 @@
     <template v-if="dominationMode == 'standard'">
         <div class="tiles-app flex gap-6 px-6">
             <aside class="w-[550px] flex-shrink-0 flex flex-col gap-4">
-                <div class="space-y-3">
-                  
-                  <!-- /スコアボード -->
-                  <h2>スコアボード</h2>
-                  <div class="flex gap-2 relative items-center">
-                  <template v-for="player in players" :key="player.id">
-                      <div
-                          class="p-3 border rounded-md "
-                          :style="{ background: player.score === highestPlayerScore() ? '#90EE90' : '' }" 
-                      >
-                      <!-- {{ player.id }}: {{ highestPlayer() }} -->
-                        <div class="flex items-center gap-3">
-                            <div class="w-7 h-7 rounded-md" :style="{ background: player.color }"></div>
-                            <div class="flex-1 text-sm">
-                                <div class="font-medium">{{ player.name }}</div>
-                                <!-- <div class="text-xs text-gray-500">チーム {{ player.id }}</div> -->
-                                <div class="text-xs font-semibold text-gray-700 mt-1">スコア: {{ player.score }}</div>
-                            </div>    
-                        </div>
+                <!-- /スコアボード -->
+                <h2>スコアボード</h2>
+                <div class="flex gap-2 relative items-center">
+                <template v-for="player in players" :key="player.id">
+                    <div
+                        class="p-3 border rounded-md "
+                        :style="{ background: player.score === highestPlayerScore() ? '#90EE90' : '' }" 
+                    >
+                    <!-- {{ player.id }}: {{ highestPlayer() }} -->
+                      <div class="flex items-center gap-3">
+                          <div class="w-7 h-7 rounded-md" :style="{ background: player.color }"></div>
+                          <div class="flex-1 text-sm">
+                              <div class="font-medium">{{ player.name }}</div>
+                              <!-- <div class="text-xs text-gray-500">チーム {{ player.id }}</div> -->
+                              <div class="text-xs font-semibold text-gray-700 mt-1">スコア: {{ player.score }}</div>
+                          </div>    
                       </div>
-                    </template>
-                  </div>
-                
+                    </div>
+                  </template>
+                </div>
+
+                <div class="space-y-3 h-[calc(100vh-600px)] overflow-y-auto bg-gray-300 p-1 rounded-md">
                   <!-- プレイヤーリスト -->
                   <h2 class="text-lg font-semibold">プレイヤーリスト</h2>
                   <div
@@ -41,8 +40,15 @@
                         </div>
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <template v-for="group in groupHandByTier(hands[player.id])" :key="group.tier">
-                          <div class="w-full border-b border-color-slate-300 pb-2">
+                        <template
+                            v-for="(group, index) in groupHandByTier(hands[player.id])"
+                            :key="group.tier"
+                        >
+                            <div
+                                class="w-full pb-2"
+                                :class="{ 'border-b border-color-slate-300': index !== groupHandByTier(hands[player.id]).length - 1 }"
+                            >
+
                             <div class="mb-1">
                                 <span class="text-xs text-slate-400 mb-1">Lv{{ group.tier }}</span> 
                             </div>
@@ -64,75 +70,105 @@
                     </div>
                   </div>
                 </div>
+                <hr>
 
+
+                <!-- 色の説明 -->
+                <div class="space-y-2 my-3">
+                  <h3 class="text-sm font-medium">色の説明</h3>
+                  <div class="flex gap-2 mb-2">
+                    <div
+                        v-for="item in terrainList"
+                        :key="item.key"
+                        class="flex items-center gap-1"
+                    >
+                      <div
+                          class="w-4 h-4 rounded-full"
+                          :style="{ background: areaColors[item.key] }"
+                      ></div>
+                      <span class="text-xs">{{ item.label }}</span>
+                    </div>
+                  </div>
+
+                </div>
+
+                <hr>
+
+                <!-- レベルの説明 -->
+                <div class="space-y-2 my-3">
+                  <h3 class="text-sm font-medium">レベルとポイントの説明</h3>
+                  <div class="flex gap-2 mb-2">
+                    <div
+                        v-for="tier in [1, 2, 3, 4]"
+                        :key="tier"
+                        class="flex items-center gap-1"
+                    >
+                      <div
+                        v-if="tier !== 1"
+                          :class="tierShapeClass(tier)"
+                          :style="tierShapeStyle(tier,'#555')"
+                          style="background: #555; border-color: #555"
+                      ></div>
+                      <span class="text-xs flex items-center gap-1">
+                        <strong v-if="tier === 1" class="text-xl">&#9650;</strong>
+                        <strong v-if="tier === 4" class="text-xl">★</strong>
+                        Lv{{ tier }}: ポイント{{ getScoreForTile(tier) }},
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+
+                <!-- アクションボタン -->
+                <div class="space-y-2 max-w-md">
+                    <h3 class="text-sm font-medium">アクションボタン</h3>
+                    <div class="flex gap-2 w-full">
+                      <button 
+                          @click="selectedCard = null" 
+                          :disabled="!selectedCard"
+                          class="px-3 py-2 rounded-md border text-sm"
+                          :class="[
+                              selectedCard
+                                  ? 'bg-gray-200 hover:bg-gray-300'
+                                  : 'bg-gray-200 opacity-[0.4] cursor-not-allowed'
+                          ]">
+                          カードをキャンセル
+                      </button>
+                      <button
+                          class="px-3 py-2 rounded-md border bg-blue-200 text-sm"
+                          @click="confirmSkip()"
+                      >
+                          スキップ
+                      </button>
+                      <button
+                          class="px-3 py-2 rounded-md border bg-red-200 text-sm"
+                          @click="resetTiles"
+                      >
+                          タイルをリセット
+                      </button>
+                    </div>
+                </div>
             </aside>
 
             <!--  --- Right side Area --- -->
             <main class="flex-1">
-
-              <!-- 色の説明 -->
-              <div class="space-y-2 my-3">
-                <h3 class="text-sm font-medium">色の説明</h3>
-                <div class="flex gap-2 mb-2">
-                  <div
-                      v-for="item in terrainList"
-                      :key="item.key"
-                      class="flex items-center gap-1"
-                  >
-                    <div
-                        class="w-4 h-4 rounded-full"
-                        :style="{ background: areaColors[item.key] }"
-                    ></div>
-                    <span class="text-xs">{{ item.label }}</span>
-                  </div>
-                </div>
-
-              </div>
-
-              <hr>
-
-              <!-- レベルの説明 -->
-              <div class="space-y-2 my-3">
-                <h3 class="text-sm font-medium">レベルとポイントの説明</h3>
-                <div class="flex gap-2 mb-2">
-                  <div
-                      v-for="tier in [1, 2, 3, 4]"
-                      :key="tier"
-                      class="flex items-center gap-1"
-                  >
-                    <div
-                      v-if="tier !== 1"
-                        :class="tierShapeClass(tier)"
-                        :style="tierShapeStyle(tier,'#555')"
-                        style="background: #555; border-color: #555"
-                    ></div>
-                    <span class="text-xs flex items-center gap-1">
-                      <strong v-if="tier === 1" class="text-xl">&#9650;</strong>
-                      <strong v-if="tier === 4" class="text-xl">★</strong>
-                      Lv{{ tier }}: ポイント{{ getScoreForTile(tier) }},
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <hr class="mb-3">
-
               <!-- Tiles Area -->
               <div class="w-full rounded-md bg-gray-200 p-4 mb-6">
                     <div
                         class="grid gap-1 w-full h-full"
                         :style="{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }"
                     >
-                    <div
-                        v-for="tile in tiles"
-                        :key="tile.id"
-                        class="relative rounded-sm transition-transform duration-150 cursor-pointer"
-                        :class="{
-                            'scale-[1.03] ring-4 ring-offset-1': tile.selected
-                        }"
-                        @click="onTileClick(tile)"
-                        :style="tileStyle(tile)"
-                    >
+                      <div
+                          v-for="tile in tiles"
+                          :key="tile.id"
+                          class="relative rounded-sm transition-transform duration-150 cursor-pointer"
+                          :class="{
+                              'scale-[1.03] ring-4 ring-offset-1': tile.selected
+                          }"
+                          @click="onTileClick(tile, $event)"
+                          :style="tileStyle(tile)"
+                        >
+                        <!-- tile preview -->
                         <div 
                             v-if="tile.validForSelection"
                             class="
@@ -152,43 +188,56 @@
 
                         <div v-if="tile.ownerTeam" class="flex justify-center items-center w-full h-full">
                           <div
-                              :class="tierShapeClass(tile.tier)"
-                              :style="tierShapeStyle(tile.tier, tile.ownerTeam)"
+                              :class="tierShapeClass(tile.placedCard?.tier)"
+                              :style="tierShapeStyle(tile.placedCard?.tier, tile.ownerTeam)"
                           >
-                              <span v-if="tile.tier === 4">★</span>
+                              <span v-if="tile.placedCard?.tier === 4">★</span>
                           </div>
                         </div>
 
-                    </div>
+                      </div>
+
+                        <template v-if="tilePreviewCard">
+                          <div
+                          v-if="tilePreviewCard?.instanceId"
+                          class="fixed inset-0 z-50 bg-black/40"
+                          >
+                          tilepreviewCard: {{ tilePreviewCard.id }} 
+                              <div
+                                  class="absolute transition-all duration-300 ease-out z-[100] pointer-events-auto"
+                                  :style="previewStyle"
+                              >
+                                <!-- Close Button -->
+                                <button
+                                    class="absolute -top-3 -right-3 bg-white rounded-full shadow px-2 py-1 text-sm"
+                                    @click="tilePreviewCard = null; previewStyle = {}"
+                                >
+                                    ✕
+                                </button>
+  
+                                <CreatureCard
+                                    :creature="tilePreviewCard"
+                                    class="w-full h-full rounded-lg shadow-xl"
+                                />
+                              </div>
+                          </div>
+                        </template>
                     </div>
               </div>
-
-              <div class="space-y-2 max-w-sm">
-                  <h3 class="text-sm font-medium">アクションボタン</h3>
-                  <div class="flex flex-col gap-2">
-                      <button
-                          class="w-full px-3 py-2 rounded-md border bg-gray-200 text-sm"
-                          @click="resetTiles"
-                      >
-                          タイルをリセット
-                      </button>
-                  </div>
+              <!-- ---------preview------------- -->
+              <hr class="my-6">
+              <div class="grid grid-cols-3 gap-4">
+                  <!-- <template > -->
+                      <CreatureCard 
+                          :creature="card" 
+                          v-for="(card, index) in allCards.sort((a, b) =>
+                              a.area === b.area
+                              ? a.tier - b.tier
+                              : a.area.localeCompare(b.area)
+                          )" :key="index"
+                          />
+                  <!-- </template> -->
               </div>
-
-                <!-- ---------preview------------- -->
-                <hr class="my-6">
-                <div class="grid grid-cols-3 gap-4">
-                    <!-- <template > -->
-                        <CreatureCard 
-                            :creature="card" 
-                            v-for="(card, index) in allCards.sort((a, b) =>
-                                a.area === b.area
-                                ? a.tier - b.tier
-                                : a.area.localeCompare(b.area)
-                            )" :key="index"
-                            />
-                    <!-- </template> -->
-                </div>
             </main>
         </div>
         <!-- Modal -->
@@ -196,7 +245,7 @@
             v-if="selectedCard && isPreviewing"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
             @click.self="closePreview"
-        >
+          >
             <div class="relative p-4 bg-white rounded-lg shadow-lg w-full max-w-sm">
 
                 <!-- Close Button -->
@@ -446,13 +495,42 @@ export default {
 
             selectedCard: null,
 
-            isPreviewing: false
+            isPreviewing: false,
+
+            tilePreviewCard: null,
+            previewStyle: {}
 
 
         }
     },
     methods: {
-        onTileClick(tile) {
+        onTileClick(tile, event) {
+          if(tile.placedCard) {
+            const rect = event.currentTarget.getBoundingClientRect()
+
+            this.previewStyle = {
+                top: rect.top + 'px',
+                left: rect.left + 'px',
+                width: rect.width + 'px',
+                height: rect.height + 'px'
+            }
+
+            this.tilePreviewCard = tile.placedCard
+
+            this.$nextTick(() => {
+                // アニメーションで中央へ
+                this.previewStyle = {
+                    top: '50%',
+                    left: '50%',
+                    width: '260px',
+                    height: 'auto',
+                    transform: 'translate(-50%, -50%)'
+                }
+            })
+
+            // alert("すでにカードが置いてあるタイルだよ")
+            return
+          }
           if(!this.selectedCard) {
               alert("カードを選択してからタイルを選んでね")
               return
@@ -467,7 +545,11 @@ export default {
           // if (!tile.validForSelection) return // not valid for selection
 
           tile.ownerTeam = this.currentPlayerId
-          tile.tier = this.selectedCard.tier
+          tile.placedCard = this.selectedCard
+
+          //   console.log("--- ")
+          //   console.log(this.selectedCard)
+          //   console.log("--- ")
 
           const points = this.getScoreForTile(this.selectedCard.tier)
           this.currentPlayer.score += points
@@ -500,6 +582,8 @@ export default {
             return tier * 2
         },
         resetTiles() {
+            if (!confirm("本当にタイルをリセットしますか？現在の進行状況は失われます。")) return;
+
             this.generateTiles()
             this.initializeHands()
 
@@ -549,6 +633,7 @@ export default {
         goToNextPlayer() {
             if (!this.players.length) return
             this.currentType = null
+            this.selectedCard = null
 
             const currentIndex = this.players.findIndex(
                 (p) => p.id === this.currentPlayerId
@@ -1016,6 +1101,12 @@ export default {
             return { background: this.teamColor(color) }
         },
 
+        confirmSkip() {
+            if (confirm("本当にスキップしますか？")) {
+                this.goToNextPlayer()
+            }
+        }
+
 
 
 
@@ -1047,25 +1138,25 @@ export default {
 </script>
 
 <style scoped>
-@keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.7; }
-}
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.05); opacity: 0.7; }
+    }
 
-/* @keyframes flash {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-} */
-/* .animate-pulse {
-    background: yellow;
-} */
+    /* @keyframes flash {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    } */
+    /* .animate-pulse {
+        background: yellow;
+    } */
 
- .triangle{
-      width:0;
-      height:0;
-      border-left:12px solid transparent;
-      border-right:12px solid transparent;
-      border-bottom:20px solid;
-  }
+    .triangle{
+        width:0;
+        height:0;
+        border-left:12px solid transparent;
+        border-right:12px solid transparent;
+        border-bottom:20px solid;
+    }
 
 </style>
