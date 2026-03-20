@@ -25,7 +25,7 @@
                 </div>
 
                 <!-- プレイヤーリスト -->
-                <div class="relative space-y-3 h-[calc(100vh-600px)] overflow-y-auto bg-gray-100 p-2 rounded-md">
+                <div class="relative space-y-3 h-[calc(100vh-400px)] overflow-y-auto bg-gray-100 p-2 rounded-md">
                   <div v-if="gameState=='finished'">
                     <div class="absolute inset-0 bg-black/50 z-10 flex items-center justify-center w-full h-full">
                       <div class="bg-white p-6 rounded-lg shadow-lg text-center z-20">
@@ -89,51 +89,7 @@
                 <hr>
 
 
-                <!-- 色の説明 -->
-                <div class="space-y-2 my-3">
-                  <h3 class="text-sm font-medium">色の説明</h3>
-                  <div class="flex gap-2 mb-2">
-                    <div
-                        v-for="item in terrainList"
-                        :key="item.key"
-                        class="flex items-center gap-1"
-                    >
-                      <div
-                          class="w-4 h-4 rounded-full"
-                          :style="{ background: areaColors[item.key] }"
-                      ></div>
-                      <span class="text-xs">{{ item.label }}</span>
-                    </div>
-                  </div>
 
-                </div>
-
-                <hr>
-
-                <!-- レベルの説明 -->
-                <div class="space-y-2 my-3">
-                  <h3 class="text-sm font-medium">レベルとポイントの説明</h3>
-                  <div class="flex gap-2 mb-2">
-                    <div
-                        v-for="tier in [1, 2, 3, 4]"
-                        :key="tier"
-                        class="flex items-center gap-1"
-                    >
-                      <div
-                        v-if="tier !== 1"
-                          :class="tierShapeClass(tier)"
-                          :style="tierShapeStyle(tier,'#555')"
-                          style="background: #555; border-color: #555"
-                      ></div>
-                      <span class="text-xs flex items-center gap-1">
-                        <strong v-if="tier === 1" class="text-xl">&#9650;</strong>
-                        <strong v-if="tier === 4" class="text-xl">★</strong>
-                        Lv{{ tier }}: ポイント{{ getScoreForTile(tier) }},
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <hr>
 
                 <!-- アクションボタン -->
                 <div class="space-y-2 w-full">
@@ -174,6 +130,51 @@
 
             <!--  --- Right side Area --- -->
             <main class="flex-1">
+              <!-- 色の説明 -->
+              <div class="space-y-2 my-3">
+                <h3 class="text-sm font-medium">色の説明</h3>
+                <div class="flex gap-2 mb-2">
+                  <div
+                      v-for="item in terrainList"
+                      :key="item.key"
+                      class="flex items-center gap-1"
+                  >
+                    <div
+                        class="w-4 h-4 rounded-full"
+                        :style="{ background: areaColors[item.key] }"
+                    ></div>
+                    <span class="text-xs">{{ item.label }}</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <hr>
+
+              <!-- レベルの説明 -->
+              <div class="space-y-2 my-3">
+                <h3 class="text-sm font-medium">レベルとポイントの説明</h3>
+                <div class="flex gap-2 mb-2">
+                  <div
+                      v-for="tier in [1, 2, 3, 4]"
+                      :key="tier"
+                      class="flex items-center gap-1"
+                  >
+                    <div
+                      v-if="tier !== 1"
+                        :class="tierShapeClass(tier)"
+                        :style="tierShapeStyle(tier,'#555')"
+                        style="background: #555; border-color: #555"
+                    ></div>
+                    <span class="text-xs flex items-center gap-1">
+                      <strong v-if="tier === 1" class="text-xl">&#9650;</strong>
+                      <strong v-if="tier === 4" class="text-xl">★</strong>
+                      Lv{{ tier }}: ポイント{{ getScoreForTile(tier) }},
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <hr>
               <!-- Tiles Area -->
               <div class="w-full rounded-md bg-gray-200 p-4 mb-6">
                     <div
@@ -190,7 +191,6 @@
                           @click="onTileClick(tile, $event)"
                           :style="tileStyle(tile)"
                         >
-                        <!-- tile preview -->
                         <div 
                             v-if="tile.validForSelection"
                             class="
@@ -219,34 +219,36 @@
 
                       </div>
 
-                        <template v-if="tilePreviewCard">
-                          <div
-                          v-if="tilePreviewCard?.instanceId"
-                          class="fixed inset-0 z-50 bg-black/40"
-                          >
-                          tilepreviewCard: {{ tilePreviewCard.id }} 
-                              <div
-                                  class="absolute transition-all duration-300 ease-out z-[100] pointer-events-auto"
-                                  :style="previewStyle"
+                      <!-- tile preview -->
+
+                      <template v-if="tilePreviewCard">
+                        <div
+                        v-if="tilePreviewCard?.instanceId"
+                        class="fixed inset-0 z-50 bg-black/40"
+                        >
+                        tilepreviewCard: {{ tilePreviewCard.id }} 
+                            <div
+                                class="absolute transition-all duration-300 ease-out z-[100] pointer-events-auto"
+                                :style="previewStyle"
+                            >
+                              <!-- Close Button -->
+                              <button
+                                  class="absolute -top-3 -right-3 bg-white rounded-full shadow px-2 py-1 text-sm"
+                                  @click="tilePreviewCard = null; previewStyle = {}"
                               >
-                                <!-- Close Button -->
-                                <button
-                                    class="absolute -top-3 -right-3 bg-white rounded-full shadow px-2 py-1 text-sm"
-                                    @click="tilePreviewCard = null; previewStyle = {}"
-                                >
-                                    ✕
-                                </button>
-  
-                                <CreatureCard
-                                    :creature="tilePreviewCard"
-                                    class="w-full h-full rounded-lg shadow-xl"
-                                />
-                              </div>
-                          </div>
-                        </template>
+                                  ✕
+                              </button>
+
+                              <CreatureCard
+                                  :creature="tilePreviewCard"
+                                  class="w-full h-full rounded-lg shadow-xl"
+                              />
+                            </div>
+                        </div>
+                      </template>
                     </div>
               </div>
-              <!-- ---------preview------------- -->
+              <!-- ---------preview all the unique cards------------- -->
               <hr class="my-6">
               <div class="grid grid-cols-3 gap-4">
                   <!-- <template > -->
@@ -264,7 +266,7 @@
         </div>
         <!-- Modal -->
         <div
-            v-if="selectedCard && isPreviewing"
+            v-if="modalCard && isPreviewing"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
             @click.self="closePreview"
           >
@@ -279,7 +281,7 @@
                 </button>
 
                 <!-- 🔥 ここで既存コンポーネントを使う -->
-                <CreatureCard :creature="selectedCard" class="mx-auto"/>
+                <CreatureCard :creature="modalCard" class="mx-auto"/>
 
                 <div class="button-container flex justify-center mt-4">
                     <button @click="useCard()" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">選択する</button>
@@ -516,6 +518,7 @@ export default {
             mapStep: 0, 
 
             selectedCard: null,
+            modalCard: null,
 
             isPreviewing: false,
 
@@ -568,7 +571,10 @@ export default {
           }
           if(tile.ownerTeam !== null) return; // already owned
           // if(this.currentType === null) return; // no type selected
-          // if (!tile.validForSelection) return // not valid for selection
+          if (!tile.validForSelection) {
+            alert("このタイルにはこのカードは置けないよ")
+            return // not valid for selection
+          }
 
           tile.ownerTeam = this.currentPlayerId
           tile.placedCard = this.selectedCard
@@ -589,7 +595,7 @@ export default {
 
           console.log(this.hands[this.currentPlayerId])
           this.selectedCard = null
-          // this.updateValidTiles()
+          this.updateValidTiles()
           // this.updateScores()
           this.skipCount = 0
           this.goToNextPlayer()
@@ -613,12 +619,6 @@ export default {
             this.currentPlayerId = this.players[0].id
 
             this.players.forEach(p => (p.score = 0))
-        },
-        setSelectType(playerId, type) {
-            if(this.currentPlayerId !== playerId) return
-            this.currentPlayerId = playerId
-            this.currentType = type
-            this.updateValidTiles()
         },
         teamColor(teamId) {
             const player = this.players.find(p => p.id === teamId)
@@ -675,34 +675,68 @@ export default {
 
         updateValidTiles() {
             this.tiles.forEach(t => t.validForSelection = false) // reset
+            if(this.selectedCard === null) return
+            console.log("updating valid tiles for card: ")
+            console.log(this.selectedCard)
 
-            if(this.currentType === 'grass') {
-                this.tiles.forEach(t => {
-                    console.log(t)
-                    if(t.area === "undeveloped") return t.validForSelection = false
-                    if(t.ownerTeam === null) t.validForSelection = true
-                })
-            }
+            const tier = this.selectedCard.tier
+            this.tiles.forEach(t => {
+              // 初期化
+              t.validForSelection = false
 
-            if(this.currentType === 'bug') {
-                this.tiles.forEach(t => {
-                    if(t.area === "undeveloped") return t.validForSelection = false
-                    if(t.ownerTeam !== null) return
-                    const neighbors = this.getNeighbors(t)
-                    const touchingGrass = neighbors.filter(n => n.type === 'grass')
-                    if(touchingGrass.length >= 2) t.validForSelection = true
-                })
-            }
+              if (t.area === "undeveloped") return
+              if (t.ownerTeam !== null) return
 
-            if(this.currentType === 'animal') {
-                this.tiles.forEach(t => {
-                    if(t.area === "undeveloped") return t.validForSelection = false
-                    if(t.ownerTeam !== null) return
-                    const neighbors = this.getNeighbors(t)
-                    const touchingBugs = neighbors.filter(n => n.type === 'bug')
-                    if(touchingBugs.length >= 2) t.validForSelection = true
-                })
-            }
+              // Lv1は無条件OK
+              if (tier === 1) {
+                  t.validForSelection = true
+                  return
+              }
+
+              const neighbors = this.getNeighbors(t)
+
+              // 必要なtier一覧を作る
+              const requiredTiers = []
+              for (let i = 1; i < tier; i++) {
+                  requiredTiers.push(i)
+              }
+
+              // すべて満たしてるかチェック
+              const isValid = requiredTiers.every(reqTier =>
+                  neighbors.some(n => n.placedCard?.tier === reqTier)
+              )
+
+              t.validForSelection = isValid
+            })
+
+            // if(this.selectedCard.tier === 1) {
+            //     this.tiles.forEach(t => {
+            //         if(t.area === "undeveloped") return t.validForSelection = false
+            //         if(t.ownerTeam === null) t.validForSelection = true
+            //     })
+            // }
+
+            // if(this.selectedCard.tier === 2) {
+            //     this.tiles.forEach(t => {
+            //         if(t.area === "undeveloped") return t.validForSelection = false
+            //         if(t.ownerTeam !== null) return
+
+            //         const neighbors = this.getNeighbors(t)
+            //         const touchingTierOne = neighbors.filter(n => n.placedCard?.tier === 1)
+            //         if(touchingTierOne.length >= 2) t.validForSelection = true
+            //     })
+            // }
+
+            // if(this.selectedCard.tier === 3) {
+            //     this.tiles.forEach(t => {
+            //         if(t.area === "undeveloped") return t.validForSelection = false
+            //         if(t.ownerTeam !== null) return
+
+            //         const neighbors = this.getNeighbors(t)
+            //         const touchingTierTwo = neighbors.filter(n => n.placedCard?.tier === 2)
+            //         if(touchingTierTwo.length >= 2) t.validForSelection = true
+            //     })
+            // }
         },
 
         getNeighbors(tile) {
@@ -1085,18 +1119,20 @@ export default {
         previewCard(card, playerId) {
             if(this.currentPlayerId !== playerId) return
             this.isPreviewing = true
-            this.selectedCard = card
-            console.log("Previewing card:", card)
+            this.modalCard = card
         },
 
         useCard() {
-            // alert(`You selected ${card.label}! Implement card effects here.`)
-            // this.selectedCard = null
-            this.isPreviewing = false
+          // alert(`You selected ${card.label}! Implement card effects here.`)
+          this.selectedCard = this.modalCard
+          this.isPreviewing = false
+          this.modalCard = null
+          
+          this.updateValidTiles()
         },
 
         closePreview() {
-            this.selectedCard = null
+            this.modalCard = null
             this.isPreviewing = false
         },
 
