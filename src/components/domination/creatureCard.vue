@@ -10,7 +10,7 @@
             </h2>
 
             <span>
-                Tier {{ creature.tier }}
+                Lv{{ creature.tier }}
             </span>
             <!-- <span
                 class="text-xs px-2 py-1 rounded-full"
@@ -21,17 +21,17 @@
         </div>
 
         <!-- Tier + Count -->
-<div class="mb-2 flex justify-between items-center text-sm text-gray-500">
-    <!-- <span>
-        Count: {{ creature.holdingCount }}
-    </span> -->
-</div>
+        <div class="mb-2 flex justify-between items-center text-sm text-gray-500">
+            <!-- <span>
+                Count: {{ creature.holdingCount }}
+            </span> -->
+        </div>
 
 
         <!-- Food -->
         <div>
             <div class="text-sm font-semibold">
-                Food :
+                食べ物 :
                 <span
                     v-for="(f, index) in creature.food"
                     :key="index"

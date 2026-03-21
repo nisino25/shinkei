@@ -1,12 +1,12 @@
 <template>
-    <button class="m-2 px-3 py-1 bg-blue-500 text-white rounded-md text-sm" @click="changeMode()">Change Mode</button>
+    <!-- <button class="m-2 px-3 py-1 bg-blue-500 text-white rounded-md text-sm" @click="changeMode()">Change Mode</button> -->
     <template v-if="dominationMode == 'standard'">
-        <div class="tiles-app flex gap-6 px-6">
-            <aside class="w-[550px] flex-shrink-0 flex flex-col gap-4">
+        <div class="tiles-app flex gap-6 px-6 justify-evenly">
+            <aside class="w-[500px]">
                 <!-- /スコアボード -->
-                <h2>スコアボード</h2>
+                <h3 style="margin-top: unset !important;">スコアボード</h3>
                 <div class="flex gap-2 relative items-center">
-                <template v-for="player in players" :key="player.id">
+                  <template v-for="player in players" :key="player.id">
                     <div
                         class="p-3 border rounded-md "
                         :style="{ background: player.score === highestPlayerScore() ? '#90EE90' : '' }" 
@@ -15,9 +15,7 @@
                       <div class="flex items-center gap-3">
                           <div class="w-7 h-7 rounded-md" :style="{ background: player.color }"></div>
                           <div class="flex-1 text-sm">
-                              <div class="font-medium">{{ player.name }}</div>
-                              <!-- <div class="text-xs text-gray-500">チーム {{ player.id }}</div> -->
-                              <div class="text-xs font-semibold text-gray-700 mt-1">スコア: {{ player.score }}</div>
+                              <div class="font-medium">{{ player.name }}: {{ player.score }}点</div>
                           </div>    
                       </div>
                     </div>
@@ -25,7 +23,8 @@
                 </div>
 
                 <!-- プレイヤーリスト -->
-                <div class="relative space-y-3 h-[calc(100vh-400px)] overflow-y-auto bg-gray-100 p-2 rounded-md">
+                <h3 class="text-lg font-semibold">プレイヤーリスト</h3>
+                <div class="relative space-y-3 h-[400px] overflow-y-auto bg-gray-100 p-2 rounded-md">
                   <div v-if="gameState=='finished'">
                     <div class="absolute inset-0 bg-black/50 z-10 flex items-center justify-center w-full h-full">
                       <div class="bg-white p-6 rounded-lg shadow-lg text-center z-20">
@@ -42,7 +41,6 @@
                       </div>
                     </div>
                   </div>
-                  <h2 class="text-lg font-semibold">プレイヤーリスト</h2>
                   <div
                       v-for="player in players"
                       :key="player.id"
@@ -60,9 +58,9 @@
                             v-for="(group, index) in groupHandByTier(hands[player.id])"
                             :key="group.tier"
                         >
-                            <div
-                                class="w-full pb-2"
-                                :class="{ 'border-b border-color-slate-300': index !== groupHandByTier(hands[player.id]).length - 1 }"
+                          <div
+                            class="w-full pb-2"
+                            :class="{ 'border-b border-color-slate-300': index !== groupHandByTier(hands[player.id]).length - 1 }"
                             >
 
                             <div class="mb-1">
@@ -86,14 +84,10 @@
                     </div>
                   </div>
                 </div>
-                <hr>
-
-
-
 
                 <!-- アクションボタン -->
+                <h3>アクションボタン</h3>
                 <div class="space-y-2 w-full">
-                    <h3 class="text-sm font-medium">アクションボタン</h3>
                     <div class="flex gap-2 w-full">
                       <button 
                           @click="selectedCard = null" 
@@ -126,55 +120,53 @@
                       </button>
                     </div>
                 </div>
+
+                <!-- 色の説明 -->
+                <h3>色の説明</h3>
+                <div class="space-y-2">
+                  <div class="flex gap-2">
+                    <div
+                        v-for="item in terrainList"
+                        :key="item.key"
+                        class="flex items-center gap-1"
+                    >
+                      <div
+                          class="w-4 h-4 rounded-full"
+                          :style="{ background: areaColors[item.key] }"
+                      ></div>
+                      <span class="text-xs">{{ item.label }}</span>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- レベルの説明 -->
+                <div>
+                  <h3 class="text-sm font-medium mb-3">レベルとポイントの説明</h3>
+                  <div class="flex gap-2">
+                    <div
+                        v-for="tier in [1, 2, 3, 4]"
+                        :key="tier"
+                        class="flex items-center gap-1"
+                    >
+                      <div
+                        v-if="tier !== 1"
+                          :class="tierShapeClass(tier)"
+                          :style="tierShapeStyle(tier,'#555')"
+                          style="background: #555; border-color: #555"
+                      ></div>
+                      <span class="text-xs flex items-center gap-1">
+                        <strong v-if="tier === 1" class="text-xl">&#9650;</strong>
+                        <strong v-if="tier === 4" class="text-xl">★</strong>
+                        Lv{{ tier }}: ポイント{{ getScoreForTile(tier) }},
+                      </span>
+                    </div>
+                  </div>
+                </div>
             </aside>
 
             <!--  --- Right side Area --- -->
-            <main class="flex-1">
-              <!-- 色の説明 -->
-              <div class="space-y-2 my-3">
-                <h3 class="text-sm font-medium">色の説明</h3>
-                <div class="flex gap-2 mb-2">
-                  <div
-                      v-for="item in terrainList"
-                      :key="item.key"
-                      class="flex items-center gap-1"
-                  >
-                    <div
-                        class="w-4 h-4 rounded-full"
-                        :style="{ background: areaColors[item.key] }"
-                    ></div>
-                    <span class="text-xs">{{ item.label }}</span>
-                  </div>
-                </div>
-
-              </div>
-
-              <hr>
-
-              <!-- レベルの説明 -->
-              <div class="space-y-2 my-3">
-                <h3 class="text-sm font-medium">レベルとポイントの説明</h3>
-                <div class="flex gap-2 mb-2">
-                  <div
-                      v-for="tier in [1, 2, 3, 4]"
-                      :key="tier"
-                      class="flex items-center gap-1"
-                  >
-                    <div
-                      v-if="tier !== 1"
-                        :class="tierShapeClass(tier)"
-                        :style="tierShapeStyle(tier,'#555')"
-                        style="background: #555; border-color: #555"
-                    ></div>
-                    <span class="text-xs flex items-center gap-1">
-                      <strong v-if="tier === 1" class="text-xl">&#9650;</strong>
-                      <strong v-if="tier === 4" class="text-xl">★</strong>
-                      Lv{{ tier }}: ポイント{{ getScoreForTile(tier) }},
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <hr>
+            <main class="w-[800px]">
               <!-- Tiles Area -->
               <div class="w-full rounded-md bg-gray-200 p-4 mb-6">
                     <div
@@ -306,231 +298,110 @@ import CreatureCard from '@/components/domination/creatureCard.vue'
 export default {
     // name: 'Tiles20x20',
     data() {
-        const cols = 15
-        const rows = 15
+      const cols = 15
+      const rows = 15
 
-        return {
-            cols,
-            rows,
-            tiles: [],
-            currentPlayerId: null,
-            currentType: null,
-            players: [
-                { id: 1, name: 'Team 1', color: '#FF2E4D', score: 0 }, // stronger red
-                { id: 2, name: 'Team 2', color: '#8A2EFF', score: 0 }, // vivid purple
-                { id: 3, name: 'Team 3', color: '#FFC300', score: 0 }  // rich yellow
-            ],
-            typeColors: {
-                grass: '#7ED957', // green
-                bug: 'blue', // brown
-                animal: '#E04E4E', // red
-                none: '#d1d5db' // grey
-            },
-            typePoints: {
-                grass: 1,
-                bug: 3,
-                animal: 10
-            },
-            areaTypes: ['town', 'forest', 'river', 'sea'],
-            areaColors: {
-                town: '#B88E66',
-                forest: '#768F7C',
-                dirt: '#C2B5A6',
-                river: '#8FAFBD',
-                sea: '#5E7F9B',
-                undeveloped: '#666666'
-            },
-            terrainList: [
-                { key: 'town', label: '町' },
-                { key: 'forest', label: '森' },
-                { key: 'dirt', label: '土' },
-                { key: 'river', label: '川' },
-                { key: 'sea', label: '海' },
-                { key: 'undeveloped', label: '未開発地' },
-            ],
+      return {
+        cols,
+        rows,
+        tiles: [],
+        currentPlayerId: null,
+        currentType: null,
+        players: [
+            { id: 1, name: 'Team A', color: '#FF2E4D', score: 0 }, // stronger red
+            { id: 2, name: 'Team B', color: '#8A2EFF', score: 0 }, // vivid purple
+            { id: 3, name: 'Team C', color: '#FFC300', score: 0 }  // rich yellow
+        ],
+        typeColors: {
+            grass: '#7ED957', // green
+            bug: 'blue', // brown
+            animal: '#E04E4E', // red
+            none: '#d1d5db' // grey
+        },
+        typePoints: {
+            grass: 1,
+            bug: 3,
+            animal: 10
+        },
+        areaTypes: ['town', 'forest', 'river', 'sea'],
+        areaColors: {
+            town: '#B88E66',
+            forest: '#768F7C',
+            dirt: '#C2B5A6',
+            river: '#8FAFBD',
+            sea: '#5E7F9B',
+            undeveloped: '#666666'
+        },
+        terrainList: [
+            { key: 'town', label: '町' },
+            { key: 'forest', label: '森' },
+            { key: 'dirt', label: '土' },
+            { key: 'river', label: '川' },
+            { key: 'sea', label: '海' },
+            { key: 'undeveloped', label: '未開発地' },
+        ],
 
-            // landAreaCards: [
-            //     { id: 'モンシロチョウ', label: 'モンシロチョウ', tier: 1, area: 'land', count: 6 },
-            //     { id: 'mimizu', label: 'ミミズ', tier: 1, area: 'land', count: 6 },
-            //     { id: 'shimaenaga', label: 'シマエナガ', tier: 2, area: 'land', count: 4 },
-            //     { id: 'kitakitsune', label: 'キタキツネ', tier: 3, area: 'land', count: 3 }
-            // ],
+        allCards: [
+          {id:'オオワシ', get label(){return this.id}, area: 'land', count: 1, food:["虫","小動物"], tier: 4},
+          {id:'キタキツネ', get label(){return this.id}, area: 'land', count: 2, food:["さかな"], tier: 3},
+          {id:'エゾタヌキ', get label(){return this.id}, area: 'land', count: 2, food:["虫","植物"], tier: 2},
+          {id:'エゾリス', get label(){return this.id}, area: 'land', count: 3, food:["植物"], tier: 2},
+          {id:'オコジョ', get label(){return this.id}, area: 'land', count: 3, food:["虫","小動物"], tier: 2},
+          {id:'カヤネズミ', get label(){return this.id}, area: 'land', count: 3, food:["植物"], tier: 2},
+          {id:'エゾウサギ', get label(){return this.id}, area: 'land', count: 3, food:["植物"], tier: 2},
+          {id:'ミミズ', get label(){return this.id}, area: 'land', count: 10, food:["植物"], tier: 1},
+          {id:'アブラムシ', get label(){return this.id}, area: 'land', count: 4, food:["植物"], tier: 1},
+          {id:'カナブン', get label(){return this.id}, area: 'land', count: 4, food:["植物"], tier: 1},
+          {id:'シオカラトンボ', get label(){return this.id}, area: 'land', count: 3, food:["虫"], tier: 1},
+          {id:'モンシロチョウ', get label(){return this.id}, area: 'land', count: 4, food:["植物"], tier: 1},
+          {id:'カマキリ', get label(){return this.id}, area: 'land', count: 3, food:["虫"], tier: 1},
+          {id:'ミツバチ', get label(){return this.id}, area: 'land', count: 4, food:["植物"], tier: 1},
+          {id:'シジミチョウ', get label(){return this.id}, area: 'land', count: 4, food:["植物"], tier: 1},
+          {id:'イトウ', get label(){return this.id}, area: 'water', count: 1, food:["魚","小動物"], tier: 4},
+          {id:'オショロコマ', get label(){return this.id}, area: 'water', count: 1, food:["魚","小動物"], tier: 3},
+          {id:'ニジマス', get label(){return this.id}, area: 'water', count: 1, food:["虫"], tier: 3},
+          {id:'ヤマメ', get label(){return this.id}, area: 'water', count: 1, food:["虫"], tier: 2},
+          {id:'ウグイ', get label(){return this.id}, area: 'water', count: 1, food:["藻類"], tier: 2},
+          {id:'ヤゴ', get label(){return this.id}, area: 'water', count: 1, food:["虫"], tier: 1},
+          {id:'カゲロウの幼虫', get label(){return this.id}, area: 'water', count: 2, food:["藻類"], tier: 1},
+          {id:'ゲンゴロウ', get label(){return this.id}, area: 'water', count: 1, food:["植物"], tier: 1},
+          {id:'川エビ', get label(){return this.id}, area: 'water', count: 4, food:["藻類"], tier: 1},
+          {id:'オタマジャクシ', get label(){return this.id}, area: 'water', count: 4, food:["藻類"], tier: 2},
+          {id:'シマエナガ', get label(){return this.id}, area: 'land', count: 3, food:["虫"], tier: 2},
+          {id:'エゾモモンガ', get label(){return this.id}, area: 'land', count: 3, food:["植物"], tier: 2},
+          {id:'ヒグマ', get label(){return this.id}, area: 'land', count: 1, food:["植物","小動物"], tier: 4},
+          {id:'タンチョウツル', get label(){return this.id}, area: 'land', count: 1, food:["植物","虫","魚"], tier: 4},
+          {id:'エゾサンショウウオ', get label(){return this.id}, area: 'water', count: 1, food:["植物"], tier: 2},
+          {id:'シマフクロウ', get label(){return this.id}, area: 'land', count: 1, food:["魚","小動物"], tier: 4},
+          {id:'ヒメネズミ', get label(){return this.id}, area: 'land', count: 3, food:["植物"], tier: 2},
+          {id:'モグラ', get label(){return this.id}, area: 'land', count: 3, food:["虫"], tier: 2},
+          {id:'アカガエル', get label(){return this.id}, area: 'water', count: 3, food:["植物"], tier: 2},
+          {id:'アブ', get label(){return this.id}, area: 'land', count: 3, food:["小動物","中動物","大動物"], tier: 1},
+          {id:'エゾシカ', get label(){return this.id}, area: 'land', count: 2, food:["植物"], tier: 4},
+          {id:'モンシロチョウ', get label(){return this.id}, area: 'land', count: 1, food:["植物"], tier: 1},
+        ],
 
-            // waterAreaCards: [
-            //     { id: 'gengoro', label: 'げんごろう', tier: 1, area: 'water', count: 6 },
-            //     { id: 'yago', label: 'やご', tier: 1, area: 'water', count: 6 },
-            //     { id: 'tanago', label: 'タナゴ', tier: 2, area: 'water', count: 4 },
-            //     { id: 'dojo', label: 'ドジョウ', tier: 3, area: 'water', count: 3 }
-            // ],
+        // プレイヤーごとの手札
+        hands: {},
 
-            allCards: [
-                {
-                    id:'オオワシ', get label(){return this.id},
-                    area: 'land', count: 1, food:["虫","小動物"], tier: 4
-                },
-                {
-                    id:'キタキツネ', get label(){return this.id},
-                    area: 'land', count: 2, food:["さかな"], tier: 3
-                },
-                {
-                    id:'エゾタヌキ', get label(){return this.id},
-                    area: 'land', count: 2, food:["虫","植物"], tier: 2
-                },
-                {
-                    id:'エゾリス', get label(){return this.id},
-                    area: 'land', count: 3, food:["植物"], tier: 2
-                },
-                {
-                    id:'オコジョ', get label(){return this.id},
-                    area: 'land', count: 3, food:["虫","小動物"], tier: 2
-                },
-                {
-                    id:'カヤネズミ', get label(){return this.id},
-                    area: 'land', count: 3, food:["植物"], tier: 2
-                },
-                {
-                    id:'エゾウサギ', get label(){return this.id},
-                    area: 'land', count: 3, food:["植物"], tier: 2
-                },
-                {
-                    id:'ミミズ', get label(){return this.id},
-                    area: 'land', count: 10, food:["植物"], tier: 1
-                },
-                {
-                    id:'アブラムシ', get label(){return this.id},
-                    area: 'land', count: 4, food:["植物"], tier: 1
-                },
-                {
-                    id:'カナブン', get label(){return this.id},
-                    area: 'land', count: 4, food:["植物"], tier: 1
-                },
-                {
-                    id:'シオカラトンボ', get label(){return this.id},
-                    area: 'land', count: 3, food:["虫"], tier: 1
-                },
-                {
-                    id:'モンシロチョウ', get label(){return this.id},
-                    area: 'land', count: 4, food:["植物"], tier: 1
-                },
-                {
-                    id:'カマキリ', get label(){return this.id},
-                    area: 'land', count: 3, food:["虫"], tier: 1
-                },
-                {
-                    id:'ミツバチ', get label(){return this.id},
-                    area: 'land', count: 4, food:["植物"], tier: 1
-                },
-                {
-                    id:'シジミチョウ', get label(){return this.id},
-                    area: 'land', count: 4, food:["植物"], tier: 1
-                },
-                {
-                    id:'イトウ', get label(){return this.id},
-                    area: 'water', count: 1, food:["魚","小動物"], tier: 4
-                },
-                {
-                    id:'オショロコマ', get label(){return this.id},
-                    area: 'water', count: 1, food:["魚","小動物"], tier: 3
-                },
-                {
-                    id:'ニジマス', get label(){return this.id},
-                    area: 'water', count: 1, food:["虫"], tier: 3
-                },
-                {
-                    id:'ヤマメ', get label(){return this.id},
-                    area: 'water', count: 1, food:["虫"], tier: 2
-                },
-                {
-                    id:'ウグイ', get label(){return this.id},
-                    area: 'water', count: 1, food:["藻類"], tier: 2
-                },
-                {
-                    id:'ヤゴ', get label(){return this.id},
-                    area: 'water', count: 1, food:["虫"], tier: 1
-                },
-                {
-                    id:'カゲロウの幼虫', get label(){return this.id},
-                    area: 'water', count: 2, food:["藻類"], tier: 1
-                },
-                {
-                    id:'ゲンゴロウ', get label(){return this.id},
-                    area: 'water', count: 1, food:["植物"], tier: 1
-                },
-                {
-                    id:'川エビ', get label(){return this.id},
-                    area: 'water', count: 4, food:["藻類"], tier: 1
-                },
-                {
-                    id:'オタマジャクシ', get label(){return this.id},
-                    area: 'water', count: 4, food:["藻類"], tier: 2
-                },
-                {
-                    id:'シマエナガ', get label(){return this.id},
-                    area: 'land', count: 3, food:["虫"], tier: 2
-                },
-                {
-                    id:'エゾモモンガ', get label(){return this.id},
-                    area: 'land', count: 3, food:["植物"], tier: 2
-                },
-                {
-                    id:'ヒグマ', get label(){return this.id},
-                    area: 'land', count: 1, food:["植物","小動物"], tier: 4
-                },
-                {
-                    id:'タンチョウツル', get label(){return this.id},
-                    area: 'land', count: 1, food:["植物","虫","魚"], tier: 4
-                },
-                {
-                    id:'エゾサンショウウオ', get label(){return this.id},
-                    area: 'water', count: 1, food:["植物"], tier: 2
-                },
-                {
-                    id:'シマフクロウ', get label(){return this.id},
-                    area: 'land', count: 1, food:["魚","小動物"], tier: 4
-                },
-                {
-                    id:'ヒメネズミ', get label(){return this.id},
-                    area: 'land', count: 3, food:["植物"], tier: 2
-                },
-                {
-                    id:'モグラ', get label(){return this.id},
-                    area: 'land', count: 3, food:["虫"], tier: 2
-                },
-                {
-                    id:'アカガエル', get label(){return this.id},
-                    area: 'water', count: 3, food:["植物"], tier: 2
-                },
-                {
-                    id:'アブ', get label(){return this.id},
-                    area: 'land', count: 3, food:["小動物","中動物","大動物"], tier: 1
-                },
-                {
-                    id:'エゾシカ', get label(){return this.id},
-                    area: 'land', count: 2, food:["植物"], tier: 4
-                },
-            ],
+        // dominationMode: 'standard',
+        dominationMode: 'mapControl',
+        mapStep: 0, 
 
-            // プレイヤーごとの手札
-            hands: {},
+        selectedCard: null,
+        modalCard: null,
 
-            // dominationMode: 'standard',
-            dominationMode: 'mapControl',
-            mapStep: 0, 
+        isPreviewing: false,
 
-            selectedCard: null,
-            modalCard: null,
+        tilePreviewCard: null,
+        previewStyle: {},
 
-            isPreviewing: false,
+        skipCount: 0,
 
-            tilePreviewCard: null,
-            previewStyle: {},
-
-            skipCount: 0,
-
-            gameState: 'playing' // 'playing' or 'finished'
+        gameState: 'playing' // 'playing' or 'finished'
 
 
-        }
+      }
     },
     methods: {
         onTileClick(tile, event) {
@@ -686,6 +557,14 @@ export default {
 
               if (t.area === "undeveloped") return
               if (t.ownerTeam !== null) return
+              
+              // if area is water then only water cards can be placed, if area is land then only land cards can be placed
+              if (t.area === "river" || t.area === "sea") {
+                  if (this.selectedCard.area !== "water") return
+              } else {
+                  if (this.selectedCard.area !== "land") return
+              }
+            
 
               // Lv1は無条件OK
               if (tier === 1) {
@@ -708,37 +587,7 @@ export default {
 
               t.validForSelection = isValid
             })
-
-            // if(this.selectedCard.tier === 1) {
-            //     this.tiles.forEach(t => {
-            //         if(t.area === "undeveloped") return t.validForSelection = false
-            //         if(t.ownerTeam === null) t.validForSelection = true
-            //     })
-            // }
-
-            // if(this.selectedCard.tier === 2) {
-            //     this.tiles.forEach(t => {
-            //         if(t.area === "undeveloped") return t.validForSelection = false
-            //         if(t.ownerTeam !== null) return
-
-            //         const neighbors = this.getNeighbors(t)
-            //         const touchingTierOne = neighbors.filter(n => n.placedCard?.tier === 1)
-            //         if(touchingTierOne.length >= 2) t.validForSelection = true
-            //     })
-            // }
-
-            // if(this.selectedCard.tier === 3) {
-            //     this.tiles.forEach(t => {
-            //         if(t.area === "undeveloped") return t.validForSelection = false
-            //         if(t.ownerTeam !== null) return
-
-            //         const neighbors = this.getNeighbors(t)
-            //         const touchingTierTwo = neighbors.filter(n => n.placedCard?.tier === 2)
-            //         if(touchingTierTwo.length >= 2) t.validForSelection = true
-            //     })
-            // }
         },
-
         getNeighbors(tile) {
             const { row, col } = tile
             return this.tiles.filter(t =>
@@ -998,28 +847,100 @@ export default {
                     tier: card.tier,
                     food: card.food,
                     // optional: unique instance id
-                    instanceId: `${card.id}-${index}`
+                    instanceId: (card.id === "モンシロチョウ" && card.count === 1) ? `${card.id}-4` : `${card.id}-${index}`
                 }));
             });
         },
 
 
         initializeHands() {
-            const deck = this.shuffleArray(
-                this.buildDeck(this.allCards)
-            );
+          const unshuffledDeck = this.buildDeck(this.allCards)
+          console.log(unshuffledDeck)
 
-            console.log("Shuffled Deck:", deck);
+          this.hands[1] = []
+          this.hands[2] = []
+          this.hands[3] = []
 
-            const playerCount = this.players.length;
-            const cardsPerPlayer = Math.floor(deck.length / playerCount);
+          this.hands[1].push(unshuffledDeck[31])
+          this.hands[1].push(unshuffledDeck[42])
+          this.hands[1].push(unshuffledDeck[39])
+          this.hands[1].push(unshuffledDeck[38])
+          this.hands[1].push(unshuffledDeck[43])
+          this.hands[1].push(unshuffledDeck[17])
+          this.hands[1].push(unshuffledDeck[27])
+          this.hands[1].push(unshuffledDeck[18])
+          this.hands[1].push(unshuffledDeck[5])
+          this.hands[1].push(unshuffledDeck[3])
+          this.hands[1].push(unshuffledDeck[71])
+          this.hands[1].push(unshuffledDeck[93])
 
-            this.players.forEach((player, index) => {
-                this.hands[player.id] = deck.slice(
-                    index * cardsPerPlayer,
-                    (index + 1) * cardsPerPlayer
-                );
-            });
+          this.hands[2].push(unshuffledDeck[32])
+          this.hands[2].push(unshuffledDeck[33])
+          this.hands[2].push(unshuffledDeck[40])
+          this.hands[2].push(unshuffledDeck[41])
+          this.hands[2].push(unshuffledDeck[19])
+          this.hands[2].push(unshuffledDeck[20])
+          this.hands[2].push(unshuffledDeck[45])
+          this.hands[2].push(unshuffledDeck[35])
+          this.hands[2].push(unshuffledDeck[8])
+          this.hands[2].push(unshuffledDeck[6])
+          this.hands[2].push(unshuffledDeck[73])
+          this.hands[2].push(unshuffledDeck[1])
+
+          this.hands[3].push(unshuffledDeck[28])
+          this.hands[3].push(unshuffledDeck[29])
+          this.hands[3].push(unshuffledDeck[34])
+          this.hands[3].push(unshuffledDeck[94])
+          this.hands[3].push(unshuffledDeck[44])
+          this.hands[3].push(unshuffledDeck[46])
+          this.hands[3].push(unshuffledDeck[47])
+          this.hands[3].push(unshuffledDeck[21])
+          this.hands[3].push(unshuffledDeck[74])
+          this.hands[3].push(unshuffledDeck[7])
+          this.hands[3].push(unshuffledDeck[9])
+          this.hands[3].push(unshuffledDeck[79])
+
+          // this.hands[1].push(unshuffledDeck[0])
+          // this.hands[1].push(unshuffledDeck[1])
+
+          // this.hands[2].push(unshuffledDeck[2])
+          // this.hands[2].push(unshuffledDeck[3])
+
+          // this.hands[3].push(unshuffledDeck[3])
+          // this.hands[3].push(unshuffledDeck[4])
+
+          // add water cards shuffle
+          const waterCards = unshuffledDeck.filter(card => card.area === 'water');
+
+          const playerCount = this.players.length;
+          const cardsPerPlayer = Math.floor(waterCards.length / playerCount);
+          this.players.forEach((player, index) => {
+              this.hands[player.id].push(...waterCards.slice(
+                  index * cardsPerPlayer,
+                  (index + 1) * cardsPerPlayer
+              ));
+          });
+
+          // this.hands[1].push(...waterCards.slice(0, 2));
+          // this.hands[2].push(...waterCards.slice(2, 4));
+          // this.hands[3].push(...waterCards.slice(4, 6));
+
+          // 3/26以降は戻す----------------------------
+          // const deck = this.shuffleArray(
+          //     this.buildDeck(this.allCards)
+          // );
+
+          // console.log("Shuffled Deck:", deck);
+
+          // const playerCount = this.players.length;
+          // const cardsPerPlayer = Math.floor(deck.length / playerCount);
+
+          // this.players.forEach((player, index) => {
+          //     this.hands[player.id] = deck.slice(
+          //         index * cardsPerPlayer,
+          //         (index + 1) * cardsPerPlayer
+          //     );
+          // });
         },
         areaBadgeClass(card, playerId) {
             let baseClass = ''
@@ -1213,34 +1134,40 @@ export default {
         CreatureCard
     },
     computed: {
-        currentPlayer() {
-            return this.players.find(p => p.id === this.currentPlayerId)
-        }
+      currentPlayer() {
+          return this.players.find(p => p.id === this.currentPlayerId)
+      }
     }
 
 }
 </script>
 
 <style scoped>
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.05); opacity: 0.7; }
-    }
+  h3{
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(90deg, #ff7e5f, #feb47b);
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    width: auto;
+    margin: 1rem;
+    margin-left: unset;
+    /* -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;  */
+  }
 
-    /* @keyframes flash {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
-    } */
-    /* .animate-pulse {
-        background: yellow;
-    } */
+  @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.7; }
+  }
 
-    .triangle{
-        width:0;
-        height:0;
-        border-left:12px solid transparent;
-        border-right:12px solid transparent;
-        border-bottom:20px solid;
-    }
+  .triangle{
+      width:0;
+      height:0;
+      border-left:12px solid transparent;
+      border-right:12px solid transparent;
+      border-bottom:20px solid;
+  }
 
 </style>
