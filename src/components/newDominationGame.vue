@@ -1091,16 +1091,15 @@ export default {
 
         confirmSkip() {
             if (confirm("本当にスキップしますか？")) {
-                this.skipCount++
-                if(this.skipCount >= this.players.length) {
-                    alert("全員がスキップしたので、ゲームを終了します。")
-                    this.finishGame();
-                    return;
-                    // this.skipCount = 0
-                } else {
-                this.goToNextPlayer()
+                // this.skipCount++
+                // if(this.skipCount >= this.players.length) {
+                //     alert("全員がスキップしたので、ゲームを終了します。")
+                //     this.finishGame();
+                //     return;
+                // } else {                
+                    this.goToNextPlayer()
+                // }
             }
-          }
         },
 
         confirmFinish() {
