@@ -3,11 +3,11 @@
     <template v-if="dominationMode == 'standard'">
         <div class="tiles-app p-5">
             <!--  --- Right side Area --- -->
-                <div class="flex justify-between gap-4">
+                <div class="flex justify-between gap-4 mb-6">
                     <div>
                         <!-- 色の説明 -->
                         <h3>色の説明</h3>
-                        <div class="space-y-2">
+                        <div>
                             <div class="grid grid-cols-4 gap-2">
                                 <template v-for="(item,index) in terrainList" :key="item.key">
                                     <div   
@@ -29,8 +29,8 @@
                         <!-- レベルの説明 -->
                         <div>
                             <h3 class="text-sm font-medium mb-3">レベルとポイントの説明</h3>
-                            <div class="flex justify-between items-center gap-2 items-stretch">
-                                <div v-for="tier in [1, 2, 3, 4]" :key="tier" class="text-center bg-gray-300 rounded block p-2 px-4">
+                            <div class="flex justify-between items-center items-stretch">
+                                <div v-for="tier in [1, 2, 3, 4]" :key="tier" class="text-center bg-gray-300 rounded block p-2">
                                     <div
                                         v-if="tier !== 1 && tier !== 4"
                                         class="mx-auto mb-2"
@@ -50,12 +50,12 @@
 
                         <!-- アクションボタン -->
                         <h3>アクションボタン</h3>
-                        <div class="space-y-2 w-full">
+                        <div class="w-full">
                             <div class="grid grid-cols-2 gap-2 w-full">
                             <button 
                                 @click="selectedCard = null" 
                                 :disabled="!selectedCard"
-                                class="px-3 py-2 rounded-md border text-sm"
+                                class="px-1 py-2 rounded-md border text-sm"
                                 :class="[
                                     selectedCard
                                         ? 'bg-gray-200 hover:bg-gray-300'
@@ -64,28 +64,28 @@
                                 キャンセル
                             </button>
                             <button
-                                class="px-3 py-2 rounded-md border bg-blue-200 text-sm"
+                                class="px-1 py-2 rounded-md border bg-blue-200 text-sm"
                                 @click="confirmSkip()"
                             >
                                 スキップ
                             </button>
                             <button
-                                class="px-3 py-2 rounded-md border bg-red-200 text-sm"
-                                @click="resetTiles"
-                            >
-                                ゲームリセット
-                            </button>
-                            <button
-                                class="px-3 py-2 rounded-md border bg-green-200 text-sm"
+                                class="px-1 py-2 rounded-md border bg-green-200 text-sm"
                                 @click="confirmFinish()"
                             >
                                 ゲーム終了
                             </button>
-                            </div>
+                            <button
+                                class="px-1 py-2 rounded-md border bg-red-200 text-sm"
+                                @click="resetTiles"
+                            >
+                              リセット
+                            </button>
+													</div>
                         </div>
                     </div>
                     <!-- Tiles Area -->
-                    <div class="w-full rounded-md bg-gray-200 p-4 flex-1 mb-6">
+                    <div class="w-full rounded-md bg-gray-200 p-4 flex-1">
                           <div
                               class="grid gap-1 w-full h-full"
                               :style="{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }"
@@ -173,7 +173,7 @@
 
             <div class="relative">
                 <!-- プレイヤーリスト -->
-                <h3 class="text-lg font-semibold absolute bottom-full left-0">プレイヤーリスト</h3>
+                <!-- <h3 class="text-lg font-semibold absolute bottom-full left-0">プレイヤーリスト</h3> -->
                 <div>
                   <div v-if="gameState=='finished'">
                     <div class="absolute inset-0 bg-black/50 z-10 flex items-center justify-center w-full h-full">
@@ -214,15 +214,15 @@
                                 :class="{ 'border-b border-color-slate-300': index !== groupHandByTier(hands[player.id]).length - 1 }"
                                 >
     
-                                <div class="mb-1">
-                                    <span class="text-xs text-slate-400 mb-1">Lv{{ group.tier }}</span> 
-                                </div>
-    
-                                <div class="flex flex-wrap gap-2">
+                                
+                                <div class="flex flex-wrap gap-2 items-center">
+                                    <div class="mb-1">
+                                        <span class="text-xs text-slate-400 mb-1">Lv{{ group.tier }}:</span> 
+                                    </div>
                                     <div
                                         v-for="card in group.cards"
                                         :key="card.id"
-                                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border cursor-pointer"
+                                        class="inline-flex items-center gap-2 px-2 py-1 rounded-full text-xs font-medium border cursor-pointer"
                                         :class="areaBadgeClass(card, player.id)"
                                         @click="previewCard(card, player.id)"
                                     >
@@ -455,6 +455,7 @@ export default {
           this.skipCount = 0
           this.goToNextPlayer()
         },
+
         getScoreForTile(tier) {
             if (!tier) return 0
 
@@ -558,18 +559,12 @@ export default {
 
               const neighbors = this.getNeighbors(t)
 
-              // 必要なtier一覧を作る
-              const requiredTiers = []
-              for (let i = 1; i < tier; i++) {
-                  requiredTiers.push(i)
-              }
+              // 1つ下のtierを2つ以上持っているかチェック
+							const lowerTier = tier - 1
 
-              // すべて満たしてるかチェック
-              const isValid = requiredTiers.every(reqTier =>
-                  neighbors.some(n => n.placedCard?.tier === reqTier)
-              )
+							const count = neighbors.filter(n => n.placedCard?.tier === lowerTier).length
 
-              t.validForSelection = isValid
+							t.validForSelection = count >= 2
             })
         },
         // getNeighbors(tile) {
@@ -590,6 +585,7 @@ export default {
                 return (rowDiff <= 1 && colDiff <= 1) && !(rowDiff === 0 && colDiff === 0)
             })
         },
+
         randomArea() {
             const list = ['forest', 'dirt']
             return list[Math.floor(Math.random() * list.length)]
