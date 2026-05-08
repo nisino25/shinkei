@@ -119,8 +119,8 @@
       
                               <div v-if="tile.ownerTeam" class="flex justify-center items-center w-full h-full">
                                 <div
-                                    :class="tierShapeClass(tile.placedCard?.tier)"
-                                    :style="tierShapeStyle(tile.placedCard?.tier, tile.ownerTeam)"
+                                    :class="tierShapeClass(tile)"
+                                    :style="tierShapeStyle(tile.placedCard?.tier, tile.ownerTeam, tile.eatenByPlayerId)"
                                 >
                                     <span v-if="tile.placedCard?.tier === 4">★</span>
                                 </div>
@@ -280,8 +280,8 @@ import CreatureCard from '@/components/domination/creatureCard.vue'
 export default {
     // name: 'Tiles20x20',
     data() {
-      const cols = 50
-      const rows = 20
+      const cols = 30
+      const rows = 15
 
       return {
         cols,
@@ -293,7 +293,7 @@ export default {
         players: [
             { id: 1, name: '水チーム', color: '#00BFA6', score: 0 }, // teal (water but not blue)
             { id: 2, name: '空気チーム', color: '#9B5DE5', score: 0 }, // purple (air = light / abstract)
-            { id: 3, name: '土チーム', color: '#F4A261', score: 0 }  // sand/orange (earth)
+            { id: 3, name: '土チーム', color: '#FFB97A', score: 0 }  // sand/orange (earth)
         ],
 
         typeColors: {
@@ -389,6 +389,7 @@ export default {
     },
     methods: {
         onTileClick(tile, event) {
+          console.log(tile)
           if(tile.placedCard) {
             const rect = event.currentTarget.getBoundingClientRect()
 
@@ -419,12 +420,13 @@ export default {
               alert("カードを選択してからタイルを選んでね")
               return
           } 
-          console.log(tile)
           if(tile.area === 'undeveloped') {
               alert("まだ動物たちが住めないから、環境をなおしてね")
               return; // cannot select undeveloped
           }
+
           if(tile.ownerTeam !== null) return; // already owned
+
           // if(this.currentType === null) return; // no type selected
           if (!tile.validForSelection) {
             alert("このタイルにはこのカードは置けないよ")
@@ -436,6 +438,8 @@ export default {
 
           const points = this.getScoreForTile(this.selectedCard.tier)
           this.currentPlayer.score += points
+
+            this.handleEating(tile)
 
 
           //カードを削除
@@ -454,6 +458,18 @@ export default {
           // this.updateScores()
           this.skipCount = 0
           this.goToNextPlayer()
+        },
+        handleEating(placedTile) {
+            const neighbors = this.getNeighbors(placedTile)
+
+            neighbors.forEach(n => {
+                // if the neibghot is lower than the placed tile, then it gets eaten
+                if(!n.placedCard || !placedTile.placedCard) return
+                if(n.placedCard.tier >= placedTile.placedCard.tier) return
+                // mark as eaten
+                n.eatenByTileId = placedTile.id
+                n.eatenByPlayerId = this.currentPlayerId
+            })
         },
 
         getScoreForTile(tier) {
@@ -491,6 +507,33 @@ export default {
                 width: '100%',
                 aspectRatio: '1 / 1'
             }
+
+            // if has a card placed, then change the background to the card color
+            // if(tile.placedCard) {
+            //     base.background = this.typeColors[tile.placedCard.area] || '#ccc'
+            // }
+
+            // if tile is eatenm then change the background eater color
+            if(tile.eatenByTileId) {
+                const eaterTile = this.tiles.find(t => t.id === tile.eatenByTileId)
+                
+                base.background = this.teamColor(eaterTile.ownerTeam) 
+                //  but if the eatenByPlayerId is also eaten then change to the grandparent eater color
+                if(eaterTile.eatenByPlayerId) {
+                    const grandEaterTile = this.tiles.find(t => t.id === eaterTile.eatenByTileId)
+                    if(grandEaterTile) {
+                        base.background = this.teamColor(grandEaterTile.ownerTeam) 
+                    }
+                }
+            }
+
+            //
+            // if(tile.eatenByPlayerId) {
+            //     const eaterPlayer = this.players.find(p => p.id === tile.eatenByPlayerId)
+            //     if(eaterPlayer) {
+            //         base.background = this.teamColor(eaterPlayer.id) 
+            //     }
+            // }
 
 
 
@@ -560,11 +603,16 @@ export default {
               const neighbors = this.getNeighbors(t)
 
               // 1つ下のtierを2つ以上持っているかチェック
-							const lowerTier = tier - 1
+              // but the card doesnt count if it is already eaten
+              const lowerTier = tier - 1    
+              const count = neighbors.filter(n => n.placedCard?.tier === lowerTier && !n.eatenByTileId).length
+              t.validForSelection = count >= 2
 
-							const count = neighbors.filter(n => n.placedCard?.tier === lowerTier).length
+                // const lowerTier = tier - 1
 
-							t.validForSelection = count >= 2
+                // const count = neighbors.filter(n => n.placedCard?.tier === lowerTier).length
+
+                // t.validForSelection = count >= 2
             })
         },
         // getNeighbors(tile) {
@@ -596,17 +644,17 @@ export default {
 
                 // blank map
                 for (let r = 0; r < this.rows; r++) {
-                        for (let c = 0; c < this.cols; c++) {
-                                this.tiles.push({
-                                        id: id++,
-                                        row: r,
-                                        col: c,
-                                        type: 'none',
-                                        selected: false,
-                                        ownerTeam: null,
-                                        area: null
-                                })
-                        }
+									for (let c = 0; c < this.cols; c++) {
+										this.tiles.push({
+											id: id++,
+											row: r,
+											col: c,
+											type: 'none',
+											selected: false,
+											ownerTeam: null,
+											area: null
+										})
+									}
                 }
 
                 // oceans and rivers
@@ -989,26 +1037,42 @@ export default {
           return Math.max(...this.players.map(p => p.score))
         },
 
-        tierShapeClass(tier) {
+        tierShapeClass(tile) {
 
-            if (tier === 1) return "triangle"
-            if (tier === 2) return "w-5 h-5"
-            if (tier === 3) return "w-5 h-5 rounded-full"
-            if (tier === 4) return "text-3xl"
+            if (tile.placedCard?.tier === 1) return "triangle"
+            if (tile.placedCard?.tier === 2) return "w-5 h-5"
+            if (tile.placedCard?.tier === 3) return "w-5 h-5 rounded-full"
+            if (tile.placedCard?.tier === 4) return "text-3xl"
 
         },
-        tierShapeStyle(tier,color) {
+        tierShapeStyle(tier,color, isEaten) {
+            // if(isEaten) {
+            //     // eaten then just show the grey color
+            //     return {
+            //         background: '#66666688',
+            //         color: '#66666688',
+            //         borderBottomColor: '#66666688'
+            //     }
+            // }
 
             if (tier === 1) {
-                return {
-                    borderBottomColor: this.teamColor(color)
+                if(isEaten) {
+                    // make it black but a little bit grey
+                    return { borderBottomColor: '#66666688' }
                 }
+                return { borderBottomColor: this.teamColor(color) }
             }
 
             if (tier === 4) {
+                if(isEaten) {
+                    return { color: '#66666688' }
+                }
                 return { color: this.teamColor(color) }
             }
 
+            if(isEaten) {
+                return { background: '#66666688' }
+            }
             return { background: this.teamColor(color) }
         },
 
