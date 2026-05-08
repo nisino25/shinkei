@@ -514,16 +514,26 @@ export default {
             // }
 
             // if tile is eatenm then change the background eater color
-            if(tile.eatenByTileId) {
-                const eaterTile = this.tiles.find(t => t.id === tile.eatenByTileId)
-                
-                base.background = this.teamColor(eaterTile.ownerTeam) 
-                //  but if the eatenByPlayerId is also eaten then change to the grandparent eater color
-                if(eaterTile.eatenByPlayerId) {
-                    const grandEaterTile = this.tiles.find(t => t.id === eaterTile.eatenByTileId)
-                    if(grandEaterTile) {
-                        base.background = this.teamColor(grandEaterTile.ownerTeam) 
+           if (tile.eatenByTileId) {
+                let currentTile = this.tiles.find(t => t.id === tile.eatenByTileId)
+
+                // keep going up the chain until we find
+                // a tile that has NOT been eaten
+                while (currentTile && currentTile.eatenByTileId) {
+                    const nextTile = this.tiles.find(
+                        t => t.id === currentTile.eatenByTileId
+                    )
+
+                    // safety break in case of broken reference
+                    if (!nextTile) {
+                        break
                     }
+
+                    currentTile = nextTile
+                }
+
+                if (currentTile) {
+                    base.background = this.teamColor(currentTile.ownerTeam)
                 }
             }
 
