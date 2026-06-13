@@ -56,12 +56,17 @@
               @click="selectGame ='RPG'" 
               class="px-4 py-2 bg-red-500 text-white rounded-lg">
               RPG
-          </button> 
+          </button>
           <button v-if="isTesting" 
               @click="selectGame ='新陣地取りゲーム'" 
               class="px-4 py-2 bg-red-500 text-white rounded-lg">
               新陣地取りゲーム
-          </button> 
+          </button>
+          <button v-if="isTesting" 
+              @click="selectGame ='カードコレクション'" 
+              class="px-4 py-2 bg-red-500 text-white rounded-lg">
+              カードコレクション
+          </button>
       </div>
     </div>
   
@@ -73,7 +78,7 @@
     <mapDemo v-if="selectGame == 'マップゲーム'"></mapDemo>
     <RPGDemo v-if="selectGame == 'RPG'"></RPGDemo>
     <newDominationDemo v-if="selectGame == '新陣地取りゲーム'"></newDominationDemo>
-  
+    <cardCollection v-if="selectGame == 'カードコレクション'"></cardCollection>
   </template>
   
   <script setup>
@@ -89,7 +94,7 @@
   import mapDemo from "./components/mapGame.vue";
   import RPGDemo from "./components/RPGGame.vue";
   import newDominationDemo from "./components/newDominationGame.vue";
-
+  import cardCollection from "./components/cardCollection.vue";
   const isTesting = ref(false);  
   
   // const { gamePoint, selectGame } = storeToRefs(store); // Correct way to access state
@@ -112,8 +117,13 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const isTestingParam = urlParams.get("isTesting");
+    const gameModeParam  = urlParams.get("gameMode");
 
     if (isTestingParam == 1) isTesting.value = true;
+    if(isTesting.value){
+      if(gameModeParam == "新陣地取りゲーム")
+      selectGame.value = gameModeParam;
+    }
 
     const id = urlParams.get("uniqueId");
 
