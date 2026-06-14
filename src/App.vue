@@ -121,7 +121,6 @@
 
     if (isTestingParam == 1) isTesting.value = true;
     if(isTesting.value){
-      if(gameModeParam == "新陣地取りゲーム")
       selectGame.value = gameModeParam;
     }
 

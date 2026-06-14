@@ -15,150 +15,95 @@
 
         <div class="bg-white rounded-lg shadow p-6">
            <div
-    v-if="currentTab === 'register'"
-    class="bg-white rounded-lg shadow p-6"
->
-    <h2 class="text-2xl font-bold mb-6">
-        カード登録
-    </h2>
-
-    <!-- Mode -->
-    <div class="flex gap-2 mb-6">
-        <button
-            @click="registerMode = 'instance'"
-            class="px-4 py-2 rounded-lg"
-            :class="registerMode === 'instance'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100'"
-        >
-            既存カードから登録
-        </button>
-
-        <button
-            @click="registerMode = 'master'"
-            class="px-4 py-2 rounded-lg"
-            :class="registerMode === 'master'
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-100'"
-        >
-            新しいカードタイプ
-        </button>
-    </div>
-
-    <!-- Existing Card -->
-    <div v-if="registerMode === 'instance'">
-
-        <label class="block mb-2 font-medium">
-            カード種類
-        </label>
-
-        <select
-            v-model="selectedCardId"
-            class="w-full border rounded-lg p-3 mb-4"
-        >
-            <option value="">
-                選択してください
-            </option>
-
-            <option
-                v-for="card in cardsDB"
-                :key="card.id"
-                :value="card.id"
+                v-if="currentTab === 'register'"
+                class="bg-white rounded-lg shadow p-6"
             >
-                {{ card.label }}
-            </option>
-        </select>
+                <h2 class="text-2xl font-bold mb-6">
+                    カード登録
+                </h2>
+                <div>
 
-        <div
-            v-if="selectedCard"
-            class="border rounded-lg p-4 mb-4"
-        >
-            <img
-                :src="selectedCard.imgSrc"
-                :alt="selectedCard.label"
-                class="w-32 h-32 object-contain mx-auto mb-4"
-            >
+                    <div class="grid md:grid-cols-2 gap-4">
 
-            <h3 class="font-bold text-lg">
-                {{ selectedCard.label }}
-            </h3>
+                        <input
+                            v-model="newCard.id"
+                            placeholder="id (hawk)"
+                            class="border rounded-lg p-3"
+                        >
 
-            <p>エリア: {{ selectedCard.area }}</p>
-            <p>ロケーション: {{ selectedCard.location }}</p>
-            <p>レベル: {{ selectedCard.level }}</p>
-        </div>
+                        <input
+                            v-model="newCard.label"
+                            placeholder="名前"
+                            class="border rounded-lg p-3"
+                        >
 
-        <button
-            @click="registerCard"
-            :disabled="!selectedCardId"
-            class="px-6 py-3 bg-blue-600 text-white rounded-lg disabled:bg-gray-300"
-        >
-            カード登録
-        </button>
+                        <select
+                            v-model="newCard.area"
+                            class="border rounded-lg p-3"
+                        >
+                            <option value="">
+                                エリア
+                            </option>
+                            <option value="land">
+                                land
+                            </option>
+                            <option value="air">
+                                air
+                            </option>
+                        </select>
 
-    </div>
+                        <select
+                            v-model="newCard.location"
+                            class="border rounded-lg p-3"
+                        >
+                            <option value="">
+                                ロケーション
+                            </option>
 
-    <!-- New Card Type -->
-    <div v-else>
+                            <option
+                                v-for="location in availableLocations"
+                                :key="location"
+                                :value="location"
+                            >
+                                {{ location }}
+                            </option>
+                        </select>
 
-        <div class="grid md:grid-cols-2 gap-4">
+                        <input
+                            v-model.number="newCard.level"
+                            type="number"
+                            placeholder="レベル"
+                            class="border rounded-lg p-3"
+                        >
 
-            <input
-                v-model="newCard.id"
-                placeholder="id (hawk)"
-                class="border rounded-lg p-3"
-            >
+                        <input
+                            v-model="newCard.imgSrc"
+                            placeholder="画像URL"
+                            class="border rounded-lg p-3 md:col-span-2"
+                        >
+                    </div>
 
-            <input
-                v-model="newCard.label"
-                placeholder="名前"
-                class="border rounded-lg p-3"
-            >
+                    <button
+                        @click="createCardType"
+                        class="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg"
+                    >
+                        カードタイプ作成
+                    </button>
 
-            <select
-                v-model="newCard.area"
-                class="border rounded-lg p-3"
-            >
-                <option value="">
-                    エリア
-                </option>
-                <option value="land">
-                    land
-                </option>
-                <option value="air">
-                    air
-                </option>
-            </select>
+                    <hr>
 
-            <input
-                v-model="newCard.location"
-                placeholder="ロケーション"
-                class="border rounded-lg p-3"
-            >
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span
+                            v-for="animal in AnimalCardsDB"
+                            :key="animal.id || animal.label"
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-200"
+                        >
+                            {{ animal.label }}
+                        </span>
+                    </div>
 
-            <input
-                v-model.number="newCard.level"
-                type="number"
-                placeholder="レベル"
-                class="border rounded-lg p-3"
-            >
-
-            <input
-                v-model="newCard.imgSrc"
-                placeholder="画像URL"
-                class="border rounded-lg p-3 md:col-span-2"
-            >
-        </div>
-
-        <button
-            @click="createCardType"
-            class="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg"
-        >
-            カードタイプ作成
-        </button>
-
-    </div>
-</div>
+                </div>
+            </div>
 
             <div v-else-if="currentTab === 'myCards'">
                 自分のカード一覧
@@ -178,7 +123,6 @@
 </template>
 
 <script setup>
-    // import { ref, computed, onMounted } from 'vue';
     import { ref,computed } from 'vue'
 
     const tabs = [
@@ -209,7 +153,7 @@
         },
     ]
 
-    const cardsDB = [
+    const AnimalCardsDB = ref([
         {
             id: 'ant',
             label: 'アリ',
@@ -225,32 +169,73 @@
             location: '平塚',
             level: 4,
             imgSrc: '/img/hawk.png'
-        }
-    ]
+        },
+        {
+            id: 'bear',
+            label: 'ヒグマ',
+            area: 'land',
+            location: '釧路',
+            level: 4,
+            imgSrc: '/img/bear.png'
+        },
+    ])
 
-    const cardInstancesDB = [
-        {
-            uniqueId: 'c001',
-            cardId: 'ant'
-        },
-        {
-            uniqueId: 'c002',
-            cardId: 'ant'
-        },
-        {
-            uniqueId: 'c003',
-            cardId: 'hawk'
-        },
-    ]
+
+    const availableLocations = computed(() => {
+        return [...new Set(
+            AnimalCardsDB.value.map(card => card.location)
+        )]
+    })
+
+
+
+    // location: 'collection'
+    // location: 'playing'
+    // location: 'market'
+    // location: 'deck'
+    // location: 'discard'
+    // location: 'wilds'
+
+    // const cardInstancesDB = [
+    //     {
+    //         uniqueId: 'c001',
+    //         cardId: 'ant',
+
+    //         ownerId: 'p001',
+
+    //         status: 'collection', // collection, playing, trade, deck, discard
+
+    //         location: 'collection',
+    //     },
+    //     {
+    //         uniqueId: 'c002',
+    //         cardId: 'hawk',
+
+    //         ownerId: 'p002',
+
+    //         status: 'playing',
+
+    //         location: 'field'
+    //     }
+    // ]
 
     // const playersDB = [
     //     {
     //         id: 'p001',
     //         name: 'Nozo',
+                // teamBelongId: 't001'
     //         cardCollection: [
     //             'c001',
-    //             'c003'
-    //         ]
+    //             'c003',
+                    // c001３３３ぽkぽ
+                    // c004,
+                    // c005,
+                    // c006,
+    //         ],
+                // itemCollection: [
+                //     'i001',
+                //     'i002'
+                // ]
     //     },
     //     {
     //         id: 'p002',
@@ -260,6 +245,52 @@
     //         ]
     //     }
     // ]
+
+
+    // const itemDB = [
+    //     {
+    //         id: 'ant',
+    //         label: '節水',
+    //         imgSrc: '/img/ant.png'
+    //         type: 'いいことカード'
+    //     },
+    //     {
+    //         id: '',
+    //         label: 'ずきん',
+    //         imgSrc: '/img/ant.png'
+    //         type: '防災'
+    //     },
+    // ]
+
+    // const itemInstancesDB = [
+    //     {
+    //         uniqueId: '1',
+    //         cardId: 'ant'
+    //     },
+    //     {
+    //         uniqueId: '2',
+    //         cardId: 'ant',
+                // status: 'playing',
+    //     },
+    //     {
+    //         uniqueId: '3',
+    //         cardId: 'hawk'
+    //     },
+    // ]
+
+    // const playersDB = [
+    //     {
+    //         id: 'p001',
+    //         name: 'Nozo',
+    //     },
+    //     {
+    //         id: 'p002',
+    //         name: 'Becca',
+    //     }
+    // ]
+
+
+    // teamDB
 
 
     function getTabClass(tab) {
@@ -278,52 +309,41 @@
 
     // ---------------------------------
 
-    const registerMode = ref('instance')
-    const selectedCardId = ref('')
 
-    const selectedCard = computed(() => {
-        return cardsDB.find(
-            card => card.id === selectedCardId.value
-        )
-    })
+    // function registerCard() {
+    //     const uniqueId = crypto.randomUUID()
 
+    //     AnimalCardsDB.push({
+    //         uniqueId,
+    //         cardId: selectedCardId.value
+    //     })
 
-    function registerCard() {
-        const uniqueId = crypto.randomUUID()
-
-        cardInstancesDB.push({
-            uniqueId,
-            cardId: selectedCardId.value
-        })
-
-        alert(`カード登録完了: ${uniqueId}`)
-    }
+    //     alert(`カード登録完了: ${uniqueId}`)
+    // }
 
     const newCard = ref({
-    id: '',
-    label: '',
-    area: '',
-    location: '',
-    level: '',
-    imgSrc: ''
-})
-
-function createCardType() {
-    cardsDB.value.push({
-        ...newCard.value
-    })
-
-    newCard.value = {
         id: '',
         label: '',
         area: '',
         location: '',
-        level: '',
+        level: 1,
         imgSrc: ''
-    }
+    })
 
-    registerMode.value = 'instance'
-}
+    function createCardType() {
+        AnimalCardsDB.value.push(newCard.value)
+
+        newCard.value = {
+            id: '',
+            label: '',
+            area: '',
+            location: '',
+            level: 1,
+            imgSrc: ''
+        }
+
+        alert("カードを登録しました")
+    }
 </script>
 
 <style scoped>
