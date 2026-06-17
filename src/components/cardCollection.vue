@@ -14,109 +14,219 @@
         </div>
 
         <div class="bg-white rounded-lg shadow p-6">
-           <div
-                v-if="currentTab === 'register'"
-                class="bg-white rounded-lg shadow p-6"
+					<div v-if="currentTab === 'register'" class="bg-white rounded-lg shadow p-6">
+							<h2 class="text-2xl font-bold mb-6">
+									カード登録
+							</h2>
+							<div>
+
+									<div class="grid md:grid-cols-2 gap-4">
+
+											<input
+													v-model="newCard.id"
+													placeholder="id (hawk)"
+													class="border rounded-lg p-3"
+											>
+
+											<input
+													v-model="newCard.label"
+													placeholder="名前"
+													class="border rounded-lg p-3"
+											>
+
+											<select
+													v-model="newCard.area"
+													class="border rounded-lg p-3"
+											>
+													<option value="">
+															エリア
+													</option>
+													<option value="land">
+															land
+													</option>
+													<option value="air">
+															air
+													</option>
+											</select>
+
+											<select
+													v-model="newCard.location"
+													class="border rounded-lg p-3"
+											>
+													<option value="">
+															ロケーション
+													</option>
+
+													<option
+															v-for="location in availableLocations"
+															:key="location"
+															:value="location"
+													>
+															{{ location }}
+													</option>
+											</select>
+
+											<input
+													v-model.number="newCard.level"
+													type="number"
+													placeholder="レベル"
+													class="border rounded-lg p-3"
+											>
+
+											<input
+													v-model="newCard.imgSrc"
+													placeholder="画像URL"
+													class="border rounded-lg p-3 md:col-span-2"
+											>
+									</div>
+
+									<button
+											@click="createCardType"
+											class="my-6 px-6 py-3 bg-green-600 text-white rounded-lg"
+									>
+											作成
+									</button>
+
+									<hr>
+
+									<div class="mt-4 flex flex-wrap gap-2">
+											<span
+													v-for="animal in AnimalCardsDB"
+													:key="animal.id || animal.label"
+													class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-200"
+											>
+													{{ animal.label }}
+											</span>
+									</div>
+
+							</div>
+
+					</div>
+
+					<div v-else-if="currentTab === 'myCards'">
+							自分のカード一覧
+					</div>
+
+					<div v-else-if="currentTab === 'playersCards'">
+
+    <h2 class="text-2xl font-bold mb-4">
+        カード一覧
+    </h2>
+
+    <select
+        v-model="selectedPlayer"
+        class="border rounded-lg p-2 mb-4"
+    >
+        <option
+            v-for="player in playerOptions"
+            :key="player"
+            :value="player"
+        >
+            {{ player }}
+        </option>
+    </select>
+
+    <table class="w-full border-collapse border">
+
+        <thead>
+            <tr>
+                <th class="border p-2">
+                    プレイヤー
+                </th>
+
+                <th class="border p-2">
+                    カード
+                </th>
+
+                <th class="border p-2">
+                    状態
+                </th>
+
+                <th class="border p-2">
+                    ID
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr
+                v-for="card in displayedCards"
+                :key="card.id"
             >
-                <h2 class="text-2xl font-bold mb-6">
-                    カード登録
-                </h2>
-                <div>
+                <td class="border p-2">
+                    {{ card.playerName }}
+                </td>
 
-                    <div class="grid md:grid-cols-2 gap-4">
+                <td class="border p-2">
+                    {{ card.cardName }}
+                </td>
 
-                        <input
-                            v-model="newCard.id"
-                            placeholder="id (hawk)"
-                            class="border rounded-lg p-3"
-                        >
+                <td class="border p-2">
+                    {{ card.status }}
+                </td>
 
-                        <input
-                            v-model="newCard.label"
-                            placeholder="名前"
-                            class="border rounded-lg p-3"
-                        >
+                <td class="border p-2">
+                    {{ card.id }}
+                </td>
+            </tr>
+        </tbody>
 
-                        <select
-                            v-model="newCard.area"
-                            class="border rounded-lg p-3"
-                        >
-                            <option value="">
-                                エリア
-                            </option>
-                            <option value="land">
-                                land
-                            </option>
-                            <option value="air">
-                                air
-                            </option>
-                        </select>
+    </table>
 
-                        <select
-                            v-model="newCard.location"
-                            class="border rounded-lg p-3"
-                        >
-                            <option value="">
-                                ロケーション
-                            </option>
+</div>
 
-                            <option
-                                v-for="location in availableLocations"
-                                :key="location"
-                                :value="location"
-                            >
-                                {{ location }}
-                            </option>
-                        </select>
+					<div v-else-if="currentTab === 'admin'">
 
-                        <input
-                            v-model.number="newCard.level"
-                            type="number"
-                            placeholder="レベル"
-                            class="border rounded-lg p-3"
-                        >
+							<h2 class="text-2xl font-bold mb-4">
+									カード所持数一覧
+							</h2>
 
-                        <input
-                            v-model="newCard.imgSrc"
-                            placeholder="画像URL"
-                            class="border rounded-lg p-3 md:col-span-2"
-                        >
-                    </div>
+							<table class="w-full border-collapse border">
 
-                    <button
-                        @click="createCardType"
-                        class="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg"
-                    >
-                        カードタイプ作成
-                    </button>
+									<thead>
+											<tr>
+													<th class="border p-2">
+															Player
+													</th>
 
-                    <hr>
+													<th
+															v-for="card in AnimalCardsDB"
+															:key="card.id"
+															class="border p-2"
+													>
+															{{ card.label }}
+													</th>
+											</tr>
+									</thead>
 
-                    <div class="mt-4 flex flex-wrap gap-2">
-                        <span
-                            v-for="animal in AnimalCardsDB"
-                            :key="animal.id || animal.label"
-                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-200"
-                        >
-                            {{ animal.label }}
-                        </span>
-                    </div>
+									<tbody>
+											<tr
+													v-for="row in adminTableRows"
+													:key="row.playerName"
+											>
+													<td class="border p-2">
+															{{ row.playerName }}
+													</td>
 
-                </div>
-            </div>
+													<td
+															v-for="card in AnimalCardsDB"
+															:key="card.id"
+															class="border p-2 text-center"
+													>
+															{{ row[card.id] }}
+															<button
+																	class="ml-2 px-2 bg-green-500 text-white rounded"
+																	@click="addCard(row.playerId, card.id)"
+															>
+																	+
+															</button>
+													</td>
+											</tr>
+									</tbody>
 
-            <div v-else-if="currentTab === 'myCards'">
-                自分のカード一覧
-            </div>
+							</table>
 
-            <div v-else-if="currentTab === 'otherCards'">
-                他の人のカード一覧
-            </div>
-
-            <div v-else-if="currentTab === 'admin'">
-                アドミン管理画面
-
-            </div>
+					</div>
         </div>
 
     </div>
@@ -132,13 +242,8 @@
             color: 'blue'
         },
         {
-            id: 'myCards',
-            label: 'マイコレクション',
-            color: 'blue'
-        },
-        {
-            id: 'otherCards',
-            label: '他の人のカード',
+            id: 'playersCards',
+            label: 'カード一覧',
             color: 'blue'
         },
         {
@@ -181,12 +286,6 @@
     ])
 
 
-    const availableLocations = computed(() => {
-        return [...new Set(
-            AnimalCardsDB.value.map(card => card.location)
-        )]
-    })
-
 
 
     // location: 'collection'
@@ -196,55 +295,101 @@
     // location: 'discard'
     // location: 'wilds'
 
-    // const cardInstancesDB = [
-    //     {
-    //         uniqueId: 'c001',
-    //         cardId: 'ant',
 
-    //         ownerId: 'p001',
+    const cardInstancesDB = ref([
+        {
+            id: Date.now(),
+            cardId: 'ant',
+            ownerId: 'p001',
+            status: 'collection'
+        },
+        {
+            id: Date.now() + 1,
+            cardId: 'ant',
+            ownerId: 'p001',
+            status: 'collection'
+        },
+        {
+            id: Date.now() + 2,
+            cardId: 'hawk',
+            ownerId: 'p001',
+            status: 'collection'
+        },
+        {
+            id: Date.now() + 3,
+            cardId: 'bear',
+            ownerId: 'p002',
+            status: 'collection'
+        }
+    ])
 
-    //         status: 'collection', // collection, playing, trade, deck, discard
+    const playersDB = ref([
+				{
+						id: 'p001',
+						name: '信長'
+				},
+				{
+						id: 'p002',
+						name: '家康'
+				},
+				{
+						id: 'p003',
+						name: '秀吉'
+				},
+				{
+						id: 'p004',
+						name: '政宗'
+				}
+		])
 
-    //         location: 'collection',
-    //     },
-    //     {
-    //         uniqueId: 'c002',
-    //         cardId: 'hawk',
 
-    //         ownerId: 'p002',
+    const availableLocations = computed(() => {
+        return [...new Set(
+            AnimalCardsDB.value.map(card => card.location)
+        )]
+    })
 
-    //         status: 'playing',
+		const playerOptions = computed(() => {
+				return [
+						'全プレイヤー',
+						...playersDB.value.map(player => player.name)
+				]
+		})
+		const selectedPlayer = ref('全プレイヤー')
 
-    //         location: 'field'
-    //     }
-    // ]
+		const displayedCards = computed(() => {
 
-    // const playersDB = [
-    //     {
-    //         id: 'p001',
-    //         name: 'Nozo',
-                // teamBelongId: 't001'
-    //         cardCollection: [
-    //             'c001',
-    //             'c003',
-                    // c001３３３ぽkぽ
-                    // c004,
-                    // c005,
-                    // c006,
-    //         ],
-                // itemCollection: [
-                //     'i001',
-                //     'i002'
-                // ]
-    //     },
-    //     {
-    //         id: 'p002',
-    //         name: 'Becca',
-    //         cardCollection: [
-    //             'c002'
-    //         ]
-    //     }
-    // ]
+				return cardInstancesDB.value
+						.filter(instance => {
+
+								if (selectedPlayer.value === '全プレイヤー') {
+										return true
+								}
+
+								const player = playersDB.value.find(player => {
+										return player.id === instance.ownerId
+								})
+
+								return player?.name === selectedPlayer.value
+						})
+						.map(instance => {
+
+								const card = AnimalCardsDB.value.find(card => {
+										return card.id === instance.cardId
+								})
+
+								const player = playersDB.value.find(player => {
+										return player.id === instance.ownerId
+								})
+
+								return {
+										...instance,
+										cardName: card?.label ?? '',
+										playerName: player?.name ?? ''
+								}
+						})
+
+		})
 
 
     // const itemDB = [
@@ -278,17 +423,6 @@
     //     },
     // ]
 
-    // const playersDB = [
-    //     {
-    //         id: 'p001',
-    //         name: 'Nozo',
-    //     },
-    //     {
-    //         id: 'p002',
-    //         name: 'Becca',
-    //     }
-    // ]
-
 
     // teamDB
 
@@ -304,22 +438,9 @@
             ? 'bg-blue-600 text-white'
             : 'bg-gray-100 hover:bg-gray-200'
     }
-
     const currentTab = ref('register')
 
     // ---------------------------------
-
-
-    // function registerCard() {
-    //     const uniqueId = crypto.randomUUID()
-
-    //     AnimalCardsDB.push({
-    //         uniqueId,
-    //         cardId: selectedCardId.value
-    //     })
-
-    //     alert(`カード登録完了: ${uniqueId}`)
-    // }
 
     const newCard = ref({
         id: '',
@@ -329,7 +450,6 @@
         level: 1,
         imgSrc: ''
     })
-
     function createCardType() {
         AnimalCardsDB.value.push(newCard.value)
 
@@ -343,6 +463,72 @@
         }
 
         alert("カードを登録しました")
+    }
+    const adminTableRows = computed(() => {
+
+			return playersDB.value.map(player => {
+
+					const row = {
+							playerName: player.name,
+							playerId: player.id
+					}
+
+					AnimalCardsDB.value.forEach(card => {
+
+							console.log('card', card)
+
+							row[card.id] = cardInstancesDB.value.filter(instance => {
+
+									console.log('instance', instance)
+
+									return (
+											instance.ownerId === player.id &&
+											instance.cardId === card.id
+									)
+
+							}).length
+
+					})
+
+					return row
+
+			})
+
+    })
+        
+    // const adminTableRows = computed(() => {
+
+    //     return playersDB.value.map(player => {
+
+    //         const row = {
+    //             playerName: player.name
+    //         }
+
+    //         AnimalCardsDB.value.forEach(card => {
+
+    //             row[card.id] = cardInstancesDB.value.filter(instance => {
+    //                 return (
+    //                     instance.ownerId === player.id &&
+    //                     instance.cardId === card.id
+    //                 )
+    //             }).length
+
+    //         })
+
+    //         return row
+
+    //     })
+
+    // })
+
+    function addCard(ownerId, cardId) {
+
+        cardInstancesDB.value.push({
+            id: Date.now(),
+            ownerId,
+            cardId
+        })
+
     }
 </script>
 
