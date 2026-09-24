@@ -67,6 +67,11 @@
               class="px-4 py-2 bg-red-500 text-white rounded-lg">
               カードコレクション
           </button>
+          <button v-if="isTesting" 
+              @click="goCaveGame()" 
+              class="px-4 py-2 bg-amber-700 text-white rounded-lg">
+              洞窟ゲーム
+          </button>
       </div>
     </div>
   
@@ -110,6 +115,11 @@
     if(store.currentUsername) return window.location = `https://www.ce-n.org/hui-yuan-purohuiru/${store.uniqueId}`
 
     window.location = 'https://www.ce-n.org/'
+  };
+
+  const goCaveGame = () => {
+    const cenId = store.uniqueId || '33d85b19-663f-4849-87ae-a7232ff33fda';
+    window.location = `https://ce-n-game.netlify.app/loginPage?cenId=${encodeURIComponent(cenId)}`;
   };
 
   onMounted(async () => {
